@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "allowJs": true,
+    "checkJs": false,
+    "declaration": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "pretty": true,
+    "sourceMap": true,
+    "inlineSources": true,
+    "strict": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "emitDeclarationOnly": true,
+    "composite": true,
+    "lib": ["ESNext", "DOM"],
+    "jsx": "react",
+    "outDir": "./lib",
+    "rootDir": "./src",
+    "downlevelIteration": true,
+    "resolveJsonModule": true,
+    "target": "ESNext",
+    "skipLibCheck": true,
+    "types": [
+      "node"
+    ]
+  },
+  "exclude": ["node_modules", "./dist/**/*",  "./lib/**/*"],
+  "include": ["src/**/*"]
+}
