@@ -1,3 +1,4 @@
+import fetch from 'node-fetch'
 function toQueryParams(obj: Record<string, any>): string {
   const params = new URLSearchParams();
 
