@@ -13688,71 +13688,6 @@ function fixResponseChunkedTransferBadEnding(request, errorCallback) {
   });
 }
 
-// src/http.ts
-function toQueryParams(obj) {
-  const params = new URLSearchParams();
-  for (const key in obj) {
-    const value = obj[key];
-    if (value == null) {
-      continue;
-    }
-    if (Array.isArray(value)) {
-      value.forEach((v) => params.append(key, String(v)));
-    } else if (typeof value === "object") {
-      params.append(key, JSON.stringify(value));
-    } else {
-      params.append(key, String(value));
-    }
-  }
-  const str = params.toString();
-  if (str === "") {
-    return "";
-  }
-  return `?${str}`;
-}
-var callOperation = async (args) => {
-  const queryParamKeys = new Set(args.queryParamKeys ?? []);
-  const pathParamKeys = new Set(args.pathParamKeys ?? []);
-  const queryParams = {};
-  const pathParams = {};
-  const body = {};
-  const headers = {};
-  for (const [key, value] of Object.entries(args.input)) {
-    if (queryParamKeys.has(key)) {
-      queryParams[key] = value;
-    } else if (pathParamKeys.has(key)) {
-      pathParams[key] = value;
-    } else {
-      body[key] = value;
-    }
-  }
-  let resolvedPath = args.path;
-  for (const paramKey of pathParamKeys) {
-    resolvedPath = resolvedPath.replace(
-      `{${paramKey}}`,
-      encodeURIComponent(pathParams[paramKey] ?? "")
-    );
-  }
-  if (Object.keys(body).length > 0) {
-    headers["Accept"] = "application/json";
-    headers["Content-Type"] = "application/json";
-  }
-  headers["Authorization"] = `Bearer ${process.env.TASKADE_API_KEY}`;
-  const apiBase = new URL("https://www.taskade.com/api/v1").toString();
-  const url = `${apiBase}${resolvedPath}${toQueryParams(queryParams)}`;
-  try {
-    const response = await fetch(url, {
-      method: args.method,
-      body: Object.keys(body).length > 0 ? JSON.stringify(body) : void 0,
-      headers
-    });
-    return await response.json();
-  } catch (error) {
-    console.error("TASKADE_ACTION_API_CALL_ERROR", error);
-    throw error;
-  }
-};
-
 // src/tools.generated.ts
 var setupTools = (server) => {
   server.tool(
@@ -13763,8 +13698,9 @@ var setupTools = (server) => {
       content: external_exports.string().optional(),
       workspaceId: external_exports.string()
     }).shape,
+    { title: "Create Workspace Project" },
     async (args) => {
-      const response = await callOperation({
+      const response = await server.callOperation({
         path: "/workspaces/{workspaceId}/projects",
         method: "POST",
         input: args,
@@ -13785,8 +13721,9 @@ var setupTools = (server) => {
     "workspacesGet",
     "Get all workspaces for a user",
     external_exports.object({}).shape,
+    { title: "Get All Workspaces" },
     async (args) => {
-      const response = await callOperation({
+      const response = await server.callOperation({
         path: "/workspaces",
         method: "GET",
         input: args,
@@ -13807,8 +13744,9 @@ var setupTools = (server) => {
     "workspaceFoldersGet",
     "Get all folders for a workspace",
     external_exports.object({ workspaceId: external_exports.string() }).shape,
+    { title: "Get Workspace Folders" },
     async (args) => {
-      const response = await callOperation({
+      const response = await server.callOperation({
         path: "/workspaces/{workspaceId}/folders",
         method: "GET",
         input: args,
@@ -13829,8 +13767,9 @@ var setupTools = (server) => {
     "projectGet",
     "Get project",
     external_exports.object({ projectId: external_exports.string() }).shape,
+    { title: "Get Project Details" },
     async (args) => {
-      const response = await callOperation({
+      const response = await server.callOperation({
         path: "/projects/{projectId}",
         method: "GET",
         input: args,
@@ -13855,8 +13794,9 @@ var setupTools = (server) => {
       projectTitle: external_exports.string().min(1).optional(),
       projectId: external_exports.string()
     }).shape,
+    { title: "Copy Project" },
     async (args) => {
-      const response = await callOperation({
+      const response = await server.callOperation({
         path: "/projects/{projectId}/copy",
         method: "POST",
         input: args,
@@ -13881,8 +13821,9 @@ var setupTools = (server) => {
       contentType: external_exports.literal("text/markdown").optional(),
       content: external_exports.string().optional()
     }).shape,
+    { title: "Create New Project" },
     async (args) => {
-      const response = await callOperation({
+      const response = await server.callOperation({
         path: "/projects",
         method: "POST",
         input: args,
@@ -13908,8 +13849,9 @@ var setupTools = (server) => {
       after: external_exports.string().uuid().optional(),
       before: external_exports.string().uuid().optional()
     }).shape,
+    { title: "Get Project Blocks" },
     async (args) => {
-      const response = await callOperation({
+      const response = await server.callOperation({
         path: "/projects/{projectId}/blocks",
         method: "GET",
         input: args,
@@ -13935,8 +13877,9 @@ var setupTools = (server) => {
       after: external_exports.string().uuid().optional(),
       before: external_exports.string().uuid().optional()
     }).shape,
+    { title: "Get Project Tasks" },
     async (args) => {
-      const response = await callOperation({
+      const response = await server.callOperation({
         path: "/projects/{projectId}/tasks",
         method: "GET",
         input: args,
@@ -13957,8 +13900,9 @@ var setupTools = (server) => {
     "taskGet",
     "Get task with id",
     external_exports.object({ projectId: external_exports.string(), taskId: external_exports.string() }).shape,
+    { title: "Get Task Details" },
     async (args) => {
-      const response = await callOperation({
+      const response = await server.callOperation({
         path: "/projects/{projectId}/tasks/{taskId}",
         method: "GET",
         input: args,
@@ -13984,8 +13928,9 @@ var setupTools = (server) => {
       projectId: external_exports.string(),
       taskId: external_exports.string()
     }).shape,
+    { title: "Update Task" },
     async (args) => {
-      const response = await callOperation({
+      const response = await server.callOperation({
         path: "/projects/{projectId}/tasks/{taskId}",
         method: "PUT",
         input: args,
@@ -14006,8 +13951,9 @@ var setupTools = (server) => {
     "taskComplete",
     "Complete a task in a project",
     external_exports.object({ projectId: external_exports.string(), taskId: external_exports.string() }).shape,
+    { title: "Complete Task" },
     async (args) => {
-      const response = await callOperation({
+      const response = await server.callOperation({
         path: "/projects/{projectId}/tasks/{taskId}/complete",
         method: "POST",
         input: args,
@@ -14041,20 +13987,16 @@ var setupTools = (server) => {
             }).strict(),
             external_exports.object({
               taskId: external_exports.string(),
-              placement: external_exports.enum([
-                "beforebegin",
-                "afterbegin",
-                "beforeend",
-                "afterend"
-              ])
+              placement: external_exports.enum(["beforebegin", "afterbegin", "beforeend", "afterend"])
             }).strict()
           ])
         )
       ).max(20).optional(),
       projectId: external_exports.string()
     }).shape,
+    { title: "Create New Task" },
     async (args) => {
-      const response = await callOperation({
+      const response = await server.callOperation({
         path: "/projects/{projectId}/tasks/",
         method: "POST",
         input: args,
@@ -14077,18 +14019,14 @@ var setupTools = (server) => {
     external_exports.object({
       target: external_exports.object({
         taskId: external_exports.string().min(1),
-        position: external_exports.enum([
-          "beforebegin",
-          "afterbegin",
-          "beforeend",
-          "afterend"
-        ])
+        position: external_exports.enum(["beforebegin", "afterbegin", "beforeend", "afterend"])
       }).strict().optional(),
       projectId: external_exports.string(),
       taskId: external_exports.string()
     }).shape,
+    { title: "Move Task" },
     async (args) => {
-      const response = await callOperation({
+      const response = await server.callOperation({
         path: "/projects/{projectId}/tasks/{taskId}/move",
         method: "PUT",
         input: args,
@@ -14109,8 +14047,9 @@ var setupTools = (server) => {
     "taskAssigneesGet",
     "Get the assignees of a task",
     external_exports.object({ projectId: external_exports.string(), taskId: external_exports.string() }).shape,
+    { title: "Get Task Assignees" },
     async (args) => {
-      const response = await callOperation({
+      const response = await server.callOperation({
         path: "/projects/{projectId}/tasks/{taskId}/assignees",
         method: "GET",
         input: args,
@@ -14135,8 +14074,9 @@ var setupTools = (server) => {
       projectId: external_exports.string(),
       taskId: external_exports.string()
     }).shape,
+    { title: "Update Task Assignees" },
     async (args) => {
-      const response = await callOperation({
+      const response = await server.callOperation({
         path: "/projects/{projectId}/tasks/{taskId}/assignees",
         method: "PUT",
         input: args,
@@ -14161,8 +14101,9 @@ var setupTools = (server) => {
       taskId: external_exports.string(),
       assigneeHandle: external_exports.string()
     }).shape,
+    { title: "Remove Task Assignees" },
     async (args) => {
-      const response = await callOperation({
+      const response = await server.callOperation({
         path: "/projects/{projectId}/tasks/{taskId}/assignees/{assigneeHandle}",
         method: "DELETE",
         input: args,
@@ -14183,8 +14124,9 @@ var setupTools = (server) => {
     "taskGetDate",
     "Get the date of a task",
     external_exports.object({ projectId: external_exports.string(), taskId: external_exports.string() }).shape,
+    { title: "Get Task Date" },
     async (args) => {
-      const response = await callOperation({
+      const response = await server.callOperation({
         path: "/projects/{projectId}/tasks/{taskId}/date",
         method: "GET",
         input: args,
@@ -14205,8 +14147,9 @@ var setupTools = (server) => {
     "taskDeleteDate",
     "Delete date of a task",
     external_exports.object({ projectId: external_exports.string(), taskId: external_exports.string() }).shape,
+    { title: "Remove Task Date" },
     async (args) => {
-      const response = await callOperation({
+      const response = await server.callOperation({
         path: "/projects/{projectId}/tasks/{taskId}/date",
         method: "DELETE",
         input: args,
@@ -14230,11 +14173,7 @@ var setupTools = (server) => {
       start: external_exports.object({
         date: external_exports.string().regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}$")),
         time: external_exports.union([
-          external_exports.string().regex(
-            new RegExp(
-              "^(?:[0-1][0-9]|[2][0-3]):[0-5][0-9](?::[0-5][0-9])?$"
-            )
-          ),
+          external_exports.string().regex(new RegExp("^(?:[0-1][0-9]|[2][0-3]):[0-5][0-9](?::[0-5][0-9])?$")),
           external_exports.null()
         ]).optional(),
         timezone: external_exports.union([external_exports.string(), external_exports.null()]).optional()
@@ -14242,11 +14181,7 @@ var setupTools = (server) => {
       end: external_exports.object({
         date: external_exports.string().regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}$")),
         time: external_exports.union([
-          external_exports.string().regex(
-            new RegExp(
-              "^(?:[0-1][0-9]|[2][0-3]):[0-5][0-9](?::[0-5][0-9])?$"
-            )
-          ),
+          external_exports.string().regex(new RegExp("^(?:[0-1][0-9]|[2][0-3]):[0-5][0-9](?::[0-5][0-9])?$")),
           external_exports.null()
         ]).optional(),
         timezone: external_exports.union([external_exports.string(), external_exports.null()]).optional()
@@ -14254,8 +14189,9 @@ var setupTools = (server) => {
       projectId: external_exports.string(),
       taskId: external_exports.string()
     }).shape,
+    { title: "Set Task Date" },
     async (args) => {
-      const response = await callOperation({
+      const response = await server.callOperation({
         path: "/projects/{projectId}/tasks/{taskId}/date",
         method: "PUT",
         input: args,
@@ -14281,8 +14217,9 @@ var setupTools = (server) => {
       projectId: external_exports.string(),
       taskId: external_exports.string()
     }).shape,
+    { title: "Update Task Note" },
     async (args) => {
-      const response = await callOperation({
+      const response = await server.callOperation({
         path: "/projects/{projectId}/tasks/{taskId}/note",
         method: "PUT",
         input: args,
@@ -14303,8 +14240,9 @@ var setupTools = (server) => {
     "folderProjectsGet",
     "Get all projects in a team, or in the home team of a workspace.",
     external_exports.object({ folderId: external_exports.string() }).shape,
+    { title: "Get Projects in Folder" },
     async (args) => {
-      const response = await callOperation({
+      const response = await server.callOperation({
         path: "/folders/{folderId}/projects",
         method: "GET",
         input: args,
@@ -14324,22 +14262,90 @@ var setupTools = (server) => {
 };
 
 // src/server.ts
-var createServer = () => {
-  const server = new McpServer({
-    name: "taskade",
-    version: "0.0.1",
-    capabilities: {
-      resources: {},
-      tools: {}
+function toQueryParams(obj) {
+  const params = new URLSearchParams();
+  for (const key in obj) {
+    const value = obj[key];
+    if (value == null) {
+      continue;
     }
-  });
-  setupTools(server);
-  return server;
+    if (Array.isArray(value)) {
+      value.forEach((v) => params.append(key, String(v)));
+    } else if (typeof value === "object") {
+      params.append(key, JSON.stringify(value));
+    } else {
+      params.append(key, String(value));
+    }
+  }
+  const str = params.toString();
+  if (str === "") {
+    return "";
+  }
+  return `?${str}`;
+}
+var TaskadeMCPServer = class extends McpServer {
+  config;
+  constructor(opts) {
+    super({
+      name: "taskade",
+      version: "0.0.1",
+      capabilities: {
+        resources: {},
+        tools: {}
+      }
+    });
+    this.config = opts;
+    setupTools(this);
+  }
+  async callOperation(args) {
+    const queryParamKeys = new Set(args.queryParamKeys ?? []);
+    const pathParamKeys = new Set(args.pathParamKeys ?? []);
+    const queryParams = {};
+    const pathParams = {};
+    const body = {};
+    const headers = {};
+    for (const [key, value] of Object.entries(args.input)) {
+      if (queryParamKeys.has(key)) {
+        queryParams[key] = value;
+      } else if (pathParamKeys.has(key)) {
+        pathParams[key] = value;
+      } else {
+        body[key] = value;
+      }
+    }
+    let resolvedPath = args.path;
+    for (const paramKey of pathParamKeys) {
+      resolvedPath = resolvedPath.replace(
+        `{${paramKey}}`,
+        encodeURIComponent(pathParams[paramKey] ?? "")
+      );
+    }
+    if (Object.keys(body).length > 0) {
+      headers["Accept"] = "application/json";
+      headers["Content-Type"] = "application/json";
+    }
+    headers["Authorization"] = `Bearer ${this.config.accessToken}`;
+    const apiBase = new URL("https://www.taskade.com/api/v1").toString();
+    const url = `${apiBase}${resolvedPath}${toQueryParams(queryParams)}`;
+    try {
+      const response = await fetch(url, {
+        method: args.method,
+        body: Object.keys(body).length > 0 ? JSON.stringify(body) : void 0,
+        headers
+      });
+      return await response.json();
+    } catch (error) {
+      console.error("TASKADE_ACTION_API_CALL_ERROR", error);
+      throw error;
+    }
+  }
 };
 
 // src/cli.ts
 async function main() {
-  const server = createServer();
+  const server = new TaskadeMCPServer({
+    accessToken: process.env.TASKADE_API_KEY
+  });
   const transport = new StdioServerTransport();
   await server.connect(transport);
   console.error("Taskade MCP Server running on stdio");

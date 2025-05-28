@@ -21,3 +21,28 @@ export const ENABLED_TASKADE_ACTIONS = [
   'workspacesGet',
   'workspaceFoldersGet',
 ];
+
+// Specify a human readable name for each action
+export const HUMANIZED_TASKADE_ACTIONS = {
+  folderProjectsGet: 'Get Projects in Folder',
+  taskGet: 'Get Task Details',
+  taskPut: 'Update Task',
+  taskComplete: 'Complete Task',
+  taskCreate: 'Create New Task',
+  taskMove: 'Move Task',
+  taskAssigneesGet: 'Get Task Assignees',
+  taskPutAssignees: 'Update Task Assignees',
+  taskDeleteAssignees: 'Remove Task Assignees',
+  taskGetDate: 'Get Task Date',
+  taskDeleteDate: 'Remove Task Date',
+  taskPutDate: 'Set Task Date',
+  taskNotePut: 'Update Task Note',
+  projectGet: 'Get Project Details',
+  projectCopy: 'Copy Project',
+  projectCreate: 'Create New Project',
+  projectBlocksGet: 'Get Project Blocks',
+  projectTasksGet: 'Get Project Tasks',
+  workspaceCreateProject: 'Create Workspace Project',
+  workspacesGet: 'Get All Workspaces',
+  workspaceFoldersGet: 'Get Workspace Folders',
+};
