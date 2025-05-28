@@ -14,7 +14,8 @@
     "build:cli": "tsx scripts/build-cli.ts",
     "build": "run-s generate:mcp-tools build:cli",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "lint:fix": "eslint --fix . --ext .js,.jsx,.ts,.tsx"
+    "lint:fix": "eslint --fix . --ext .js,.jsx,.ts,.tsx",
+    "start:server": "tsx src/http.ts --watch"
   },
   "devDependencies": {
     "@readme/openapi-parser": "^4.0.0",
@@ -38,6 +39,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0",
+    "mcp-proxy": "^3.2.0",
     "node-fetch": "^3.3.2",
     "zod": "^3.25.28"
   }
