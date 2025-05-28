@@ -17,7 +17,7 @@ For example, to install the server on Claude, edit your `claude_desktop_config.j
         "taskade": {
             "command": "node",
             "args": [
-                "/Users/prevwong/Documents/taskade/mcp" // path to this repo
+                "/path/to/taskade-mcp-repo"
             ],
             "env": {
                 "TASKADE_API_KEY": "INSERT_YOUR_TASKADE_PERSONAL_ACCESS_TOKEN_HERE"
@@ -35,7 +35,6 @@ For clients that support connecting MCP servers via SSE/Streamable HTTP (ie: Cur
 1. Run the local server: `yarn start:server`
 2. Add the SSE endpoint in your client config (ie: `~/.cursor/mcp.json`):
 
-```
 ```json
 {
     "mcpServers": {
