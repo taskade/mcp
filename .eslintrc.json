@@ -6,8 +6,6 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:react/recommended",
-    "plugin:react-hooks/recommended",
     "plugin:prettier/recommended"
   ],
   "parser": "@typescript-eslint/parser",
@@ -18,12 +16,6 @@
   },
   "plugins": ["@typescript-eslint", "simple-import-sort"],
   "overrides": [
-    {
-      "files": ["**/*.tsx"],
-      "rules": {
-        "react/prop-types": "off"
-      }
-    },
     {
       "files": ["**/*.js", "**/*.jsx"],
       "rules": {
@@ -77,10 +69,5 @@
     "import/order": "off",
     "simple-import-sort/exports": "warn",
     "simple-import-sort/imports": "warn"
-  },
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
   }
 }

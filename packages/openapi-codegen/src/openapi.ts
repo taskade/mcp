@@ -1,7 +1,10 @@
 import type { JSONSchema7 as IJsonSchema } from 'json-schema';
 import { OpenAPIV3 } from 'openapi-types';
 
-export const isOperation = (method: string, _operation: any): _operation is OpenAPIV3.OperationObject => {
+export const isOperation = (
+  method: string,
+  _operation: any,
+): _operation is OpenAPIV3.OperationObject => {
   return ['get', 'post', 'put', 'delete', 'patch'].includes(method.toLowerCase());
 };
 

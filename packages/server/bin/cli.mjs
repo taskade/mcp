@@ -10284,7 +10284,7 @@ var Protocol = class {
   request(request, resultSchema, options) {
     const { relatedRequestId, resumptionToken, onresumptiontoken } = options !== null && options !== void 0 ? options : {};
     return new Promise((resolve, reject) => {
-      var _a, _b, _c, _d, _e;
+      var _a, _b, _c, _d, _e, _f;
       if (!this._transport) {
         reject(new Error("Not connected"));
         return;
@@ -10303,7 +10303,10 @@ var Protocol = class {
         this._progressHandlers.set(messageId, options.onprogress);
         jsonrpcRequest.params = {
           ...request.params,
-          _meta: { progressToken: messageId }
+          _meta: {
+            ...((_c = request.params) === null || _c === void 0 ? void 0 : _c._meta) || {},
+            progressToken: messageId
+          }
         };
       }
       const cancel = (reason) => {
@@ -10336,13 +10339,13 @@ var Protocol = class {
           reject(error);
         }
       });
-      (_c = options === null || options === void 0 ? void 0 : options.signal) === null || _c === void 0 ? void 0 : _c.addEventListener("abort", () => {
+      (_d = options === null || options === void 0 ? void 0 : options.signal) === null || _d === void 0 ? void 0 : _d.addEventListener("abort", () => {
         var _a2;
         cancel((_a2 = options === null || options === void 0 ? void 0 : options.signal) === null || _a2 === void 0 ? void 0 : _a2.reason);
       });
-      const timeout = (_d = options === null || options === void 0 ? void 0 : options.timeout) !== null && _d !== void 0 ? _d : DEFAULT_REQUEST_TIMEOUT_MSEC;
+      const timeout = (_e = options === null || options === void 0 ? void 0 : options.timeout) !== null && _e !== void 0 ? _e : DEFAULT_REQUEST_TIMEOUT_MSEC;
       const timeoutHandler = () => cancel(new McpError(ErrorCode.RequestTimeout, "Request timed out", { timeout }));
-      this._setupTimeout(messageId, timeout, options === null || options === void 0 ? void 0 : options.maxTotalTimeout, timeoutHandler, (_e = options === null || options === void 0 ? void 0 : options.resetTimeoutOnProgress) !== null && _e !== void 0 ? _e : false);
+      this._setupTimeout(messageId, timeout, options === null || options === void 0 ? void 0 : options.maxTotalTimeout, timeoutHandler, (_f = options === null || options === void 0 ? void 0 : options.resetTimeoutOnProgress) !== null && _f !== void 0 ? _f : false);
       this._transport.send(jsonrpcRequest, { relatedRequestId, resumptionToken, onresumptiontoken }).catch((error) => {
         this._cleanupTimeout(messageId);
         reject(error);
@@ -13689,7 +13692,118 @@ function fixResponseChunkedTransferBadEnding(request, errorCallback) {
 }
 
 // src/tools.generated.ts
-var setupTools = (server, callOperation) => {
+function toQueryParams(obj) {
+  const params = new URLSearchParams();
+  for (const key in obj) {
+    const value = obj[key];
+    if (value == null) {
+      continue;
+    }
+    if (Array.isArray(value)) {
+      value.forEach((v) => params.append(key, String(v)));
+    } else if (typeof value === "object") {
+      params.append(key, JSON.stringify(value));
+    } else {
+      params.append(key, String(value));
+    }
+  }
+  const str = params.toString();
+  if (str === "") {
+    return "";
+  }
+  return `?${str}`;
+}
+var prepareToolCallOperation = (operation) => {
+  const queryParamKeys = new Set(operation.queryParamKeys ?? []);
+  const pathParamKeys = new Set(operation.pathParamKeys ?? []);
+  const queryParams = {};
+  const pathParams = {};
+  const body = {};
+  const headers = {};
+  for (const [key, value] of Object.entries(operation.input)) {
+    if (queryParamKeys.has(key)) {
+      queryParams[key] = value;
+    } else if (pathParamKeys.has(key)) {
+      pathParams[key] = value;
+    } else {
+      body[key] = value;
+    }
+  }
+  let resolvedPath = operation.path;
+  for (const paramKey of pathParamKeys) {
+    resolvedPath = resolvedPath.replace(
+      `{${paramKey}}`,
+      encodeURIComponent(pathParams[paramKey] ?? "")
+    );
+  }
+  if (Object.keys(body).length > 0) {
+    headers["Accept"] = "application/json";
+    headers["Content-Type"] = "application/json";
+  }
+  const url = `${resolvedPath}${toQueryParams(queryParams)}`;
+  return {
+    url,
+    headers,
+    body: Object.keys(body).length > 0 ? JSON.stringify(body) : void 0,
+    method: operation.method,
+    operation
+  };
+};
+var OpenAPIToolRuntimeConfig = class {
+  constructor(config) {
+    this.config = config;
+  }
+  async defaultExecuteToolCall(payload) {
+    const response = await this.fetch(`${this.baseUrl}${payload.url}`, {
+      method: payload.method,
+      body: payload.body,
+      headers: {
+        ...payload.headers,
+        ...this.config.headers
+      }
+    });
+    return await response.json();
+  }
+  async executeToolCall(operation) {
+    const payload = prepareToolCallOperation(operation);
+    try {
+      const response = await (this.config.executeToolCall?.(payload) ?? this.defaultExecuteToolCall(payload));
+      return this.normaliseResponse(operation, response);
+    } catch (error) {
+      console.error("OPENAPI_TOOL_CALL_ERROR", error);
+      throw error;
+    }
+  }
+  normaliseResponse(operation, response) {
+    const normaliser = this.config.normalizeResponse?.[operation.name];
+    if (normaliser) {
+      return normaliser(response);
+    }
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(response)
+        }
+      ]
+    };
+  }
+  get baseUrl() {
+    if (this.config.url) {
+      return this.config.url;
+    }
+    throw new Error('"url" is not defined');
+  }
+  get fetch() {
+    const fetch2 = this.config.fetch ?? window["fetch"];
+    if (!fetch2) {
+      throw new Error("fetch is not defined");
+    }
+    return fetch2.bind(fetch2);
+  }
+};
+var setupTools = (server, opts) => {
+  const config = new OpenAPIToolRuntimeConfig(opts);
   server.tool(
     "workspaceCreateProject",
     "Create a project in a workspace",
@@ -13699,21 +13813,14 @@ var setupTools = (server, callOperation) => {
       workspaceId: external_exports.string()
     }).shape,
     async (args) => {
-      const response = await callOperation({
+      return await config.executeToolCall({
+        name: "workspaceCreateProject",
         path: "/workspaces/{workspaceId}/projects",
         method: "POST",
         input: args,
         pathParamKeys: ["workspaceId"],
         queryParamKeys: []
       });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response)
-          }
-        ]
-      };
     }
   );
   server.tool(
@@ -13721,21 +13828,14 @@ var setupTools = (server, callOperation) => {
     "Get all workspaces for a user",
     external_exports.object({}).shape,
     async (args) => {
-      const response = await callOperation({
+      return await config.executeToolCall({
+        name: "workspacesGet",
         path: "/workspaces",
         method: "GET",
         input: args,
         pathParamKeys: [],
         queryParamKeys: []
       });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response)
-          }
-        ]
-      };
     }
   );
   server.tool(
@@ -13743,21 +13843,14 @@ var setupTools = (server, callOperation) => {
     "Get all folders for a workspace",
     external_exports.object({ workspaceId: external_exports.string() }).shape,
     async (args) => {
-      const response = await callOperation({
+      return await config.executeToolCall({
+        name: "workspaceFoldersGet",
         path: "/workspaces/{workspaceId}/folders",
         method: "GET",
         input: args,
         pathParamKeys: ["workspaceId"],
         queryParamKeys: []
       });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response)
-          }
-        ]
-      };
     }
   );
   server.tool(
@@ -13765,21 +13858,14 @@ var setupTools = (server, callOperation) => {
     "Get project",
     external_exports.object({ projectId: external_exports.string() }).shape,
     async (args) => {
-      const response = await callOperation({
+      return await config.executeToolCall({
+        name: "projectGet",
         path: "/projects/{projectId}",
         method: "GET",
         input: args,
         pathParamKeys: ["projectId"],
         queryParamKeys: []
       });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response)
-          }
-        ]
-      };
     }
   );
   server.tool(
@@ -13791,21 +13877,14 @@ var setupTools = (server, callOperation) => {
       projectId: external_exports.string()
     }).shape,
     async (args) => {
-      const response = await callOperation({
+      return await config.executeToolCall({
+        name: "projectCopy",
         path: "/projects/{projectId}/copy",
         method: "POST",
         input: args,
         pathParamKeys: ["projectId"],
         queryParamKeys: []
       });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response)
-          }
-        ]
-      };
     }
   );
   server.tool(
@@ -13817,21 +13896,14 @@ var setupTools = (server, callOperation) => {
       content: external_exports.string().optional()
     }).shape,
     async (args) => {
-      const response = await callOperation({
+      return await config.executeToolCall({
+        name: "projectCreate",
         path: "/projects",
         method: "POST",
         input: args,
         pathParamKeys: [],
         queryParamKeys: []
       });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response)
-          }
-        ]
-      };
     }
   );
   server.tool(
@@ -13844,21 +13916,14 @@ var setupTools = (server, callOperation) => {
       before: external_exports.string().uuid().optional()
     }).shape,
     async (args) => {
-      const response = await callOperation({
+      return await config.executeToolCall({
+        name: "projectBlocksGet",
         path: "/projects/{projectId}/blocks",
         method: "GET",
         input: args,
         pathParamKeys: ["projectId"],
         queryParamKeys: ["limit", "after", "before"]
       });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response)
-          }
-        ]
-      };
     }
   );
   server.tool(
@@ -13871,21 +13936,14 @@ var setupTools = (server, callOperation) => {
       before: external_exports.string().uuid().optional()
     }).shape,
     async (args) => {
-      const response = await callOperation({
+      return await config.executeToolCall({
+        name: "projectTasksGet",
         path: "/projects/{projectId}/tasks",
         method: "GET",
         input: args,
         pathParamKeys: ["projectId"],
         queryParamKeys: ["limit", "after", "before"]
       });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response)
-          }
-        ]
-      };
     }
   );
   server.tool(
@@ -13893,21 +13951,14 @@ var setupTools = (server, callOperation) => {
     "Get task with id",
     external_exports.object({ projectId: external_exports.string(), taskId: external_exports.string() }).shape,
     async (args) => {
-      const response = await callOperation({
+      return await config.executeToolCall({
+        name: "taskGet",
         path: "/projects/{projectId}/tasks/{taskId}",
         method: "GET",
         input: args,
         pathParamKeys: ["projectId", "taskId"],
         queryParamKeys: []
       });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response)
-          }
-        ]
-      };
     }
   );
   server.tool(
@@ -13920,21 +13971,14 @@ var setupTools = (server, callOperation) => {
       taskId: external_exports.string()
     }).shape,
     async (args) => {
-      const response = await callOperation({
+      return await config.executeToolCall({
+        name: "taskPut",
         path: "/projects/{projectId}/tasks/{taskId}",
         method: "PUT",
         input: args,
         pathParamKeys: ["projectId", "taskId"],
         queryParamKeys: []
       });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response)
-          }
-        ]
-      };
     }
   );
   server.tool(
@@ -13942,21 +13986,14 @@ var setupTools = (server, callOperation) => {
     "Complete a task in a project",
     external_exports.object({ projectId: external_exports.string(), taskId: external_exports.string() }).shape,
     async (args) => {
-      const response = await callOperation({
+      return await config.executeToolCall({
+        name: "taskComplete",
         path: "/projects/{projectId}/tasks/{taskId}/complete",
         method: "POST",
         input: args,
         pathParamKeys: ["projectId", "taskId"],
         queryParamKeys: []
       });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response)
-          }
-        ]
-      };
     }
   );
   server.tool(
@@ -13989,21 +14026,14 @@ var setupTools = (server, callOperation) => {
       projectId: external_exports.string()
     }).shape,
     async (args) => {
-      const response = await callOperation({
+      return await config.executeToolCall({
+        name: "taskCreate",
         path: "/projects/{projectId}/tasks/",
         method: "POST",
         input: args,
         pathParamKeys: ["projectId"],
         queryParamKeys: []
       });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response)
-          }
-        ]
-      };
     }
   );
   server.tool(
@@ -14023,21 +14053,14 @@ var setupTools = (server, callOperation) => {
       taskId: external_exports.string()
     }).shape,
     async (args) => {
-      const response = await callOperation({
+      return await config.executeToolCall({
+        name: "taskMove",
         path: "/projects/{projectId}/tasks/{taskId}/move",
         method: "PUT",
         input: args,
         pathParamKeys: ["projectId", "taskId"],
         queryParamKeys: []
       });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response)
-          }
-        ]
-      };
     }
   );
   server.tool(
@@ -14045,21 +14068,14 @@ var setupTools = (server, callOperation) => {
     "Get the assignees of a task",
     external_exports.object({ projectId: external_exports.string(), taskId: external_exports.string() }).shape,
     async (args) => {
-      const response = await callOperation({
+      return await config.executeToolCall({
+        name: "taskAssigneesGet",
         path: "/projects/{projectId}/tasks/{taskId}/assignees",
         method: "GET",
         input: args,
         pathParamKeys: ["projectId", "taskId"],
         queryParamKeys: []
       });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response)
-          }
-        ]
-      };
     }
   );
   server.tool(
@@ -14071,21 +14087,14 @@ var setupTools = (server, callOperation) => {
       taskId: external_exports.string()
     }).shape,
     async (args) => {
-      const response = await callOperation({
+      return await config.executeToolCall({
+        name: "taskPutAssignees",
         path: "/projects/{projectId}/tasks/{taskId}/assignees",
         method: "PUT",
         input: args,
         pathParamKeys: ["projectId", "taskId"],
         queryParamKeys: []
       });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response)
-          }
-        ]
-      };
     }
   );
   server.tool(
@@ -14097,21 +14106,14 @@ var setupTools = (server, callOperation) => {
       assigneeHandle: external_exports.string()
     }).shape,
     async (args) => {
-      const response = await callOperation({
+      return await config.executeToolCall({
+        name: "taskDeleteAssignees",
         path: "/projects/{projectId}/tasks/{taskId}/assignees/{assigneeHandle}",
         method: "DELETE",
         input: args,
         pathParamKeys: ["projectId", "taskId", "assigneeHandle"],
         queryParamKeys: []
       });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response)
-          }
-        ]
-      };
     }
   );
   server.tool(
@@ -14119,21 +14121,14 @@ var setupTools = (server, callOperation) => {
     "Get the date of a task",
     external_exports.object({ projectId: external_exports.string(), taskId: external_exports.string() }).shape,
     async (args) => {
-      const response = await callOperation({
+      return await config.executeToolCall({
+        name: "taskGetDate",
         path: "/projects/{projectId}/tasks/{taskId}/date",
         method: "GET",
         input: args,
         pathParamKeys: ["projectId", "taskId"],
         queryParamKeys: []
       });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response)
-          }
-        ]
-      };
     }
   );
   server.tool(
@@ -14141,21 +14136,14 @@ var setupTools = (server, callOperation) => {
     "Delete date of a task",
     external_exports.object({ projectId: external_exports.string(), taskId: external_exports.string() }).shape,
     async (args) => {
-      const response = await callOperation({
+      return await config.executeToolCall({
+        name: "taskDeleteDate",
         path: "/projects/{projectId}/tasks/{taskId}/date",
         method: "DELETE",
         input: args,
         pathParamKeys: ["projectId", "taskId"],
         queryParamKeys: []
       });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response)
-          }
-        ]
-      };
     }
   );
   server.tool(
@@ -14190,21 +14178,14 @@ var setupTools = (server, callOperation) => {
       taskId: external_exports.string()
     }).shape,
     async (args) => {
-      const response = await callOperation({
+      return await config.executeToolCall({
+        name: "taskPutDate",
         path: "/projects/{projectId}/tasks/{taskId}/date",
         method: "PUT",
         input: args,
         pathParamKeys: ["projectId", "taskId"],
         queryParamKeys: []
       });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response)
-          }
-        ]
-      };
     }
   );
   server.tool(
@@ -14217,21 +14198,14 @@ var setupTools = (server, callOperation) => {
       taskId: external_exports.string()
     }).shape,
     async (args) => {
-      const response = await callOperation({
+      return await config.executeToolCall({
+        name: "taskNotePut",
         path: "/projects/{projectId}/tasks/{taskId}/note",
         method: "PUT",
         input: args,
         pathParamKeys: ["projectId", "taskId"],
         queryParamKeys: []
       });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response)
-          }
-        ]
-      };
     }
   );
   server.tool(
@@ -14239,47 +14213,19 @@ var setupTools = (server, callOperation) => {
     "Get all projects in a team, or in the home team of a workspace.",
     external_exports.object({ folderId: external_exports.string() }).shape,
     async (args) => {
-      const response = await callOperation({
+      return await config.executeToolCall({
+        name: "folderProjectsGet",
         path: "/folders/{folderId}/projects",
         method: "GET",
         input: args,
         pathParamKeys: ["folderId"],
         queryParamKeys: []
       });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response)
-          }
-        ]
-      };
     }
   );
 };
 
 // src/server.ts
-function toQueryParams(obj) {
-  const params = new URLSearchParams();
-  for (const key in obj) {
-    const value = obj[key];
-    if (value == null) {
-      continue;
-    }
-    if (Array.isArray(value)) {
-      value.forEach((v) => params.append(key, String(v)));
-    } else if (typeof value === "object") {
-      params.append(key, JSON.stringify(value));
-    } else {
-      params.append(key, String(value));
-    }
-  }
-  const str = params.toString();
-  if (str === "") {
-    return "";
-  }
-  return `?${str}`;
-}
 var TaskadeMCPServer = class extends McpServer {
   constructor(opts) {
     super({
@@ -14291,49 +14237,29 @@ var TaskadeMCPServer = class extends McpServer {
       }
     });
     this.config = opts;
-    setupTools(this, async (args) => await this.callOperation(args));
-  }
-  async callOperation(args) {
-    const queryParamKeys = new Set(args.queryParamKeys ?? []);
-    const pathParamKeys = new Set(args.pathParamKeys ?? []);
-    const queryParams = {};
-    const pathParams = {};
-    const body = {};
-    const headers = {};
-    for (const [key, value] of Object.entries(args.input)) {
-      if (queryParamKeys.has(key)) {
-        queryParams[key] = value;
-      } else if (pathParamKeys.has(key)) {
-        pathParams[key] = value;
-      } else {
-        body[key] = value;
+    setupTools(this, {
+      url: "https://www.taskade.com/api/v1",
+      fetch,
+      headers: {
+        "Authorization": `Bearer ${this.config.accessToken}`
+      },
+      normalizeResponse: {
+        folderProjectsGet: (response) => {
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(response)
+              },
+              {
+                type: "text",
+                text: "The url to projects is in the format of: https://www.taskade.com/d/{projectId}. You should link all projects in the response to the user."
+              }
+            ]
+          };
+        }
       }
-    }
-    let resolvedPath = args.path;
-    for (const paramKey of pathParamKeys) {
-      resolvedPath = resolvedPath.replace(
-        `{${paramKey}}`,
-        encodeURIComponent(pathParams[paramKey] ?? "")
-      );
-    }
-    if (Object.keys(body).length > 0) {
-      headers["Accept"] = "application/json";
-      headers["Content-Type"] = "application/json";
-    }
-    headers["Authorization"] = `Bearer ${this.config.accessToken}`;
-    const apiBase = new URL("https://www.taskade.com/api/v1").toString();
-    const url = `${apiBase}${resolvedPath}${toQueryParams(queryParams)}`;
-    try {
-      const response = await fetch(url, {
-        method: args.method,
-        body: Object.keys(body).length > 0 ? JSON.stringify(body) : void 0,
-        headers
-      });
-      return await response.json();
-    } catch (error) {
-      console.error("TASKADE_ACTION_API_CALL_ERROR", error);
-      throw error;
-    }
+    });
   }
 };
 

@@ -26,8 +26,24 @@ export class TaskadeMCPServer extends McpServer {
       url: 'https://www.taskade.com/api/v1',
       fetch,
       headers: {
-        'Authorization': `Bearer ${this.config.accessToken}`
-      }
+        Authorization: `Bearer ${this.config.accessToken}`,
+      },
+      normalizeResponse: {
+        folderProjectsGet: (response) => {
+          return {
+            content: [
+              {
+                type: 'text',
+                text: JSON.stringify(response),
+              },
+              {
+                type: 'text',
+                text: 'The url to projects is in the format of: https://www.taskade.com/d/{projectId}. You should link all projects in the response to the user.',
+              },
+            ],
+          };
+        },
+      },
     });
   }
 }
