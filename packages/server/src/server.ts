@@ -1,7 +1,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import fetch from 'node-fetch';
 
-import { setupTools } from './tools.generated';
+import { CallOperationOpts, setupTools } from './tools.generated';
 
 function toQueryParams(obj: Record<string, any>): string {
   const params = new URLSearchParams();
@@ -31,13 +31,6 @@ function toQueryParams(obj: Record<string, any>): string {
   return `?${str}`;
 }
 
-type CallOperationOpts = {
-  path: string;
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
-  input: Record<string, any>;
-  pathParamKeys?: Array<string>;
-  queryParamKeys?: Array<string>;
-};
 
 type TaskadeServerOpts = {
   accessToken: string;
@@ -58,7 +51,7 @@ export class TaskadeMCPServer extends McpServer {
 
     this.config = opts;
 
-    setupTools(this);
+    setupTools(this, async (args) => await this.callOperation(args));
   }
 
   async callOperation(args: CallOperationOpts) {

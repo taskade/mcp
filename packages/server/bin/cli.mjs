@@ -39,9 +39,9 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 
-// node_modules/web-streams-polyfill/dist/ponyfill.es2018.js
+// ../../node_modules/web-streams-polyfill/dist/ponyfill.es2018.js
 var require_ponyfill_es2018 = __commonJS({
-  "node_modules/web-streams-polyfill/dist/ponyfill.es2018.js"(exports, module) {
+  "../../node_modules/web-streams-polyfill/dist/ponyfill.es2018.js"(exports, module) {
     (function(global2, factory) {
       typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.WebStreamsPolyfill = {}));
     })(exports, function(exports2) {
@@ -4314,9 +4314,9 @@ var require_ponyfill_es2018 = __commonJS({
   }
 });
 
-// node_modules/fetch-blob/streams.cjs
+// ../../node_modules/fetch-blob/streams.cjs
 var require_streams = __commonJS({
-  "node_modules/fetch-blob/streams.cjs"() {
+  "../../node_modules/fetch-blob/streams.cjs"() {
     var POOL_SIZE2 = 65536;
     if (!globalThis.ReadableStream) {
       try {
@@ -4360,7 +4360,7 @@ var require_streams = __commonJS({
   }
 });
 
-// node_modules/fetch-blob/index.js
+// ../../node_modules/fetch-blob/index.js
 async function* toIterator(parts, clone2 = true) {
   for (const part of parts) {
     if ("stream" in part) {
@@ -4397,7 +4397,7 @@ async function* toIterator(parts, clone2 = true) {
 }
 var import_streams, POOL_SIZE, _Blob, Blob2, fetch_blob_default;
 var init_fetch_blob = __esm({
-  "node_modules/fetch-blob/index.js"() {
+  "../../node_modules/fetch-blob/index.js"() {
     import_streams = __toESM(require_streams(), 1);
     POOL_SIZE = 65536;
     _Blob = class Blob {
@@ -4564,10 +4564,10 @@ var init_fetch_blob = __esm({
   }
 });
 
-// node_modules/fetch-blob/file.js
+// ../../node_modules/fetch-blob/file.js
 var _File, File2, file_default;
 var init_file = __esm({
-  "node_modules/fetch-blob/file.js"() {
+  "../../node_modules/fetch-blob/file.js"() {
     init_fetch_blob();
     _File = class File extends fetch_blob_default {
       #lastModified = 0;
@@ -4608,7 +4608,7 @@ var init_file = __esm({
   }
 });
 
-// node_modules/formdata-polyfill/esm.min.js
+// ../../node_modules/formdata-polyfill/esm.min.js
 function formDataToBlob(F2, B = fetch_blob_default) {
   var b = `${r()}${r()}`.replace(/\./g, "").slice(-28).padStart(32, "-"), c = [], p = `--${b}\r
 Content-Disposition: form-data; name="`;
@@ -4624,7 +4624,7 @@ Content-Type: ${v.type || "application/octet-stream"}\r
 }
 var t, i, h, r, m, f, e, x, FormData;
 var init_esm_min = __esm({
-  "node_modules/formdata-polyfill/esm.min.js"() {
+  "../../node_modules/formdata-polyfill/esm.min.js"() {
     init_fetch_blob();
     init_file();
     ({ toStringTag: t, iterator: i, hasInstance: h } = Symbol);
@@ -4705,9 +4705,9 @@ var init_esm_min = __esm({
   }
 });
 
-// node_modules/node-domexception/index.js
+// ../../node_modules/node-domexception/index.js
 var require_node_domexception = __commonJS({
-  "node_modules/node-domexception/index.js"(exports, module) {
+  "../../node_modules/node-domexception/index.js"(exports, module) {
     if (!globalThis.DOMException) {
       try {
         const { MessageChannel } = __require("worker_threads"), port = new MessageChannel().port1, ab = new ArrayBuffer();
@@ -4720,11 +4720,11 @@ var require_node_domexception = __commonJS({
   }
 });
 
-// node_modules/fetch-blob/from.js
+// ../../node_modules/fetch-blob/from.js
 import { statSync, createReadStream, promises as fs } from "node:fs";
 var import_node_domexception, stat;
 var init_from = __esm({
-  "node_modules/fetch-blob/from.js"() {
+  "../../node_modules/fetch-blob/from.js"() {
     import_node_domexception = __toESM(require_node_domexception(), 1);
     init_file();
     init_fetch_blob();
@@ -5094,10 +5094,10 @@ var init_multipart_parser = __esm({
   }
 });
 
-// node_modules/@modelcontextprotocol/sdk/dist/esm/server/stdio.js
+// ../../node_modules/@modelcontextprotocol/sdk/dist/esm/server/stdio.js
 import process2 from "node:process";
 
-// node_modules/zod/dist/esm/v3/external.js
+// ../../node_modules/zod/dist/esm/v3/external.js
 var external_exports = {};
 __export(external_exports, {
   BRAND: () => BRAND,
@@ -5209,7 +5209,7 @@ __export(external_exports, {
   void: () => voidType
 });
 
-// node_modules/zod/dist/esm/v3/helpers/util.js
+// ../../node_modules/zod/dist/esm/v3/helpers/util.js
 var util;
 (function(util2) {
   util2.assertEqual = (_) => {
@@ -5343,7 +5343,7 @@ var getParsedType = (data) => {
   }
 };
 
-// node_modules/zod/dist/esm/v3/ZodError.js
+// ../../node_modules/zod/dist/esm/v3/ZodError.js
 var ZodIssueCode = util.arrayToEnum([
   "invalid_type",
   "invalid_literal",
@@ -5460,7 +5460,7 @@ ZodError.create = (issues) => {
   return error;
 };
 
-// node_modules/zod/dist/esm/v3/locales/en.js
+// ../../node_modules/zod/dist/esm/v3/locales/en.js
 var errorMap = (issue, _ctx) => {
   let message;
   switch (issue.code) {
@@ -5561,7 +5561,7 @@ var errorMap = (issue, _ctx) => {
 };
 var en_default = errorMap;
 
-// node_modules/zod/dist/esm/v3/errors.js
+// ../../node_modules/zod/dist/esm/v3/errors.js
 var overrideErrorMap = en_default;
 function setErrorMap(map) {
   overrideErrorMap = map;
@@ -5570,7 +5570,7 @@ function getErrorMap() {
   return overrideErrorMap;
 }
 
-// node_modules/zod/dist/esm/v3/helpers/parseUtil.js
+// ../../node_modules/zod/dist/esm/v3/helpers/parseUtil.js
 var makeIssue = (params) => {
   const { data, path, errorMaps, issueData } = params;
   const fullPath = [...path, ...issueData.path || []];
@@ -5680,14 +5680,14 @@ var isDirty = (x2) => x2.status === "dirty";
 var isValid = (x2) => x2.status === "valid";
 var isAsync = (x2) => typeof Promise !== "undefined" && x2 instanceof Promise;
 
-// node_modules/zod/dist/esm/v3/helpers/errorUtil.js
+// ../../node_modules/zod/dist/esm/v3/helpers/errorUtil.js
 var errorUtil;
 (function(errorUtil2) {
   errorUtil2.errToObj = (message) => typeof message === "string" ? { message } : message || {};
   errorUtil2.toString = (message) => typeof message === "string" ? message : message?.message;
 })(errorUtil || (errorUtil = {}));
 
-// node_modules/zod/dist/esm/v3/types.js
+// ../../node_modules/zod/dist/esm/v3/types.js
 var __classPrivateFieldGet = function(receiver, state, kind, f3) {
   if (kind === "a" && !f3) throw new TypeError("Private accessor was defined without a getter");
   if (typeof state === "function" ? receiver !== state || !f3 : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
@@ -9156,7 +9156,7 @@ var coerce = {
 };
 var NEVER = INVALID;
 
-// node_modules/@modelcontextprotocol/sdk/dist/esm/types.js
+// ../../node_modules/@modelcontextprotocol/sdk/dist/esm/types.js
 var LATEST_PROTOCOL_VERSION = "2025-03-26";
 var SUPPORTED_PROTOCOL_VERSIONS = [
   LATEST_PROTOCOL_VERSION,
@@ -9980,7 +9980,7 @@ var McpError = class extends Error {
   }
 };
 
-// node_modules/@modelcontextprotocol/sdk/dist/esm/shared/stdio.js
+// ../../node_modules/@modelcontextprotocol/sdk/dist/esm/shared/stdio.js
 var ReadBuffer = class {
   append(chunk) {
     this._buffer = this._buffer ? Buffer.concat([this._buffer, chunk]) : chunk;
@@ -10008,7 +10008,7 @@ function serializeMessage(message) {
   return JSON.stringify(message) + "\n";
 }
 
-// node_modules/@modelcontextprotocol/sdk/dist/esm/server/stdio.js
+// ../../node_modules/@modelcontextprotocol/sdk/dist/esm/server/stdio.js
 var StdioServerTransport = class {
   constructor(_stdin = process2.stdin, _stdout = process2.stdout) {
     this._stdin = _stdin;
@@ -10072,7 +10072,7 @@ var StdioServerTransport = class {
   }
 };
 
-// node_modules/@modelcontextprotocol/sdk/dist/esm/shared/protocol.js
+// ../../node_modules/@modelcontextprotocol/sdk/dist/esm/shared/protocol.js
 var DEFAULT_REQUEST_TIMEOUT_MSEC = 6e4;
 var Protocol = class {
   constructor(_options) {
@@ -10415,7 +10415,7 @@ function mergeCapabilities(base, additional) {
   }, { ...base });
 }
 
-// node_modules/@modelcontextprotocol/sdk/dist/esm/server/index.js
+// ../../node_modules/@modelcontextprotocol/sdk/dist/esm/server/index.js
 var Server = class extends Protocol {
   /**
    * Initializes this server with the given name and version information.
@@ -10582,7 +10582,7 @@ var Server = class extends Protocol {
   }
 };
 
-// node_modules/zod-to-json-schema/dist/esm/Options.js
+// ../../node_modules/zod-to-json-schema/dist/esm/Options.js
 var ignoreOverride = Symbol("Let zodToJsonSchema decide on which parser to use");
 var defaultOptions = {
   name: void 0,
@@ -10615,7 +10615,7 @@ var getDefaultOptions = (options) => typeof options === "string" ? {
   ...options
 };
 
-// node_modules/zod-to-json-schema/dist/esm/Refs.js
+// ../../node_modules/zod-to-json-schema/dist/esm/Refs.js
 var getRefs = (options) => {
   const _options = getDefaultOptions(options);
   const currentPath = _options.name !== void 0 ? [..._options.basePath, _options.definitionPath, _options.name] : _options.basePath;
@@ -10635,7 +10635,7 @@ var getRefs = (options) => {
   };
 };
 
-// node_modules/zod-to-json-schema/dist/esm/errorMessages.js
+// ../../node_modules/zod-to-json-schema/dist/esm/errorMessages.js
 function addErrorMessage(res, key, errorMessage, refs) {
   if (!refs?.errorMessages)
     return;
@@ -10651,12 +10651,12 @@ function setResponseValueAndErrors(res, key, value, errorMessage, refs) {
   addErrorMessage(res, key, errorMessage, refs);
 }
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/any.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/any.js
 function parseAnyDef() {
   return {};
 }
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/array.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/array.js
 function parseArrayDef(def, refs) {
   const res = {
     type: "array"
@@ -10680,7 +10680,7 @@ function parseArrayDef(def, refs) {
   return res;
 }
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/bigint.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/bigint.js
 function parseBigintDef(def, refs) {
   const res = {
     type: "integer",
@@ -10726,24 +10726,24 @@ function parseBigintDef(def, refs) {
   return res;
 }
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/boolean.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/boolean.js
 function parseBooleanDef() {
   return {
     type: "boolean"
   };
 }
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/branded.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/branded.js
 function parseBrandedDef(_def, refs) {
   return parseDef(_def.type._def, refs);
 }
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/catch.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/catch.js
 var parseCatchDef = (def, refs) => {
   return parseDef(def.innerType._def, refs);
 };
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/date.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/date.js
 function parseDateDef(def, refs, overrideDateStrategy) {
   const strategy = overrideDateStrategy ?? refs.dateStrategy;
   if (Array.isArray(strategy)) {
@@ -10802,7 +10802,7 @@ var integerDateParser = (def, refs) => {
   return res;
 };
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/default.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/default.js
 function parseDefaultDef(_def, refs) {
   return {
     ...parseDef(_def.innerType._def, refs),
@@ -10810,12 +10810,12 @@ function parseDefaultDef(_def, refs) {
   };
 }
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/effects.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/effects.js
 function parseEffectsDef(_def, refs) {
   return refs.effectStrategy === "input" ? parseDef(_def.schema._def, refs) : {};
 }
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/enum.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/enum.js
 function parseEnumDef(def) {
   return {
     type: "string",
@@ -10823,7 +10823,7 @@ function parseEnumDef(def) {
   };
 }
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/intersection.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/intersection.js
 var isJsonSchema7AllOfType = (type) => {
   if ("type" in type && type.type === "string")
     return false;
@@ -10865,7 +10865,7 @@ function parseIntersectionDef(def, refs) {
   } : void 0;
 }
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/literal.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/literal.js
 function parseLiteralDef(def, refs) {
   const parsedType = typeof def.value;
   if (parsedType !== "bigint" && parsedType !== "number" && parsedType !== "boolean" && parsedType !== "string") {
@@ -10885,7 +10885,7 @@ function parseLiteralDef(def, refs) {
   };
 }
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/string.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/string.js
 var emojiRegex2 = void 0;
 var zodPatterns = {
   /**
@@ -11210,7 +11210,7 @@ function stringifyRegExpWithFlags(regex, refs) {
   return pattern;
 }
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/record.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/record.js
 function parseRecordDef(def, refs) {
   if (refs.target === "openAi") {
     console.warn("Warning: OpenAI may not support records in schemas! Try an array of key-value pairs instead.");
@@ -11262,7 +11262,7 @@ function parseRecordDef(def, refs) {
   return schema;
 }
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/map.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/map.js
 function parseMapDef(def, refs) {
   if (refs.mapStrategy === "record") {
     return parseRecordDef(def, refs);
@@ -11287,7 +11287,7 @@ function parseMapDef(def, refs) {
   };
 }
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/nativeEnum.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/nativeEnum.js
 function parseNativeEnumDef(def) {
   const object = def.values;
   const actualKeys = Object.keys(def.values).filter((key) => {
@@ -11301,14 +11301,14 @@ function parseNativeEnumDef(def) {
   };
 }
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/never.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/never.js
 function parseNeverDef() {
   return {
     not: {}
   };
 }
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/null.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/null.js
 function parseNullDef(refs) {
   return refs.target === "openApi3" ? {
     enum: ["null"],
@@ -11318,7 +11318,7 @@ function parseNullDef(refs) {
   };
 }
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/union.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/union.js
 var primitiveMappings = {
   ZodString: "string",
   ZodNumber: "number",
@@ -11386,7 +11386,7 @@ var asAnyOf = (def, refs) => {
   return anyOf.length ? { anyOf } : void 0;
 };
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/nullable.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/nullable.js
 function parseNullableDef(def, refs) {
   if (["ZodString", "ZodNumber", "ZodBigInt", "ZodBoolean", "ZodNull"].includes(def.innerType._def.typeName) && (!def.innerType._def.checks || !def.innerType._def.checks.length)) {
     if (refs.target === "openApi3") {
@@ -11418,7 +11418,7 @@ function parseNullableDef(def, refs) {
   return base && { anyOf: [base, { type: "null" }] };
 }
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/number.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/number.js
 function parseNumberDef(def, refs) {
   const res = {
     type: "number"
@@ -11467,7 +11467,7 @@ function parseNumberDef(def, refs) {
   return res;
 }
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/object.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/object.js
 function parseObjectDef(def, refs) {
   const forceOptionalIntoNullable = refs.target === "openAi";
   const result = {
@@ -11537,7 +11537,7 @@ function safeIsOptional(schema) {
   }
 }
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/optional.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/optional.js
 var parseOptionalDef = (def, refs) => {
   if (refs.currentPath.toString() === refs.propertyPath?.toString()) {
     return parseDef(def.innerType._def, refs);
@@ -11556,7 +11556,7 @@ var parseOptionalDef = (def, refs) => {
   } : {};
 };
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/pipeline.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/pipeline.js
 var parsePipelineDef = (def, refs) => {
   if (refs.pipeStrategy === "input") {
     return parseDef(def.in._def, refs);
@@ -11576,12 +11576,12 @@ var parsePipelineDef = (def, refs) => {
   };
 };
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/promise.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/promise.js
 function parsePromiseDef(def, refs) {
   return parseDef(def.type._def, refs);
 }
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/set.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/set.js
 function parseSetDef(def, refs) {
   const items = parseDef(def.valueType._def, {
     ...refs,
@@ -11601,7 +11601,7 @@ function parseSetDef(def, refs) {
   return schema;
 }
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/tuple.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/tuple.js
 function parseTupleDef(def, refs) {
   if (def.rest) {
     return {
@@ -11629,24 +11629,24 @@ function parseTupleDef(def, refs) {
   }
 }
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/undefined.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/undefined.js
 function parseUndefinedDef() {
   return {
     not: {}
   };
 }
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/unknown.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/unknown.js
 function parseUnknownDef() {
   return {};
 }
 
-// node_modules/zod-to-json-schema/dist/esm/parsers/readonly.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parsers/readonly.js
 var parseReadonlyDef = (def, refs) => {
   return parseDef(def.innerType._def, refs);
 };
 
-// node_modules/zod-to-json-schema/dist/esm/selectParser.js
+// ../../node_modules/zod-to-json-schema/dist/esm/selectParser.js
 var selectParser = (def, typeName, refs) => {
   switch (typeName) {
     case ZodFirstPartyTypeKind.ZodString:
@@ -11722,7 +11722,7 @@ var selectParser = (def, typeName, refs) => {
   }
 };
 
-// node_modules/zod-to-json-schema/dist/esm/parseDef.js
+// ../../node_modules/zod-to-json-schema/dist/esm/parseDef.js
 function parseDef(def, refs, forceResolution = false) {
   const seenItem = refs.seen.get(def);
   if (refs.override) {
@@ -11786,7 +11786,7 @@ var addMeta = (def, refs, jsonSchema) => {
   return jsonSchema;
 };
 
-// node_modules/zod-to-json-schema/dist/esm/zodToJsonSchema.js
+// ../../node_modules/zod-to-json-schema/dist/esm/zodToJsonSchema.js
 var zodToJsonSchema = (schema, options) => {
   const refs = getRefs(options);
   const definitions = typeof options === "object" && options.definitions ? Object.entries(options.definitions).reduce((acc, [name2, schema2]) => ({
@@ -11830,7 +11830,7 @@ var zodToJsonSchema = (schema, options) => {
   return combined;
 };
 
-// node_modules/@modelcontextprotocol/sdk/dist/esm/server/completable.js
+// ../../node_modules/@modelcontextprotocol/sdk/dist/esm/server/completable.js
 var McpZodTypeKind;
 (function(McpZodTypeKind2) {
   McpZodTypeKind2["Completable"] = "McpCompletable";
@@ -11882,7 +11882,7 @@ function processCreateParams2(params) {
   return { errorMap: customMap, description };
 }
 
-// node_modules/@modelcontextprotocol/sdk/dist/esm/server/mcp.js
+// ../../node_modules/@modelcontextprotocol/sdk/dist/esm/server/mcp.js
 var McpServer = class {
   constructor(serverInfo, options) {
     this._registeredResources = {};
@@ -12414,7 +12414,7 @@ import zlib from "node:zlib";
 import Stream2, { PassThrough as PassThrough2, pipeline as pump } from "node:stream";
 import { Buffer as Buffer3 } from "node:buffer";
 
-// node_modules/data-uri-to-buffer/dist/index.js
+// ../../node_modules/data-uri-to-buffer/dist/index.js
 function dataUriToBuffer(uri) {
   if (!/^data:/i.test(uri)) {
     throw new TypeError('`uri` does not appear to be a Data URI (must begin with "data:")');
@@ -13689,7 +13689,7 @@ function fixResponseChunkedTransferBadEnding(request, errorCallback) {
 }
 
 // src/tools.generated.ts
-var setupTools = (server) => {
+var setupTools = (server, callOperation) => {
   server.tool(
     "workspaceCreateProject",
     "Create a project in a workspace",
@@ -13698,9 +13698,8 @@ var setupTools = (server) => {
       content: external_exports.string().optional(),
       workspaceId: external_exports.string()
     }).shape,
-    { title: "Create Workspace Project" },
     async (args) => {
-      const response = await server.callOperation({
+      const response = await callOperation({
         path: "/workspaces/{workspaceId}/projects",
         method: "POST",
         input: args,
@@ -13721,9 +13720,8 @@ var setupTools = (server) => {
     "workspacesGet",
     "Get all workspaces for a user",
     external_exports.object({}).shape,
-    { title: "Get All Workspaces" },
     async (args) => {
-      const response = await server.callOperation({
+      const response = await callOperation({
         path: "/workspaces",
         method: "GET",
         input: args,
@@ -13744,9 +13742,8 @@ var setupTools = (server) => {
     "workspaceFoldersGet",
     "Get all folders for a workspace",
     external_exports.object({ workspaceId: external_exports.string() }).shape,
-    { title: "Get Workspace Folders" },
     async (args) => {
-      const response = await server.callOperation({
+      const response = await callOperation({
         path: "/workspaces/{workspaceId}/folders",
         method: "GET",
         input: args,
@@ -13767,9 +13764,8 @@ var setupTools = (server) => {
     "projectGet",
     "Get project",
     external_exports.object({ projectId: external_exports.string() }).shape,
-    { title: "Get Project Details" },
     async (args) => {
-      const response = await server.callOperation({
+      const response = await callOperation({
         path: "/projects/{projectId}",
         method: "GET",
         input: args,
@@ -13794,9 +13790,8 @@ var setupTools = (server) => {
       projectTitle: external_exports.string().min(1).optional(),
       projectId: external_exports.string()
     }).shape,
-    { title: "Copy Project" },
     async (args) => {
-      const response = await server.callOperation({
+      const response = await callOperation({
         path: "/projects/{projectId}/copy",
         method: "POST",
         input: args,
@@ -13821,9 +13816,8 @@ var setupTools = (server) => {
       contentType: external_exports.literal("text/markdown").optional(),
       content: external_exports.string().optional()
     }).shape,
-    { title: "Create New Project" },
     async (args) => {
-      const response = await server.callOperation({
+      const response = await callOperation({
         path: "/projects",
         method: "POST",
         input: args,
@@ -13849,9 +13843,8 @@ var setupTools = (server) => {
       after: external_exports.string().uuid().optional(),
       before: external_exports.string().uuid().optional()
     }).shape,
-    { title: "Get Project Blocks" },
     async (args) => {
-      const response = await server.callOperation({
+      const response = await callOperation({
         path: "/projects/{projectId}/blocks",
         method: "GET",
         input: args,
@@ -13877,9 +13870,8 @@ var setupTools = (server) => {
       after: external_exports.string().uuid().optional(),
       before: external_exports.string().uuid().optional()
     }).shape,
-    { title: "Get Project Tasks" },
     async (args) => {
-      const response = await server.callOperation({
+      const response = await callOperation({
         path: "/projects/{projectId}/tasks",
         method: "GET",
         input: args,
@@ -13900,9 +13892,8 @@ var setupTools = (server) => {
     "taskGet",
     "Get task with id",
     external_exports.object({ projectId: external_exports.string(), taskId: external_exports.string() }).shape,
-    { title: "Get Task Details" },
     async (args) => {
-      const response = await server.callOperation({
+      const response = await callOperation({
         path: "/projects/{projectId}/tasks/{taskId}",
         method: "GET",
         input: args,
@@ -13928,9 +13919,8 @@ var setupTools = (server) => {
       projectId: external_exports.string(),
       taskId: external_exports.string()
     }).shape,
-    { title: "Update Task" },
     async (args) => {
-      const response = await server.callOperation({
+      const response = await callOperation({
         path: "/projects/{projectId}/tasks/{taskId}",
         method: "PUT",
         input: args,
@@ -13951,9 +13941,8 @@ var setupTools = (server) => {
     "taskComplete",
     "Complete a task in a project",
     external_exports.object({ projectId: external_exports.string(), taskId: external_exports.string() }).shape,
-    { title: "Complete Task" },
     async (args) => {
-      const response = await server.callOperation({
+      const response = await callOperation({
         path: "/projects/{projectId}/tasks/{taskId}/complete",
         method: "POST",
         input: args,
@@ -13987,16 +13976,20 @@ var setupTools = (server) => {
             }).strict(),
             external_exports.object({
               taskId: external_exports.string(),
-              placement: external_exports.enum(["beforebegin", "afterbegin", "beforeend", "afterend"])
+              placement: external_exports.enum([
+                "beforebegin",
+                "afterbegin",
+                "beforeend",
+                "afterend"
+              ])
             }).strict()
           ])
         )
       ).max(20).optional(),
       projectId: external_exports.string()
     }).shape,
-    { title: "Create New Task" },
     async (args) => {
-      const response = await server.callOperation({
+      const response = await callOperation({
         path: "/projects/{projectId}/tasks/",
         method: "POST",
         input: args,
@@ -14019,14 +14012,18 @@ var setupTools = (server) => {
     external_exports.object({
       target: external_exports.object({
         taskId: external_exports.string().min(1),
-        position: external_exports.enum(["beforebegin", "afterbegin", "beforeend", "afterend"])
+        position: external_exports.enum([
+          "beforebegin",
+          "afterbegin",
+          "beforeend",
+          "afterend"
+        ])
       }).strict().optional(),
       projectId: external_exports.string(),
       taskId: external_exports.string()
     }).shape,
-    { title: "Move Task" },
     async (args) => {
-      const response = await server.callOperation({
+      const response = await callOperation({
         path: "/projects/{projectId}/tasks/{taskId}/move",
         method: "PUT",
         input: args,
@@ -14047,9 +14044,8 @@ var setupTools = (server) => {
     "taskAssigneesGet",
     "Get the assignees of a task",
     external_exports.object({ projectId: external_exports.string(), taskId: external_exports.string() }).shape,
-    { title: "Get Task Assignees" },
     async (args) => {
-      const response = await server.callOperation({
+      const response = await callOperation({
         path: "/projects/{projectId}/tasks/{taskId}/assignees",
         method: "GET",
         input: args,
@@ -14074,9 +14070,8 @@ var setupTools = (server) => {
       projectId: external_exports.string(),
       taskId: external_exports.string()
     }).shape,
-    { title: "Update Task Assignees" },
     async (args) => {
-      const response = await server.callOperation({
+      const response = await callOperation({
         path: "/projects/{projectId}/tasks/{taskId}/assignees",
         method: "PUT",
         input: args,
@@ -14101,9 +14096,8 @@ var setupTools = (server) => {
       taskId: external_exports.string(),
       assigneeHandle: external_exports.string()
     }).shape,
-    { title: "Remove Task Assignees" },
     async (args) => {
-      const response = await server.callOperation({
+      const response = await callOperation({
         path: "/projects/{projectId}/tasks/{taskId}/assignees/{assigneeHandle}",
         method: "DELETE",
         input: args,
@@ -14124,9 +14118,8 @@ var setupTools = (server) => {
     "taskGetDate",
     "Get the date of a task",
     external_exports.object({ projectId: external_exports.string(), taskId: external_exports.string() }).shape,
-    { title: "Get Task Date" },
     async (args) => {
-      const response = await server.callOperation({
+      const response = await callOperation({
         path: "/projects/{projectId}/tasks/{taskId}/date",
         method: "GET",
         input: args,
@@ -14147,9 +14140,8 @@ var setupTools = (server) => {
     "taskDeleteDate",
     "Delete date of a task",
     external_exports.object({ projectId: external_exports.string(), taskId: external_exports.string() }).shape,
-    { title: "Remove Task Date" },
     async (args) => {
-      const response = await server.callOperation({
+      const response = await callOperation({
         path: "/projects/{projectId}/tasks/{taskId}/date",
         method: "DELETE",
         input: args,
@@ -14173,7 +14165,11 @@ var setupTools = (server) => {
       start: external_exports.object({
         date: external_exports.string().regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}$")),
         time: external_exports.union([
-          external_exports.string().regex(new RegExp("^(?:[0-1][0-9]|[2][0-3]):[0-5][0-9](?::[0-5][0-9])?$")),
+          external_exports.string().regex(
+            new RegExp(
+              "^(?:[0-1][0-9]|[2][0-3]):[0-5][0-9](?::[0-5][0-9])?$"
+            )
+          ),
           external_exports.null()
         ]).optional(),
         timezone: external_exports.union([external_exports.string(), external_exports.null()]).optional()
@@ -14181,7 +14177,11 @@ var setupTools = (server) => {
       end: external_exports.object({
         date: external_exports.string().regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}$")),
         time: external_exports.union([
-          external_exports.string().regex(new RegExp("^(?:[0-1][0-9]|[2][0-3]):[0-5][0-9](?::[0-5][0-9])?$")),
+          external_exports.string().regex(
+            new RegExp(
+              "^(?:[0-1][0-9]|[2][0-3]):[0-5][0-9](?::[0-5][0-9])?$"
+            )
+          ),
           external_exports.null()
         ]).optional(),
         timezone: external_exports.union([external_exports.string(), external_exports.null()]).optional()
@@ -14189,9 +14189,8 @@ var setupTools = (server) => {
       projectId: external_exports.string(),
       taskId: external_exports.string()
     }).shape,
-    { title: "Set Task Date" },
     async (args) => {
-      const response = await server.callOperation({
+      const response = await callOperation({
         path: "/projects/{projectId}/tasks/{taskId}/date",
         method: "PUT",
         input: args,
@@ -14217,9 +14216,8 @@ var setupTools = (server) => {
       projectId: external_exports.string(),
       taskId: external_exports.string()
     }).shape,
-    { title: "Update Task Note" },
     async (args) => {
-      const response = await server.callOperation({
+      const response = await callOperation({
         path: "/projects/{projectId}/tasks/{taskId}/note",
         method: "PUT",
         input: args,
@@ -14240,9 +14238,8 @@ var setupTools = (server) => {
     "folderProjectsGet",
     "Get all projects in a team, or in the home team of a workspace.",
     external_exports.object({ folderId: external_exports.string() }).shape,
-    { title: "Get Projects in Folder" },
     async (args) => {
-      const response = await server.callOperation({
+      const response = await callOperation({
         path: "/folders/{folderId}/projects",
         method: "GET",
         input: args,
@@ -14284,7 +14281,6 @@ function toQueryParams(obj) {
   return `?${str}`;
 }
 var TaskadeMCPServer = class extends McpServer {
-  config;
   constructor(opts) {
     super({
       name: "taskade",
@@ -14295,7 +14291,7 @@ var TaskadeMCPServer = class extends McpServer {
       }
     });
     this.config = opts;
-    setupTools(this);
+    setupTools(this, async (args) => await this.callOperation(args));
   }
   async callOperation(args) {
     const queryParamKeys = new Set(args.queryParamKeys ?? []);

@@ -15,22 +15,14 @@
     "sourceMap": true,
     "inlineSources": true,
     "strict": true,
+    "jsx": "react",
+    /* https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping */
+    /* Node 10 */
+    "lib": [
+      "ES2021"
+    ],
     "module": "esnext",
     "moduleResolution": "bundler",
-    "emitDeclarationOnly": true,
-    "composite": true,
-    "lib": ["ESNext", "DOM"],
-    "jsx": "react",
-    "outDir": "./lib",
-    "rootDir": "./src",
-    "downlevelIteration": true,
-    "resolveJsonModule": true,
-    "target": "ESNext",
-    "skipLibCheck": true,
-    "types": [
-      "node"
-    ]
-  },
-  "exclude": ["node_modules", "./dist/**/*",  "./lib/**/*"],
-  "include": ["src/**/*"]
+    "target": "ES2021"
+  }
 }
