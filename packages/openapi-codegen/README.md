@@ -28,8 +28,7 @@ await codegen({
 });
 ```
 
-This will generate a new `tools.generated.ts` file in the `src/` folder.
-
+> This will generate a new `tools.generated.ts` file in the `src/` folder.
 
 - Link the generated tools with your MCP server:
 
@@ -62,3 +61,31 @@ setupTools(server, {
 
 
 That's it - you're all set!
+
+### Normalizing responses
+
+By default, all responses from APIs are returned to the LLM in text. But there may be situations where you might want to specify custom responses for certain endpoints. 
+
+For example, you may want to include an additional text response alongside the JSON response of a specific API endpoint:
+
+```tsx
+setupTools(this, {
+    // ... 
+    normalizeResponse: {
+        folderProjectsGet: (response) => {
+            return {
+                content: [
+                    {
+                        type: 'text',
+                        text: JSON.stringify(response),
+                    },
+                    {
+                        type: 'text',
+                        text: 'The url to projects is in the format of: https://www.taskade.com/d/{projectId}. You should link all projects in the response to the user.',
+                    },
+                ],
+            };
+        },
+    },
+});
+```
