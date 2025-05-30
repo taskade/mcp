@@ -1,10 +1,10 @@
 {
   "name": "@taskade/mcp-server",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "author": "Prev Wong",
   "license": "MIT",
   "type": "module",
-   "main": "bin/cli.mjs",
+  "main": "bin/cli.mjs",
   "bin": {
     "taskade-mcp-server": "bin/cli.mjs"
   },
@@ -23,6 +23,5 @@
     "mcp-proxy": "^3.2.0",
     "node-fetch": "^3.3.2",
     "zod": "^3.25.28"
-
   }
 }
