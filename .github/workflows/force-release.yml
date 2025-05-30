@@ -1,0 +1,26 @@
+name: Force Release
+on: workflow_dispatch
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20 
+
+      - name: Install dependencies
+        run: yarn install
+        
+      - name: Publish
+        run: yarn run publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
