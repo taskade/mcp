@@ -1,11 +1,24 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "./dist",
+    "emitDeclarationOnly": true,
+    "composite": true,
+    "lib": ["ESNext", "DOM"],
+    "jsx": "react",
+    "outDir": "./lib",
     "rootDir": "./src",
-    "module": "ESNext",
+    "downlevelIteration": true,
+    "resolveJsonModule": true,
+    "target": "ES2021",
+    "skipLibCheck": true,
+    "types": [
+      "node"
+    ],
     "moduleResolution": "bundler"
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "exclude": ["node_modules", "./dist/**/*",  "./lib/**/*"],
 }

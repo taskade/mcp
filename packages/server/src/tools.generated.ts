@@ -6,7 +6,7 @@
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
-export type CallOperationOpts = {
+export type ToolCallOpenApiOperation = {
   path: string;
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
   input: Record<string, any>;
@@ -14,9 +14,97 @@ export type CallOperationOpts = {
   queryParamKeys?: Array<string>;
 };
 
+export type ToolCallOpenApiRequestConfig = {
+  url: string;
+  headers: Record<string, string>;
+  body?: string | null | undefined;
+  method: ToolCallOpenApiOperation["method"];
+};
+
+export type ExecuteToolCallOpenApiOperationCbPayload =
+  ToolCallOpenApiRequestConfig & { operation: ToolCallOpenApiOperation };
+
+export type ExecuteToolCallOpenApiOperationCb = (
+  payload: ExecuteToolCallOpenApiOperationCbPayload,
+) => Promise<any>;
+
+function toQueryParams(obj: Record<string, any>): string {
+  const params = new URLSearchParams();
+
+  for (const key in obj) {
+    const value = obj[key];
+
+    if (value == null) {
+      continue;
+    }
+
+    if (Array.isArray(value)) {
+      value.forEach((v) => params.append(key, String(v)));
+    } else if (typeof value === "object") {
+      params.append(key, JSON.stringify(value));
+    } else {
+      params.append(key, String(value));
+    }
+  }
+
+  const str = params.toString();
+
+  if (str === "") {
+    return "";
+  }
+
+  return `?${str}`;
+}
+
+export const prepareToolCallOperation = (
+  operation: ToolCallOpenApiOperation,
+): ExecuteToolCallOpenApiOperationCbPayload => {
+  const queryParamKeys = new Set(operation.queryParamKeys ?? []);
+  const pathParamKeys = new Set(operation.pathParamKeys ?? []);
+
+  const queryParams: Record<string, string> = {};
+  const pathParams: Record<string, string> = {};
+  const body: Record<string, any> = {};
+  const headers: HeadersInit = {};
+
+  for (const [key, value] of Object.entries(operation.input)) {
+    if (queryParamKeys.has(key)) {
+      queryParams[key] = value;
+    } else if (pathParamKeys.has(key)) {
+      pathParams[key] = value;
+    } else {
+      body[key] = value;
+    }
+  }
+
+  let resolvedPath = operation.path;
+
+  for (const paramKey of pathParamKeys) {
+    resolvedPath = resolvedPath.replace(
+      `{${paramKey}}`,
+      encodeURIComponent(pathParams[paramKey] ?? ""),
+    );
+  }
+
+  if (Object.keys(body).length > 0) {
+    headers["Accept"] = "application/json";
+    headers["Content-Type"] = "application/json";
+  }
+
+  const url = `{resolvedPath}${toQueryParams(queryParams)}`;
+
+  return {
+    url,
+    headers,
+    body: Object.keys(body).length > 0 ? JSON.stringify(body) : undefined,
+    method: operation.method,
+    operation,
+  };
+};
+
 export const setupTools = (
   server: McpServer,
-  callOperation: (opts: CallOperationOpts) => Promise<any>,
+  executeToolCallOpenApiOperation: ExecuteToolCallOpenApiOperationCb,
 ) => {
   server.tool(
     "workspaceCreateProject",
@@ -27,13 +115,15 @@ export const setupTools = (
       workspaceId: z.string(),
     }).shape,
     async (args) => {
-      const response = await callOperation({
-        path: "/workspaces/{workspaceId}/projects",
-        method: "POST",
-        input: args,
-        pathParamKeys: ["workspaceId"],
-        queryParamKeys: [],
-      });
+      const response = await executeToolCallOpenApiOperation(
+        prepareToolCallOperation({
+          path: "/workspaces/{workspaceId}/projects",
+          method: "POST",
+          input: args,
+          pathParamKeys: ["workspaceId"],
+          queryParamKeys: [],
+        }),
+      );
 
       return {
         content: [
@@ -50,13 +140,15 @@ export const setupTools = (
     "Get all workspaces for a user",
     z.object({}).shape,
     async (args) => {
-      const response = await callOperation({
-        path: "/workspaces",
-        method: "GET",
-        input: args,
-        pathParamKeys: [],
-        queryParamKeys: [],
-      });
+      const response = await executeToolCallOpenApiOperation(
+        prepareToolCallOperation({
+          path: "/workspaces",
+          method: "GET",
+          input: args,
+          pathParamKeys: [],
+          queryParamKeys: [],
+        }),
+      );
 
       return {
         content: [
@@ -73,13 +165,15 @@ export const setupTools = (
     "Get all folders for a workspace",
     z.object({ workspaceId: z.string() }).shape,
     async (args) => {
-      const response = await callOperation({
-        path: "/workspaces/{workspaceId}/folders",
-        method: "GET",
-        input: args,
-        pathParamKeys: ["workspaceId"],
-        queryParamKeys: [],
-      });
+      const response = await executeToolCallOpenApiOperation(
+        prepareToolCallOperation({
+          path: "/workspaces/{workspaceId}/folders",
+          method: "GET",
+          input: args,
+          pathParamKeys: ["workspaceId"],
+          queryParamKeys: [],
+        }),
+      );
 
       return {
         content: [
@@ -96,13 +190,15 @@ export const setupTools = (
     "Get project",
     z.object({ projectId: z.string() }).shape,
     async (args) => {
-      const response = await callOperation({
-        path: "/projects/{projectId}",
-        method: "GET",
-        input: args,
-        pathParamKeys: ["projectId"],
-        queryParamKeys: [],
-      });
+      const response = await executeToolCallOpenApiOperation(
+        prepareToolCallOperation({
+          path: "/projects/{projectId}",
+          method: "GET",
+          input: args,
+          pathParamKeys: ["projectId"],
+          queryParamKeys: [],
+        }),
+      );
 
       return {
         content: [
@@ -123,13 +219,15 @@ export const setupTools = (
       projectId: z.string(),
     }).shape,
     async (args) => {
-      const response = await callOperation({
-        path: "/projects/{projectId}/copy",
-        method: "POST",
-        input: args,
-        pathParamKeys: ["projectId"],
-        queryParamKeys: [],
-      });
+      const response = await executeToolCallOpenApiOperation(
+        prepareToolCallOperation({
+          path: "/projects/{projectId}/copy",
+          method: "POST",
+          input: args,
+          pathParamKeys: ["projectId"],
+          queryParamKeys: [],
+        }),
+      );
 
       return {
         content: [
@@ -150,13 +248,15 @@ export const setupTools = (
       content: z.string().optional(),
     }).shape,
     async (args) => {
-      const response = await callOperation({
-        path: "/projects",
-        method: "POST",
-        input: args,
-        pathParamKeys: [],
-        queryParamKeys: [],
-      });
+      const response = await executeToolCallOpenApiOperation(
+        prepareToolCallOperation({
+          path: "/projects",
+          method: "POST",
+          input: args,
+          pathParamKeys: [],
+          queryParamKeys: [],
+        }),
+      );
 
       return {
         content: [
@@ -178,13 +278,15 @@ export const setupTools = (
       before: z.string().uuid().optional(),
     }).shape,
     async (args) => {
-      const response = await callOperation({
-        path: "/projects/{projectId}/blocks",
-        method: "GET",
-        input: args,
-        pathParamKeys: ["projectId"],
-        queryParamKeys: ["limit", "after", "before"],
-      });
+      const response = await executeToolCallOpenApiOperation(
+        prepareToolCallOperation({
+          path: "/projects/{projectId}/blocks",
+          method: "GET",
+          input: args,
+          pathParamKeys: ["projectId"],
+          queryParamKeys: ["limit", "after", "before"],
+        }),
+      );
 
       return {
         content: [
@@ -206,13 +308,15 @@ export const setupTools = (
       before: z.string().uuid().optional(),
     }).shape,
     async (args) => {
-      const response = await callOperation({
-        path: "/projects/{projectId}/tasks",
-        method: "GET",
-        input: args,
-        pathParamKeys: ["projectId"],
-        queryParamKeys: ["limit", "after", "before"],
-      });
+      const response = await executeToolCallOpenApiOperation(
+        prepareToolCallOperation({
+          path: "/projects/{projectId}/tasks",
+          method: "GET",
+          input: args,
+          pathParamKeys: ["projectId"],
+          queryParamKeys: ["limit", "after", "before"],
+        }),
+      );
 
       return {
         content: [
@@ -229,13 +333,15 @@ export const setupTools = (
     "Get task with id",
     z.object({ projectId: z.string(), taskId: z.string() }).shape,
     async (args) => {
-      const response = await callOperation({
-        path: "/projects/{projectId}/tasks/{taskId}",
-        method: "GET",
-        input: args,
-        pathParamKeys: ["projectId", "taskId"],
-        queryParamKeys: [],
-      });
+      const response = await executeToolCallOpenApiOperation(
+        prepareToolCallOperation({
+          path: "/projects/{projectId}/tasks/{taskId}",
+          method: "GET",
+          input: args,
+          pathParamKeys: ["projectId", "taskId"],
+          queryParamKeys: [],
+        }),
+      );
 
       return {
         content: [
@@ -261,13 +367,15 @@ export const setupTools = (
       taskId: z.string(),
     }).shape,
     async (args) => {
-      const response = await callOperation({
-        path: "/projects/{projectId}/tasks/{taskId}",
-        method: "PUT",
-        input: args,
-        pathParamKeys: ["projectId", "taskId"],
-        queryParamKeys: [],
-      });
+      const response = await executeToolCallOpenApiOperation(
+        prepareToolCallOperation({
+          path: "/projects/{projectId}/tasks/{taskId}",
+          method: "PUT",
+          input: args,
+          pathParamKeys: ["projectId", "taskId"],
+          queryParamKeys: [],
+        }),
+      );
 
       return {
         content: [
@@ -284,13 +392,15 @@ export const setupTools = (
     "Complete a task in a project",
     z.object({ projectId: z.string(), taskId: z.string() }).shape,
     async (args) => {
-      const response = await callOperation({
-        path: "/projects/{projectId}/tasks/{taskId}/complete",
-        method: "POST",
-        input: args,
-        pathParamKeys: ["projectId", "taskId"],
-        queryParamKeys: [],
-      });
+      const response = await executeToolCallOpenApiOperation(
+        prepareToolCallOperation({
+          path: "/projects/{projectId}/tasks/{taskId}/complete",
+          method: "POST",
+          input: args,
+          pathParamKeys: ["projectId", "taskId"],
+          queryParamKeys: [],
+        }),
+      );
 
       return {
         content: [
@@ -339,13 +449,15 @@ export const setupTools = (
       projectId: z.string(),
     }).shape,
     async (args) => {
-      const response = await callOperation({
-        path: "/projects/{projectId}/tasks/",
-        method: "POST",
-        input: args,
-        pathParamKeys: ["projectId"],
-        queryParamKeys: [],
-      });
+      const response = await executeToolCallOpenApiOperation(
+        prepareToolCallOperation({
+          path: "/projects/{projectId}/tasks/",
+          method: "POST",
+          input: args,
+          pathParamKeys: ["projectId"],
+          queryParamKeys: [],
+        }),
+      );
 
       return {
         content: [
@@ -377,13 +489,15 @@ export const setupTools = (
       taskId: z.string(),
     }).shape,
     async (args) => {
-      const response = await callOperation({
-        path: "/projects/{projectId}/tasks/{taskId}/move",
-        method: "PUT",
-        input: args,
-        pathParamKeys: ["projectId", "taskId"],
-        queryParamKeys: [],
-      });
+      const response = await executeToolCallOpenApiOperation(
+        prepareToolCallOperation({
+          path: "/projects/{projectId}/tasks/{taskId}/move",
+          method: "PUT",
+          input: args,
+          pathParamKeys: ["projectId", "taskId"],
+          queryParamKeys: [],
+        }),
+      );
 
       return {
         content: [
@@ -400,13 +514,15 @@ export const setupTools = (
     "Get the assignees of a task",
     z.object({ projectId: z.string(), taskId: z.string() }).shape,
     async (args) => {
-      const response = await callOperation({
-        path: "/projects/{projectId}/tasks/{taskId}/assignees",
-        method: "GET",
-        input: args,
-        pathParamKeys: ["projectId", "taskId"],
-        queryParamKeys: [],
-      });
+      const response = await executeToolCallOpenApiOperation(
+        prepareToolCallOperation({
+          path: "/projects/{projectId}/tasks/{taskId}/assignees",
+          method: "GET",
+          input: args,
+          pathParamKeys: ["projectId", "taskId"],
+          queryParamKeys: [],
+        }),
+      );
 
       return {
         content: [
@@ -427,13 +543,15 @@ export const setupTools = (
       taskId: z.string(),
     }).shape,
     async (args) => {
-      const response = await callOperation({
-        path: "/projects/{projectId}/tasks/{taskId}/assignees",
-        method: "PUT",
-        input: args,
-        pathParamKeys: ["projectId", "taskId"],
-        queryParamKeys: [],
-      });
+      const response = await executeToolCallOpenApiOperation(
+        prepareToolCallOperation({
+          path: "/projects/{projectId}/tasks/{taskId}/assignees",
+          method: "PUT",
+          input: args,
+          pathParamKeys: ["projectId", "taskId"],
+          queryParamKeys: [],
+        }),
+      );
 
       return {
         content: [
@@ -454,13 +572,15 @@ export const setupTools = (
       assigneeHandle: z.string(),
     }).shape,
     async (args) => {
-      const response = await callOperation({
-        path: "/projects/{projectId}/tasks/{taskId}/assignees/{assigneeHandle}",
-        method: "DELETE",
-        input: args,
-        pathParamKeys: ["projectId", "taskId", "assigneeHandle"],
-        queryParamKeys: [],
-      });
+      const response = await executeToolCallOpenApiOperation(
+        prepareToolCallOperation({
+          path: "/projects/{projectId}/tasks/{taskId}/assignees/{assigneeHandle}",
+          method: "DELETE",
+          input: args,
+          pathParamKeys: ["projectId", "taskId", "assigneeHandle"],
+          queryParamKeys: [],
+        }),
+      );
 
       return {
         content: [
@@ -477,13 +597,15 @@ export const setupTools = (
     "Get the date of a task",
     z.object({ projectId: z.string(), taskId: z.string() }).shape,
     async (args) => {
-      const response = await callOperation({
-        path: "/projects/{projectId}/tasks/{taskId}/date",
-        method: "GET",
-        input: args,
-        pathParamKeys: ["projectId", "taskId"],
-        queryParamKeys: [],
-      });
+      const response = await executeToolCallOpenApiOperation(
+        prepareToolCallOperation({
+          path: "/projects/{projectId}/tasks/{taskId}/date",
+          method: "GET",
+          input: args,
+          pathParamKeys: ["projectId", "taskId"],
+          queryParamKeys: [],
+        }),
+      );
 
       return {
         content: [
@@ -500,13 +622,15 @@ export const setupTools = (
     "Delete date of a task",
     z.object({ projectId: z.string(), taskId: z.string() }).shape,
     async (args) => {
-      const response = await callOperation({
-        path: "/projects/{projectId}/tasks/{taskId}/date",
-        method: "DELETE",
-        input: args,
-        pathParamKeys: ["projectId", "taskId"],
-        queryParamKeys: [],
-      });
+      const response = await executeToolCallOpenApiOperation(
+        prepareToolCallOperation({
+          path: "/projects/{projectId}/tasks/{taskId}/date",
+          method: "DELETE",
+          input: args,
+          pathParamKeys: ["projectId", "taskId"],
+          queryParamKeys: [],
+        }),
+      );
 
       return {
         content: [
@@ -564,13 +688,15 @@ export const setupTools = (
       taskId: z.string(),
     }).shape,
     async (args) => {
-      const response = await callOperation({
-        path: "/projects/{projectId}/tasks/{taskId}/date",
-        method: "PUT",
-        input: args,
-        pathParamKeys: ["projectId", "taskId"],
-        queryParamKeys: [],
-      });
+      const response = await executeToolCallOpenApiOperation(
+        prepareToolCallOperation({
+          path: "/projects/{projectId}/tasks/{taskId}/date",
+          method: "PUT",
+          input: args,
+          pathParamKeys: ["projectId", "taskId"],
+          queryParamKeys: [],
+        }),
+      );
 
       return {
         content: [
@@ -592,13 +718,15 @@ export const setupTools = (
       taskId: z.string(),
     }).shape,
     async (args) => {
-      const response = await callOperation({
-        path: "/projects/{projectId}/tasks/{taskId}/note",
-        method: "PUT",
-        input: args,
-        pathParamKeys: ["projectId", "taskId"],
-        queryParamKeys: [],
-      });
+      const response = await executeToolCallOpenApiOperation(
+        prepareToolCallOperation({
+          path: "/projects/{projectId}/tasks/{taskId}/note",
+          method: "PUT",
+          input: args,
+          pathParamKeys: ["projectId", "taskId"],
+          queryParamKeys: [],
+        }),
+      );
 
       return {
         content: [
@@ -615,13 +743,15 @@ export const setupTools = (
     "Get all projects in a team, or in the home team of a workspace.",
     z.object({ folderId: z.string() }).shape,
     async (args) => {
-      const response = await callOperation({
-        path: "/folders/{folderId}/projects",
-        method: "GET",
-        input: args,
-        pathParamKeys: ["folderId"],
-        queryParamKeys: [],
-      });
+      const response = await executeToolCallOpenApiOperation(
+        prepareToolCallOperation({
+          path: "/folders/{folderId}/projects",
+          method: "GET",
+          input: args,
+          pathParamKeys: ["folderId"],
+          queryParamKeys: [],
+        }),
+      );
 
       return {
         content: [
