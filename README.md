@@ -1,4 +1,4 @@
-# Taskade MCP
+# :rainbow: Taskade MCP
 
 All things related to Taskade's MCP initiatives
 

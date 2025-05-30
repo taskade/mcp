@@ -5,10 +5,10 @@ Generate MCP tools from any OpenAPI Schema in seconds.
 
 ## Usage
 
-- Install `@taskade/mcp-openapi-codegen` package:
+- Install `@taskade/mcp-openapi-codegen` and `@readme/openapi-parser` package:
 
 ```sh
-npm install --dev @taskade/mcp-openapi-codegen
+npm install --dev @taskade/mcp-openapi-codegen @readme/openapi-parser
 ```
 
 - Create a script to run the codegen:
@@ -27,6 +27,8 @@ await codegen({
   document,
 });
 ```
+
+Then run `npx tsx scripts/generate-openapi-tools.ts`
 
 > This will generate a new `tools.generated.ts` file in the `src/` folder.
 
