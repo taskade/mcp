@@ -1,6 +1,6 @@
 {
   "name": "@taskade/mcp-server",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "author": "Prev Wong",
   "license": "MIT",
   "type": "module",
