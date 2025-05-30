@@ -4,6 +4,10 @@
   "author": "Prev Wong",
   "license": "MIT",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/taskade/mcp/"
+  },
   "main": "bin/cli.mjs",
   "bin": {
     "taskade-mcp-server": "bin/cli.mjs"
