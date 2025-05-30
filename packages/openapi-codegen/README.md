@@ -1,14 +1,14 @@
-# @taskade/openapi-codegen
+# @taskade/mcp-openapi-codegen
 
 Generate MCP tools from any OpenAPI Schema in seconds.
 
 
 ## Usage
 
-- Install `@taskade/openapi-codegen` package:
+- Install `@taskade/mcp-openapi-codegen` package:
 
 ```sh
-npm install --dev @taskade/openapi-codegen
+npm install --dev @taskade/mcp-openapi-codegen
 ```
 
 - Create a script to run the codegen:
@@ -17,7 +17,7 @@ npm install --dev @taskade/openapi-codegen
 // scripts/generate-openapi-tools.ts
 
 import { dereference } from '@readme/openapi-parser';
-import { codegen } from '@taskade/openapi-codegen';
+import { codegen } from '@taskade/mcp-openapi-codegen';
 
 
 const document = await dereference('taskade-public.yaml');

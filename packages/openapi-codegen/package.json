@@ -1,5 +1,5 @@
 {
-  "name": "@taskade/openapi-codegen",
+  "name": "@taskade/mcp-openapi-codegen",
   "version": "0.0.1",
   "author": "Prev Wong",
   "license": "MIT",

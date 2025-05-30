@@ -16,7 +16,7 @@
     "start:server": "tsx src/http.ts --watch"
   },
   "devDependencies": {
-    "@taskade/openapi-codegen": "*"
+    "@taskade/mcp-openapi-codegen": "*"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0",

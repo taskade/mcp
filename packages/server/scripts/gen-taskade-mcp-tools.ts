@@ -1,5 +1,5 @@
 import { dereference } from '@readme/openapi-parser';
-import { codegen } from '@taskade/openapi-codegen';
+import { codegen } from '@taskade/mcp-openapi-codegen';
 
 import { ENABLED_TASKADE_ACTIONS } from '../src/constants';
 
