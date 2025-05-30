@@ -2,7 +2,32 @@
 
 MCP server for Taskade's public API
 
-## Manual setup
+## Install
+
+Add the taskade mcp server to your client (ie: Cursor):
+
+
+```json
+{
+  "mcpServers": {
+      "taskade": {
+          "command": "npx",
+          "args": [
+              "-y", "@taskade/mcp-server"
+          ],
+          "env": {
+              "TASKADE_API_KEY": "INSERT_YOUR_TASKADE_PERSONAL_ACCESS_TOKEN_HERE"
+          }
+      }
+  }
+}
+```
+
+> You will need a valid Taskade personal access token, generate one [here](https://www.taskade.com/settings/password)
+
+
+
+## Test locally
 
 - Clone this repo: `git clone git@github.com:taskade/mcp.git`
 - Install dependencies: `yarn install`
