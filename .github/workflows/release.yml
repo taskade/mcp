@@ -32,12 +32,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create .npmrc
-        if: steps.changesets.outputs.hasChangesets == 'false'
-        run: |
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
-          echo "@taskade:registry=https://npm.pkg.github.com/" >> .npmrc
-        
       - name: Publish
         if: steps.changesets.outputs.hasChangesets == 'false'
         run: yarn run publish
