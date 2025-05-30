@@ -63,7 +63,10 @@ export const codegen = async (opts: CodegenOpts) => {
 
       ${runtime}\n
 
-      export const setupTools = (server: McpServer, executeToolCallOpenApiOperation: ExecuteToolCallOpenApiOperationCb) => {
+      export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts) => {
+
+      const config = new OpenAPIToolRuntimeConfig(opts);
+
     `;
 
     tools.forEach((tool) => {
@@ -87,8 +90,7 @@ export const codegen = async (opts: CodegenOpts) => {
 
 
         toolArgs.push(`async (args) => {
-                
-              const response = await executeToolCallOpenApiOperation(prepareToolCallOperation({
+            return await config.executeToolCall({
                 path: "${tool.path}",
                 method: "${tool.method.toUpperCase()}",
                 input: args,
@@ -104,17 +106,7 @@ export const codegen = async (opts: CodegenOpts) => {
                     .join(',')}]`
                 : '[]'
             },
-              }));
-    
-    
-              return {
-                content: [
-                  {
-                    type: 'text',
-                    text: JSON.stringify(response),
-                  },
-                ],
-              }
+              });
         }`);
 
         output += `server.tool(${toolArgs.join(',')});\n`;
