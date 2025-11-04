@@ -2,297 +2,335 @@
 
 ## Overview
 
-This n8n workflow provides a complete integration between an MCP (Model Context Protocol) server and the Taskade API. It implements all 25 Taskade API endpoints as HTTP Request nodes, routed through a webhook trigger that acts as an MCP server endpoint.
+This n8n workflow provides a complete **MCP (Model Context Protocol) server** integration for the Taskade API. It implements all 21 Taskade API endpoints as AI-powered HTTP Request Tool nodes, accessible through a centralized MCP Server Trigger.
 
 ## Architecture
 
 ```
-┌─────────────────────┐
-│  MCP Server Trigger │ ← Receives incoming MCP requests via webhook
-│   (Webhook Node)    │
-└──────────┬──────────┘
-           │
-           ▼
-┌─────────────────────┐
-│ Route by Tool Name  │ ← Switch node routes to appropriate HTTP endpoint
-│   (Switch Node)     │
-└──────────┬──────────┘
-           │
-           ▼
-┌─────────────────────┐
-│   HTTP Request      │ ← 25 HTTP nodes for each Taskade endpoint
-│      Nodes          │
-│  (21 endpoints)     │
-└──────────┬──────────┘
-           │
-           ▼
-┌─────────────────────┐
-│ Respond to Webhook  │ ← Returns formatted response
-└─────────────────────┘
+┌─────────────────────────────────┐
+│   MCP Server Trigger Node       │ ← Entry point for AI/MCP clients
+│ (@n8n/n8n-nodes-langchain.      │
+│       mcpTrigger)                │
+└────────────┬────────────────────┘
+             │ ai_tool connections
+             ├─────────────────────────────────┐
+             │                                 │
+             ▼                                 ▼
+┌──────────────────────┐      ┌──────────────────────┐
+│ HTTP Request Tool    │      │ HTTP Request Tool    │
+│  workspacesGet       │ ...  │  folderProjectsGet   │
+│ (httpRequestTool)    │      │  (httpRequestTool)   │
+└──────────────────────┘      └──────────────────────┘
+         (21 AI-enabled HTTP tool nodes)
 ```
+
+## Key Features
+
+- **AI-Native Design**: Uses `$fromAI()` function for dynamic parameter extraction from AI requests
+- **MCP Protocol**: Fully compliant with Model Context Protocol standard
+- **21 Tool Nodes**: Complete coverage of Taskade API endpoints
+- **ai_tool Connections**: All tools connect via `ai_tool` type for AI orchestration
+- **Zero Manual Routing**: MCP Trigger automatically routes requests to the appropriate tool
 
 ## Workflow Components
 
-### 1. MCP Server Trigger (Webhook Node)
-- **Type**: `n8n-nodes-base.webhook`
-- **Path**: `/taskade-mcp`
-- **Method**: POST
-- **Purpose**: Acts as the entry point for all MCP requests
+### 1. MCP Server Trigger
+- **Type**: `@n8n/n8n-nodes-langchain.mcpTrigger` (v2)
+- **Path**: `/taskade-mcp-server`
+- **Purpose**: Acts as the MCP server endpoint, automatically routing tool calls to HTTP Request Tool nodes
+- **Webhook ID**: `taskade-mcp-server`
 
-### 2. Route by Tool Name (Switch Node)
-- **Type**: `n8n-nodes-base.switch`
-- **Purpose**: Routes requests to the appropriate HTTP endpoint based on the `tool` field in the incoming request
-- **Routes 21 different operations**
+### 2. HTTP Request Tool Nodes (21 nodes)
 
-### 3. HTTP Request Nodes (25 nodes total)
+All nodes use:
+- **Type**: `n8n-nodes-base.httpRequestTool` (v4.3)
+- **Connection Type**: `ai_tool` (connects to MCP Trigger)
+- **Parameter Extraction**: `$fromAI()` function for AI-driven parameter passing
+- **Authentication**: Bearer token via `$fromAI('api_key', ...)`
 
-#### Workspace Operations (3 endpoints)
-1. **GET Workspaces** - `GET /workspaces`
-2. **POST Workspace Create Project** - `POST /workspaces/{workspaceId}/projects`
-3. **GET Workspace Folders** - `GET /workspaces/{workspaceId}/folders`
+#### Workspace Operations (3 tools)
+1. **workspacesGet** - Get all workspaces
+2. **workspaceCreateProject** - Create project in workspace
+3. **workspaceFoldersGet** - Get folders in workspace
 
-#### Project Operations (5 endpoints)
-4. **GET Project** - `GET /projects/{projectId}`
-5. **POST Project Create** - `POST /projects`
-6. **POST Project Copy** - `POST /projects/{projectId}/copy`
-7. **GET Project Blocks** - `GET /projects/{projectId}/blocks`
-8. **GET Project Tasks** - `GET /projects/{projectId}/tasks`
+#### Project Operations (5 tools)
+4. **projectGet** - Get project by ID
+5. **projectCreate** - Create new project
+6. **projectCopy** - Copy existing project
+7. **projectBlocksGet** - Get project blocks (with pagination)
+8. **projectTasksGet** - Get project tasks (with pagination)
 
-#### Task Operations (12 endpoints)
-9. **GET Task** - `GET /projects/{projectId}/tasks/{taskId}`
-10. **PUT Task Update** - `PUT /projects/{projectId}/tasks/{taskId}`
-11. **POST Task Create** - `POST /projects/{projectId}/tasks/`
-12. **POST Task Complete** - `POST /projects/{projectId}/tasks/{taskId}/complete`
-13. **PUT Task Move** - `PUT /projects/{projectId}/tasks/{taskId}/move`
-14. **GET Task Assignees** - `GET /projects/{projectId}/tasks/{taskId}/assignees`
-15. **PUT Task Assignees** - `PUT /projects/{projectId}/tasks/{taskId}/assignees`
-16. **DELETE Task Assignee** - `DELETE /projects/{projectId}/tasks/{taskId}/assignees/{assigneeHandle}`
-17. **GET Task Date** - `GET /projects/{projectId}/tasks/{taskId}/date`
-18. **PUT Task Date** - `PUT /projects/{projectId}/tasks/{taskId}/date`
-19. **DELETE Task Date** - `DELETE /projects/{projectId}/tasks/{taskId}/date`
-20. **PUT Task Note** - `PUT /projects/{projectId}/tasks/{taskId}/note`
+#### Task Operations (12 tools)
+9. **taskGet** - Get task by ID
+10. **taskPut** - Update task content
+11. **taskCreate** - Create one or more tasks
+12. **taskComplete** - Mark task as complete
+13. **taskMove** - Move task within project
+14. **taskAssigneesGet** - Get task assignees
+15. **taskPutAssignees** - Assign users to task
+16. **taskDeleteAssignees** - Remove assignee from task
+17. **taskGetDate** - Get task date
+18. **taskPutDate** - Set or update task date
+19. **taskDeleteDate** - Delete task date
+20. **taskNotePut** - Add/update task note
 
-#### Folder Operations (1 endpoint)
-21. **GET Folder Projects** - `GET /folders/{folderId}/projects`
-
-### 4. Response Handler
-- **Type**: `n8n-nodes-base.respondToWebhook`
-- **Purpose**: Formats and returns the API response back to the webhook caller
+#### Folder Operations (1 tool)
+21. **folderProjectsGet** - Get projects in folder
 
 ## Installation
 
 ### Prerequisites
-- n8n instance (self-hosted or cloud)
-- Taskade API key (get one at https://www.taskade.com/settings/password)
+- n8n instance (v1.0+ with LangChain node support)
+- Taskade API key from https://www.taskade.com/settings/password
+- MCP-compatible AI client (Claude Desktop, Cline, etc.)
 
-### Steps
+### Setup Steps
 
 1. **Import the Workflow**
-   ```bash
-   # In your n8n instance, go to:
-   # Workflows → Import from File → Select n8n-taskade-mcp-workflow.json
-   ```
+   - In n8n, go to: Workflows → Import from File
+   - Select `n8n-taskade-mcp-workflow.json`
+   - Click Import
 
-2. **Configure Environment Variable**
-   Set the `TASKADE_API_KEY` environment variable in your n8n instance:
+2. **Activate the Workflow**
+   - Open the imported workflow
+   - Click "Activate" in the top right corner
 
-   For Docker:
-   ```bash
-   docker run -e TASKADE_API_KEY="your_api_key_here" ...
-   ```
-
-   For self-hosted:
-   ```bash
-   export TASKADE_API_KEY="your_api_key_here"
-   ```
-
-3. **Activate the Workflow**
-   - Open the workflow in n8n
-   - Click "Activate" in the top right
-
-4. **Get Your Webhook URL**
+3. **Get Your MCP Server URL**
    - Click on the "MCP Server Trigger" node
-   - Copy the production webhook URL (e.g., `https://your-n8n.com/webhook/taskade-mcp`)
+   - Copy the production URL (e.g., `https://your-n8n.com/webhook/taskade-mcp-server`)
+
+4. **Configure Your AI Client**
+
+   For **Claude Desktop**, edit `claude_desktop_config.json`:
+   ```json
+   {
+     "mcpServers": {
+       "taskade-n8n": {
+         "url": "https://your-n8n.com/webhook/taskade-mcp-server",
+         "apiKey": "YOUR_TASKADE_API_KEY"
+       }
+     }
+   }
+   ```
+
+   For **Cline/Cursor**, edit MCP settings:
+   ```json
+   {
+     "mcpServers": {
+       "taskade-n8n": {
+         "url": "https://your-n8n.com/webhook/taskade-mcp-server",
+         "headers": {
+           "api_key": "YOUR_TASKADE_API_KEY"
+         }
+       }
+     }
+   }
+   ```
 
 ## Usage
 
-### Request Format
+### How It Works
 
-Send POST requests to your webhook URL with the following JSON structure:
+1. **AI Client** sends MCP tool request to n8n webhook
+2. **MCP Trigger** receives request and identifies the tool
+3. **HTTP Request Tool** extracts parameters using `$fromAI()`
+4. **Taskade API** receives the formatted HTTP request
+5. **Response** flows back through the MCP protocol to the AI client
+
+### Example AI Interactions
+
+Once configured, simply chat with your AI client:
+
+```
+User: "Get all my Taskade workspaces"
+AI: [Calls workspacesGet tool via MCP]
+→ Returns list of workspaces
+
+User: "Create a new task in project abc123 with content 'Review PR'"
+AI: [Calls taskCreate tool with projectId and task data]
+→ Creates task and returns task details
+
+User: "Assign @john to task xyz789 in project abc123"
+AI: [Calls taskPutAssignees with projectId, taskId, and handles]
+→ Assigns user and confirms
+```
+
+### Direct MCP Tool Calls
+
+You can also test tools directly using MCP protocol:
 
 ```json
+POST https://your-n8n.com/webhook/taskade-mcp-server
+Content-Type: application/json
+
 {
-  "tool": "workspacesGet",
-  "params": {}
+  "method": "tools/call",
+  "params": {
+    "name": "workspacesGet",
+    "arguments": {
+      "api_key": "your_taskade_api_key"
+    }
+  }
 }
 ```
 
-Or for operations requiring parameters:
+## Tool Reference
+
+| Tool Name | HTTP Method | Endpoint Pattern | Required Parameters |
+|-----------|-------------|------------------|---------------------|
+| `workspacesGet` | GET | `/workspaces` | `api_key` |
+| `workspaceCreateProject` | POST | `/workspaces/{workspaceId}/projects` | `api_key`, `workspaceId`, `content` |
+| `workspaceFoldersGet` | GET | `/workspaces/{workspaceId}/folders` | `api_key`, `workspaceId` |
+| `projectGet` | GET | `/projects/{projectId}` | `api_key`, `projectId` |
+| `projectCreate` | POST | `/projects` | `api_key`, `content` |
+| `projectCopy` | POST | `/projects/{projectId}/copy` | `api_key`, `projectId` |
+| `projectBlocksGet` | GET | `/projects/{projectId}/blocks` | `api_key`, `projectId` |
+| `projectTasksGet` | GET | `/projects/{projectId}/tasks` | `api_key`, `projectId` |
+| `taskGet` | GET | `/projects/{projectId}/tasks/{taskId}` | `api_key`, `projectId`, `taskId` |
+| `taskPut` | PUT | `/projects/{projectId}/tasks/{taskId}` | `api_key`, `projectId`, `taskId`, `content` |
+| `taskCreate` | POST | `/projects/{projectId}/tasks/` | `api_key`, `projectId`, `tasks` |
+| `taskComplete` | POST | `/projects/{projectId}/tasks/{taskId}/complete` | `api_key`, `projectId`, `taskId` |
+| `taskMove` | PUT | `/projects/{projectId}/tasks/{taskId}/move` | `api_key`, `projectId`, `taskId`, `target` |
+| `taskAssigneesGet` | GET | `/projects/{projectId}/tasks/{taskId}/assignees` | `api_key`, `projectId`, `taskId` |
+| `taskPutAssignees` | PUT | `/projects/{projectId}/tasks/{taskId}/assignees` | `api_key`, `projectId`, `taskId`, `handles` |
+| `taskDeleteAssignees` | DELETE | `/projects/{projectId}/tasks/{taskId}/assignees/{assigneeHandle}` | `api_key`, `projectId`, `taskId`, `assigneeHandle` |
+| `taskGetDate` | GET | `/projects/{projectId}/tasks/{taskId}/date` | `api_key`, `projectId`, `taskId` |
+| `taskPutDate` | PUT | `/projects/{projectId}/tasks/{taskId}/date` | `api_key`, `projectId`, `taskId` |
+| `taskDeleteDate` | DELETE | `/projects/{projectId}/tasks/{taskId}/date` | `api_key`, `projectId`, `taskId` |
+| `taskNotePut` | PUT | `/projects/{projectId}/tasks/{taskId}/note` | `api_key`, `projectId`, `taskId`, `value` |
+| `folderProjectsGet` | GET | `/folders/{folderId}/projects` | `api_key`, `folderId` |
+
+## Technical Details
+
+### $fromAI() Function
+
+The `$fromAI()` function is n8n's mechanism for extracting parameters from AI/MCP requests:
+
+```javascript
+$fromAI('parameterName', 'Description for AI', 'dataType')
+```
+
+Example from workflow:
+```javascript
+"url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') }}"
+```
+
+### ai_tool Connection Type
+
+All HTTP Request Tool nodes connect to the MCP Trigger using `ai_tool` connection type:
 
 ```json
-{
-  "tool": "taskCreate",
-  "params": {
-    "projectId": "project-uuid",
-    "tasks": [
-      {
-        "contentType": "text/plain",
-        "content": "My new task",
-        "placement": "beforeend"
-      }
+"connections": {
+  "workspacesGet": {
+    "ai_tool": [
+      [
+        {
+          "node": "MCP Server Trigger",
+          "type": "ai_tool",
+          "index": 0
+        }
+      ]
     ]
   }
 }
 ```
 
-### Example Requests
+### Authentication Flow
 
-#### 1. Get All Workspaces
-```bash
-curl -X POST https://your-n8n.com/webhook/taskade-mcp \
-  -H "Content-Type: application/json" \
-  -d '{
-    "tool": "workspacesGet",
-    "params": {}
-  }'
-```
-
-#### 2. Create a Project
-```bash
-curl -X POST https://your-n8n.com/webhook/taskade-mcp \
-  -H "Content-Type: application/json" \
-  -d '{
-    "tool": "projectCreate",
-    "params": {
-      "folderId": "folder-uuid",
-      "contentType": "text/markdown",
-      "content": "# My New Project\n- Task 1\n- Task 2"
-    }
-  }'
-```
-
-#### 3. Create a Task
-```bash
-curl -X POST https://your-n8n.com/webhook/taskade-mcp \
-  -H "Content-Type: application/json" \
-  -d '{
-    "tool": "taskCreate",
-    "params": {
-      "projectId": "project-uuid",
-      "tasks": [
-        {
-          "contentType": "text/plain",
-          "content": "Complete integration",
-          "placement": "beforeend"
-        }
-      ]
-    }
-  }'
-```
-
-#### 4. Update Task Assignees
-```bash
-curl -X POST https://your-n8n.com/webhook/taskade-mcp \
-  -H "Content-Type: application/json" \
-  -d '{
-    "tool": "taskPutAssignees",
-    "params": {
-      "projectId": "project-uuid",
-      "taskId": "task-uuid",
-      "handles": ["@username1", "@username2"]
-    }
-  }'
-```
-
-## Tool Reference
-
-| Tool Name | Method | Endpoint | Required Params |
-|-----------|--------|----------|-----------------|
-| `workspacesGet` | GET | `/workspaces` | None |
-| `workspaceCreateProject` | POST | `/workspaces/{workspaceId}/projects` | `workspaceId` |
-| `workspaceFoldersGet` | GET | `/workspaces/{workspaceId}/folders` | `workspaceId` |
-| `projectGet` | GET | `/projects/{projectId}` | `projectId` |
-| `projectCreate` | POST | `/projects` | None |
-| `projectCopy` | POST | `/projects/{projectId}/copy` | `projectId` |
-| `projectBlocksGet` | GET | `/projects/{projectId}/blocks` | `projectId` |
-| `projectTasksGet` | GET | `/projects/{projectId}/tasks` | `projectId` |
-| `taskGet` | GET | `/projects/{projectId}/tasks/{taskId}` | `projectId`, `taskId` |
-| `taskPut` | PUT | `/projects/{projectId}/tasks/{taskId}` | `projectId`, `taskId` |
-| `taskCreate` | POST | `/projects/{projectId}/tasks/` | `projectId` |
-| `taskComplete` | POST | `/projects/{projectId}/tasks/{taskId}/complete` | `projectId`, `taskId` |
-| `taskMove` | PUT | `/projects/{projectId}/tasks/{taskId}/move` | `projectId`, `taskId` |
-| `taskAssigneesGet` | GET | `/projects/{projectId}/tasks/{taskId}/assignees` | `projectId`, `taskId` |
-| `taskPutAssignees` | PUT | `/projects/{projectId}/tasks/{taskId}/assignees` | `projectId`, `taskId` |
-| `taskDeleteAssignees` | DELETE | `/projects/{projectId}/tasks/{taskId}/assignees/{assigneeHandle}` | `projectId`, `taskId`, `assigneeHandle` |
-| `taskGetDate` | GET | `/projects/{projectId}/tasks/{taskId}/date` | `projectId`, `taskId` |
-| `taskPutDate` | PUT | `/projects/{projectId}/tasks/{taskId}/date` | `projectId`, `taskId` |
-| `taskDeleteDate` | DELETE | `/projects/{projectId}/tasks/{taskId}/date` | `projectId`, `taskId` |
-| `taskNotePut` | PUT | `/projects/{projectId}/tasks/{taskId}/note` | `projectId`, `taskId` |
-| `folderProjectsGet` | GET | `/folders/{folderId}/projects` | `folderId` |
-
-## Configuration Details
-
-### Authentication
-All HTTP nodes are configured to use the `TASKADE_API_KEY` environment variable:
-- Header: `Authorization: Bearer {{ $env.TASKADE_API_KEY }}`
-- Base URL: `https://www.taskade.com/api/v1`
-
-### Parameter Mapping
-The workflow uses n8n expressions to map incoming parameters:
-- Path parameters: `{{ $json.params.paramName }}`
-- Query parameters: Dynamically constructed in the URL
-- Body parameters: Mapped from `$json.params` object
-
-### Response Format
-All responses are returned as JSON through the "Respond to Webhook" node.
+1. AI client sends `api_key` parameter
+2. Each tool extracts it via `$fromAI('api_key', ...)`
+3. Tool formats as: `Bearer {api_key}` in Authorization header
+4. Taskade API validates and processes request
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. **"TASKADE_API_KEY is not defined"**
-   - Ensure the environment variable is set in your n8n instance
-   - Restart n8n after setting the variable
+**"Tool not found"**
+- Verify the workflow is activated in n8n
+- Check that all 21 tools are properly connected to MCP Trigger
+- Ensure tool names match exactly (case-sensitive)
 
-2. **"404 Not Found"**
-   - Check that the workflow is activated
-   - Verify the webhook URL is correct
-   - Ensure the `tool` name matches exactly
+**"Missing api_key parameter"**
+- AI client must send `api_key` with every request
+- Check your MCP client configuration includes the API key
+- Verify the key is valid at https://www.taskade.com/settings/password
 
-3. **"Invalid tool name"**
-   - Check the spelling of the `tool` field
-   - Refer to the Tool Reference table for valid names
+**"$fromAI is not defined"**
+- Ensure you're using n8n v1.0+ with LangChain support
+- Update n8n if using older version
+- Check that nodes are `httpRequestTool` type, not `httpRequest`
 
-4. **"Missing required parameter"**
-   - Check the Tool Reference for required parameters
-   - Ensure all required fields are in the `params` object
+**"Connection type 'ai_tool' not recognized"**
+- Verify n8n supports LangChain nodes
+- Reimport the workflow JSON
+- Check that MCP Trigger is `@n8n/n8n-nodes-langchain.mcpTrigger`
 
-## Development
+### Testing Individual Tools
 
-### Testing the Workflow
-1. Use the n8n "Execute Workflow" button to test with manual data
-2. Use the "Listen for Test Event" in the webhook node
-3. Send test requests using curl or Postman
+Test a single tool by sending MCP request:
 
-### Extending the Workflow
-To add new endpoints:
-1. Add a new condition in the "Route by Tool Name" switch node
-2. Create a new HTTP Request node
-3. Configure the endpoint, method, and parameters
-4. Connect the new node to the response handler
+```bash
+curl -X POST https://your-n8n.com/webhook/taskade-mcp-server \
+  -H "Content-Type: application/json" \
+  -d '{
+    "method": "tools/call",
+    "params": {
+      "name": "workspacesGet",
+      "arguments": {
+        "api_key": "your_api_key"
+      }
+    }
+  }'
+```
+
+## Advanced Configuration
+
+### Custom Tool Descriptions
+
+Edit node descriptions to improve AI understanding:
+
+1. Click on any HTTP Request Tool node
+2. Update the "Description" field in node settings
+3. Save and reactivate workflow
+
+### Adding Rate Limiting
+
+Add rate limiting to the MCP Trigger:
+
+1. Add a "Rate Limit" node before HTTP tools
+2. Configure requests per time window
+3. Reconnect via ai_tool connections
+
+### Error Handling
+
+Add error handling nodes:
+
+1. Create an "Error Trigger" node
+2. Configure notification (email, Slack, etc.)
+3. Link to failed tool executions
 
 ## API Documentation
 
-For complete Taskade API documentation, visit:
-- Developer Docs: https://developers.taskade.com
-- API Reference: https://developers.taskade.com/reference
+- **Taskade API Docs**: https://developers.taskade.com
+- **MCP Protocol**: https://modelcontextprotocol.io
+- **n8n LangChain Nodes**: https://docs.n8n.io/integrations/builtin/cluster-nodes/root-nodes/n8n-nodes-langchain.mcptrigger/
 
 ## Support
 
-- Taskade Community: https://www.taskade.com/community
-- GitHub Issues: https://github.com/taskade/mcp/issues
-- Email: hello@taskade.com
+- **Taskade**:
+  - Community: https://www.taskade.com/community
+  - Email: hello@taskade.com
+  - GitHub: https://github.com/taskade/mcp
+
+- **n8n**:
+  - Community: https://community.n8n.io
+  - Docs: https://docs.n8n.io
 
 ## License
 
 This workflow is part of the Taskade MCP project. See LICENSE file for details.
+
+---
+
+**Note**: This workflow requires n8n v1.0+ with LangChain node support. For older n8n versions, use the legacy webhook-based approach.

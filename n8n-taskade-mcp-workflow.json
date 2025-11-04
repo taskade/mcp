@@ -3,507 +3,26 @@
   "nodes": [
     {
       "parameters": {
-        "httpMethod": "POST",
-        "path": "taskade-mcp",
-        "responseMode": "responseNode",
-        "options": {}
+        "path": "taskade-mcp-server"
       },
-      "id": "webhook-trigger",
-      "name": "MCP Server Trigger",
-      "type": "n8n-nodes-base.webhook",
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
       "typeVersion": 2,
-      "position": [240, 300],
-      "webhookId": "taskade-mcp-webhook"
-    },
-    {
-      "parameters": {
-        "mode": "rules",
-        "rules": {
-          "values": [
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.tool }}",
-                    "rightValue": "workspacesGet",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "workspacesGet"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.tool }}",
-                    "rightValue": "workspaceCreateProject",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "workspaceCreateProject"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.tool }}",
-                    "rightValue": "workspaceFoldersGet",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "workspaceFoldersGet"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.tool }}",
-                    "rightValue": "projectGet",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "projectGet"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.tool }}",
-                    "rightValue": "projectCreate",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "projectCreate"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.tool }}",
-                    "rightValue": "projectCopy",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "projectCopy"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.tool }}",
-                    "rightValue": "projectBlocksGet",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "projectBlocksGet"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.tool }}",
-                    "rightValue": "projectTasksGet",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "projectTasksGet"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.tool }}",
-                    "rightValue": "taskGet",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "taskGet"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.tool }}",
-                    "rightValue": "taskPut",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "taskPut"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.tool }}",
-                    "rightValue": "taskCreate",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "taskCreate"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.tool }}",
-                    "rightValue": "taskComplete",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "taskComplete"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.tool }}",
-                    "rightValue": "taskMove",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "taskMove"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.tool }}",
-                    "rightValue": "taskAssigneesGet",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "taskAssigneesGet"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.tool }}",
-                    "rightValue": "taskPutAssignees",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "taskPutAssignees"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.tool }}",
-                    "rightValue": "taskDeleteAssignees",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "taskDeleteAssignees"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.tool }}",
-                    "rightValue": "taskGetDate",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "taskGetDate"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.tool }}",
-                    "rightValue": "taskPutDate",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "taskPutDate"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.tool }}",
-                    "rightValue": "taskDeleteDate",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "taskDeleteDate"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.tool }}",
-                    "rightValue": "taskNotePut",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "taskNotePut"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.tool }}",
-                    "rightValue": "folderProjectsGet",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "folderProjectsGet"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "switch-router",
-      "name": "Route by Tool Name",
-      "type": "n8n-nodes-base.switch",
-      "typeVersion": 3.2,
-      "position": [460, 300]
+      "position": [400, 300],
+      "id": "mcp-trigger-taskade",
+      "name": "MCP Server Trigger",
+      "webhookId": "taskade-mcp-server"
     },
     {
       "parameters": {
         "method": "GET",
         "url": "https://www.taskade.com/api/v1/workspaces",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "taskadeApi",
+        "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer {{ $env.TASKADE_API_KEY }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key from environment variable', 'string') }}"
             }
           ]
         },
@@ -515,24 +34,24 @@
           }
         }
       },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [600, 100],
       "id": "http-workspaces-get",
-      "name": "GET Workspaces",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [680, 100]
+      "name": "workspacesGet",
+      "description": "Get all workspaces for a user"
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://www.taskade.com/api/v1/workspaces/{{ $json.params.workspaceId }}/projects",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "taskadeApi",
+        "url": "={{ 'https://www.taskade.com/api/v1/workspaces/' + $fromAI('workspaceId', 'The workspace ID', 'string') + '/projects' }}",
+        "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer {{ $env.TASKADE_API_KEY }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
             },
             {
               "name": "Content-Type",
@@ -545,11 +64,11 @@
           "parameters": [
             {
               "name": "contentType",
-              "value": "={{ $json.params.contentType || 'text/markdown' }}"
+              "value": "={{ $fromAI('contentType', 'Content type: text/markdown or text/plain', 'string') }}"
             },
             {
               "name": "content",
-              "value": "={{ $json.params.content }}"
+              "value": "={{ $fromAI('content', 'Project content', 'string') }}"
             }
           ]
         },
@@ -561,24 +80,24 @@
           }
         }
       },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [600, 200],
       "id": "http-workspace-create-project",
-      "name": "POST Workspace Create Project",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [680, 200]
+      "name": "workspaceCreateProject",
+      "description": "Create a project in a workspace"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "=https://www.taskade.com/api/v1/workspaces/{{ $json.params.workspaceId }}/folders",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "taskadeApi",
+        "url": "={{ 'https://www.taskade.com/api/v1/workspaces/' + $fromAI('workspaceId', 'The workspace ID', 'string') + '/folders' }}",
+        "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer {{ $env.TASKADE_API_KEY }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
             }
           ]
         },
@@ -590,24 +109,24 @@
           }
         }
       },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [600, 300],
       "id": "http-workspace-folders-get",
-      "name": "GET Workspace Folders",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [680, 300]
+      "name": "workspaceFoldersGet",
+      "description": "Get all folders for a workspace"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "=https://www.taskade.com/api/v1/projects/{{ $json.params.projectId }}",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "taskadeApi",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') }}",
+        "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer {{ $env.TASKADE_API_KEY }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
             }
           ]
         },
@@ -619,24 +138,24 @@
           }
         }
       },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [600, 400],
       "id": "http-project-get",
-      "name": "GET Project",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [680, 400]
+      "name": "projectGet",
+      "description": "Get project by ID"
     },
     {
       "parameters": {
         "method": "POST",
         "url": "https://www.taskade.com/api/v1/projects",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "taskadeApi",
+        "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer {{ $env.TASKADE_API_KEY }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
             },
             {
               "name": "Content-Type",
@@ -649,15 +168,15 @@
           "parameters": [
             {
               "name": "folderId",
-              "value": "={{ $json.params.folderId }}"
+              "value": "={{ $fromAI('folderId', 'The folder ID (optional)', 'string') }}"
             },
             {
               "name": "contentType",
-              "value": "={{ $json.params.contentType || 'text/markdown' }}"
+              "value": "={{ $fromAI('contentType', 'Content type: text/markdown or text/plain', 'string') }}"
             },
             {
               "name": "content",
-              "value": "={{ $json.params.content }}"
+              "value": "={{ $fromAI('content', 'Project content', 'string') }}"
             }
           ]
         },
@@ -669,24 +188,24 @@
           }
         }
       },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [600, 500],
       "id": "http-project-create",
-      "name": "POST Project Create",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [680, 500]
+      "name": "projectCreate",
+      "description": "Create a new project in a team"
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://www.taskade.com/api/v1/projects/{{ $json.params.projectId }}/copy",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "taskadeApi",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID to copy', 'string') + '/copy' }}",
+        "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer {{ $env.TASKADE_API_KEY }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
             },
             {
               "name": "Content-Type",
@@ -699,11 +218,11 @@
           "parameters": [
             {
               "name": "folderId",
-              "value": "={{ $json.params.folderId }}"
+              "value": "={{ $fromAI('folderId', 'Destination folder ID (optional)', 'string') }}"
             },
             {
               "name": "projectTitle",
-              "value": "={{ $json.params.projectTitle }}"
+              "value": "={{ $fromAI('projectTitle', 'New project title (optional)', 'string') }}"
             }
           ]
         },
@@ -715,24 +234,41 @@
           }
         }
       },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [600, 600],
       "id": "http-project-copy",
-      "name": "POST Project Copy",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [680, 600]
+      "name": "projectCopy",
+      "description": "Copy a project to a folder"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "=https://www.taskade.com/api/v1/projects/{{ $json.params.projectId }}/blocks?limit={{ $json.params.limit || 100 }}{{ $json.params.after ? '&after=' + $json.params.after : '' }}{{ $json.params.before ? '&before=' + $json.params.before : '' }}",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "taskadeApi",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/blocks' }}",
+        "authentication": "none",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "limit",
+              "value": "={{ $fromAI('limit', 'Number of blocks to return (default 100)', 'number') }}"
+            },
+            {
+              "name": "after",
+              "value": "={{ $fromAI('after', 'Cursor for pagination (UUID)', 'string') }}"
+            },
+            {
+              "name": "before",
+              "value": "={{ $fromAI('before', 'Cursor for pagination (UUID)', 'string') }}"
+            }
+          ]
+        },
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer {{ $env.TASKADE_API_KEY }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
             }
           ]
         },
@@ -744,24 +280,41 @@
           }
         }
       },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [600, 700],
       "id": "http-project-blocks-get",
-      "name": "GET Project Blocks",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [680, 700]
+      "name": "projectBlocksGet",
+      "description": "Get all blocks for a project"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "=https://www.taskade.com/api/v1/projects/{{ $json.params.projectId }}/tasks?limit={{ $json.params.limit || 100 }}{{ $json.params.after ? '&after=' + $json.params.after : '' }}{{ $json.params.before ? '&before=' + $json.params.before : '' }}",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "taskadeApi",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks' }}",
+        "authentication": "none",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "limit",
+              "value": "={{ $fromAI('limit', 'Number of tasks to return (default 100)', 'number') }}"
+            },
+            {
+              "name": "after",
+              "value": "={{ $fromAI('after', 'Cursor for pagination (UUID)', 'string') }}"
+            },
+            {
+              "name": "before",
+              "value": "={{ $fromAI('before', 'Cursor for pagination (UUID)', 'string') }}"
+            }
+          ]
+        },
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer {{ $env.TASKADE_API_KEY }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
             }
           ]
         },
@@ -773,24 +326,24 @@
           }
         }
       },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [600, 800],
       "id": "http-project-tasks-get",
-      "name": "GET Project Tasks",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [680, 800]
+      "name": "projectTasksGet",
+      "description": "Get all tasks for a project"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "=https://www.taskade.com/api/v1/projects/{{ $json.params.projectId }}/tasks/{{ $json.params.taskId }}",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "taskadeApi",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks/' + $fromAI('taskId', 'The task ID', 'string') }}",
+        "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer {{ $env.TASKADE_API_KEY }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
             }
           ]
         },
@@ -802,24 +355,24 @@
           }
         }
       },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [600, 900],
       "id": "http-task-get",
-      "name": "GET Task",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [680, 900]
+      "name": "taskGet",
+      "description": "Get a specific task by ID"
     },
     {
       "parameters": {
         "method": "PUT",
-        "url": "=https://www.taskade.com/api/v1/projects/{{ $json.params.projectId }}/tasks/{{ $json.params.taskId }}",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "taskadeApi",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks/' + $fromAI('taskId', 'The task ID', 'string') }}",
+        "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer {{ $env.TASKADE_API_KEY }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
             },
             {
               "name": "Content-Type",
@@ -832,11 +385,11 @@
           "parameters": [
             {
               "name": "contentType",
-              "value": "={{ $json.params.contentType }}"
+              "value": "={{ $fromAI('contentType', 'Content type: text/markdown or text/plain', 'string') }}"
             },
             {
               "name": "content",
-              "value": "={{ $json.params.content }}"
+              "value": "={{ $fromAI('content', 'Task content (max 2000 characters)', 'string') }}"
             }
           ]
         },
@@ -848,24 +401,24 @@
           }
         }
       },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [600, 1000],
       "id": "http-task-put",
-      "name": "PUT Task Update",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [680, 1000]
+      "name": "taskPut",
+      "description": "Update a task's content"
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://www.taskade.com/api/v1/projects/{{ $json.params.projectId }}/tasks/",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "taskadeApi",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks/' }}",
+        "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer {{ $env.TASKADE_API_KEY }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
             },
             {
               "name": "Content-Type",
@@ -878,7 +431,7 @@
           "parameters": [
             {
               "name": "tasks",
-              "value": "={{ $json.params.tasks }}"
+              "value": "={{ $fromAI('tasks', 'Array of tasks with contentType, content, and placement', 'string') }}"
             }
           ]
         },
@@ -890,24 +443,24 @@
           }
         }
       },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [600, 1100],
       "id": "http-task-create",
-      "name": "POST Task Create",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [680, 1100]
+      "name": "taskCreate",
+      "description": "Create one or more tasks in a project"
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://www.taskade.com/api/v1/projects/{{ $json.params.projectId }}/tasks/{{ $json.params.taskId }}/complete",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "taskadeApi",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks/' + $fromAI('taskId', 'The task ID', 'string') + '/complete' }}",
+        "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer {{ $env.TASKADE_API_KEY }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
             }
           ]
         },
@@ -919,24 +472,24 @@
           }
         }
       },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [600, 1200],
       "id": "http-task-complete",
-      "name": "POST Task Complete",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [680, 1200]
+      "name": "taskComplete",
+      "description": "Mark a task as complete"
     },
     {
       "parameters": {
         "method": "PUT",
-        "url": "=https://www.taskade.com/api/v1/projects/{{ $json.params.projectId }}/tasks/{{ $json.params.taskId }}/move",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "taskadeApi",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks/' + $fromAI('taskId', 'The task ID', 'string') + '/move' }}",
+        "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer {{ $env.TASKADE_API_KEY }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
             },
             {
               "name": "Content-Type",
@@ -949,7 +502,7 @@
           "parameters": [
             {
               "name": "target",
-              "value": "={{ $json.params.target }}"
+              "value": "={{ $fromAI('target', 'Target object with taskId and position (beforebegin/afterbegin/beforeend/afterend)', 'string') }}"
             }
           ]
         },
@@ -961,24 +514,24 @@
           }
         }
       },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [600, 1300],
       "id": "http-task-move",
-      "name": "PUT Task Move",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [680, 1300]
+      "name": "taskMove",
+      "description": "Move a task within the project"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "=https://www.taskade.com/api/v1/projects/{{ $json.params.projectId }}/tasks/{{ $json.params.taskId }}/assignees",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "taskadeApi",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks/' + $fromAI('taskId', 'The task ID', 'string') + '/assignees' }}",
+        "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer {{ $env.TASKADE_API_KEY }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
             }
           ]
         },
@@ -990,24 +543,24 @@
           }
         }
       },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [600, 1400],
       "id": "http-task-assignees-get",
-      "name": "GET Task Assignees",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [680, 1400]
+      "name": "taskAssigneesGet",
+      "description": "Get the assignees of a task"
     },
     {
       "parameters": {
         "method": "PUT",
-        "url": "=https://www.taskade.com/api/v1/projects/{{ $json.params.projectId }}/tasks/{{ $json.params.taskId }}/assignees",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "taskadeApi",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks/' + $fromAI('taskId', 'The task ID', 'string') + '/assignees' }}",
+        "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer {{ $env.TASKADE_API_KEY }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
             },
             {
               "name": "Content-Type",
@@ -1020,7 +573,7 @@
           "parameters": [
             {
               "name": "handles",
-              "value": "={{ $json.params.handles }}"
+              "value": "={{ $fromAI('handles', 'Array of user handles to assign', 'string') }}"
             }
           ]
         },
@@ -1032,24 +585,24 @@
           }
         }
       },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [600, 1500],
       "id": "http-task-put-assignees",
-      "name": "PUT Task Assignees",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [680, 1500]
+      "name": "taskPutAssignees",
+      "description": "Assign users to a task"
     },
     {
       "parameters": {
         "method": "DELETE",
-        "url": "=https://www.taskade.com/api/v1/projects/{{ $json.params.projectId }}/tasks/{{ $json.params.taskId }}/assignees/{{ $json.params.assigneeHandle }}",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "taskadeApi",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks/' + $fromAI('taskId', 'The task ID', 'string') + '/assignees/' + $fromAI('assigneeHandle', 'The assignee handle to remove', 'string') }}",
+        "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer {{ $env.TASKADE_API_KEY }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
             }
           ]
         },
@@ -1061,24 +614,24 @@
           }
         }
       },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [600, 1600],
       "id": "http-task-delete-assignees",
-      "name": "DELETE Task Assignee",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [680, 1600]
+      "name": "taskDeleteAssignees",
+      "description": "Remove an assignee from a task"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "=https://www.taskade.com/api/v1/projects/{{ $json.params.projectId }}/tasks/{{ $json.params.taskId }}/date",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "taskadeApi",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks/' + $fromAI('taskId', 'The task ID', 'string') + '/date' }}",
+        "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer {{ $env.TASKADE_API_KEY }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
             }
           ]
         },
@@ -1090,24 +643,24 @@
           }
         }
       },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [600, 1700],
       "id": "http-task-get-date",
-      "name": "GET Task Date",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [680, 1700]
+      "name": "taskGetDate",
+      "description": "Get the date of a task"
     },
     {
       "parameters": {
         "method": "PUT",
-        "url": "=https://www.taskade.com/api/v1/projects/{{ $json.params.projectId }}/tasks/{{ $json.params.taskId }}/date",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "taskadeApi",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks/' + $fromAI('taskId', 'The task ID', 'string') + '/date' }}",
+        "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer {{ $env.TASKADE_API_KEY }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
             },
             {
               "name": "Content-Type",
@@ -1120,11 +673,11 @@
           "parameters": [
             {
               "name": "start",
-              "value": "={{ $json.params.start }}"
+              "value": "={{ $fromAI('start', 'Start date object with date, time, timezone', 'string') }}"
             },
             {
               "name": "end",
-              "value": "={{ $json.params.end }}"
+              "value": "={{ $fromAI('end', 'End date object with date, time, timezone', 'string') }}"
             }
           ]
         },
@@ -1136,24 +689,24 @@
           }
         }
       },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [600, 1800],
       "id": "http-task-put-date",
-      "name": "PUT Task Date",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [680, 1800]
+      "name": "taskPutDate",
+      "description": "Create or update date for a task"
     },
     {
       "parameters": {
         "method": "DELETE",
-        "url": "=https://www.taskade.com/api/v1/projects/{{ $json.params.projectId }}/tasks/{{ $json.params.taskId }}/date",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "taskadeApi",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks/' + $fromAI('taskId', 'The task ID', 'string') + '/date' }}",
+        "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer {{ $env.TASKADE_API_KEY }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
             }
           ]
         },
@@ -1165,24 +718,24 @@
           }
         }
       },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [600, 1900],
       "id": "http-task-delete-date",
-      "name": "DELETE Task Date",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [680, 1900]
+      "name": "taskDeleteDate",
+      "description": "Delete the date of a task"
     },
     {
       "parameters": {
         "method": "PUT",
-        "url": "=https://www.taskade.com/api/v1/projects/{{ $json.params.projectId }}/tasks/{{ $json.params.taskId }}/note",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "taskadeApi",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks/' + $fromAI('taskId', 'The task ID', 'string') + '/note' }}",
+        "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer {{ $env.TASKADE_API_KEY }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
             },
             {
               "name": "Content-Type",
@@ -1195,11 +748,11 @@
           "parameters": [
             {
               "name": "type",
-              "value": "={{ $json.params.type }}"
+              "value": "={{ $fromAI('type', 'Note type: text/plain or text/markdown', 'string') }}"
             },
             {
               "name": "value",
-              "value": "={{ $json.params.value }}"
+              "value": "={{ $fromAI('value', 'Note content', 'string') }}"
             }
           ]
         },
@@ -1211,24 +764,24 @@
           }
         }
       },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [600, 2000],
       "id": "http-task-note-put",
-      "name": "PUT Task Note",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [680, 2000]
+      "name": "taskNotePut",
+      "description": "Add or update a note to the task"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "=https://www.taskade.com/api/v1/folders/{{ $json.params.folderId }}/projects",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "taskadeApi",
+        "url": "={{ 'https://www.taskade.com/api/v1/folders/' + $fromAI('folderId', 'The folder ID', 'string') + '/projects' }}",
+        "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer {{ $env.TASKADE_API_KEY }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
             }
           ]
         },
@@ -1240,414 +793,241 @@
           }
         }
       },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [600, 2100],
       "id": "http-folder-projects-get",
-      "name": "GET Folder Projects",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [680, 2100]
-    },
-    {
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "={{ $json }}",
-        "options": {}
-      },
-      "id": "respond-to-webhook",
-      "name": "Respond to Webhook",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.1,
-      "position": [900, 300]
+      "name": "folderProjectsGet",
+      "description": "Get all projects in a folder"
     }
   ],
   "connections": {
-    "MCP Server Trigger": {
-      "main": [
+    "workspacesGet": {
+      "ai_tool": [
         [
           {
-            "node": "Route by Tool Name",
-            "type": "main",
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Route by Tool Name": {
-      "main": [
+    "workspaceCreateProject": {
+      "ai_tool": [
         [
           {
-            "node": "GET Workspaces",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "POST Workspace Create Project",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "GET Workspace Folders",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "GET Project",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "POST Project Create",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "POST Project Copy",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "GET Project Blocks",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "GET Project Tasks",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "GET Task",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "PUT Task Update",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "POST Task Create",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "POST Task Complete",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "PUT Task Move",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "GET Task Assignees",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "PUT Task Assignees",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "DELETE Task Assignee",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "GET Task Date",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "PUT Task Date",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "DELETE Task Date",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "PUT Task Note",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "GET Folder Projects",
-            "type": "main",
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "GET Workspaces": {
-      "main": [
+    "workspaceFoldersGet": {
+      "ai_tool": [
         [
           {
-            "node": "Respond to Webhook",
-            "type": "main",
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "POST Workspace Create Project": {
-      "main": [
+    "projectGet": {
+      "ai_tool": [
         [
           {
-            "node": "Respond to Webhook",
-            "type": "main",
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "GET Workspace Folders": {
-      "main": [
+    "projectCreate": {
+      "ai_tool": [
         [
           {
-            "node": "Respond to Webhook",
-            "type": "main",
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "GET Project": {
-      "main": [
+    "projectCopy": {
+      "ai_tool": [
         [
           {
-            "node": "Respond to Webhook",
-            "type": "main",
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "POST Project Create": {
-      "main": [
+    "projectBlocksGet": {
+      "ai_tool": [
         [
           {
-            "node": "Respond to Webhook",
-            "type": "main",
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "POST Project Copy": {
-      "main": [
+    "projectTasksGet": {
+      "ai_tool": [
         [
           {
-            "node": "Respond to Webhook",
-            "type": "main",
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "GET Project Blocks": {
-      "main": [
+    "taskGet": {
+      "ai_tool": [
         [
           {
-            "node": "Respond to Webhook",
-            "type": "main",
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "GET Project Tasks": {
-      "main": [
+    "taskPut": {
+      "ai_tool": [
         [
           {
-            "node": "Respond to Webhook",
-            "type": "main",
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "GET Task": {
-      "main": [
+    "taskCreate": {
+      "ai_tool": [
         [
           {
-            "node": "Respond to Webhook",
-            "type": "main",
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "PUT Task Update": {
-      "main": [
+    "taskComplete": {
+      "ai_tool": [
         [
           {
-            "node": "Respond to Webhook",
-            "type": "main",
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "POST Task Create": {
-      "main": [
+    "taskMove": {
+      "ai_tool": [
         [
           {
-            "node": "Respond to Webhook",
-            "type": "main",
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "POST Task Complete": {
-      "main": [
+    "taskAssigneesGet": {
+      "ai_tool": [
         [
           {
-            "node": "Respond to Webhook",
-            "type": "main",
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "PUT Task Move": {
-      "main": [
+    "taskPutAssignees": {
+      "ai_tool": [
         [
           {
-            "node": "Respond to Webhook",
-            "type": "main",
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "GET Task Assignees": {
-      "main": [
+    "taskDeleteAssignees": {
+      "ai_tool": [
         [
           {
-            "node": "Respond to Webhook",
-            "type": "main",
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "PUT Task Assignees": {
-      "main": [
+    "taskGetDate": {
+      "ai_tool": [
         [
           {
-            "node": "Respond to Webhook",
-            "type": "main",
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "DELETE Task Assignee": {
-      "main": [
+    "taskPutDate": {
+      "ai_tool": [
         [
           {
-            "node": "Respond to Webhook",
-            "type": "main",
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "GET Task Date": {
-      "main": [
+    "taskDeleteDate": {
+      "ai_tool": [
         [
           {
-            "node": "Respond to Webhook",
-            "type": "main",
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "PUT Task Date": {
-      "main": [
+    "taskNotePut": {
+      "ai_tool": [
         [
           {
-            "node": "Respond to Webhook",
-            "type": "main",
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "DELETE Task Date": {
-      "main": [
+    "folderProjectsGet": {
+      "ai_tool": [
         [
           {
-            "node": "Respond to Webhook",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "PUT Task Note": {
-      "main": [
-        [
-          {
-            "node": "Respond to Webhook",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "GET Folder Projects": {
-      "main": [
-        [
-          {
-            "node": "Respond to Webhook",
-            "type": "main",
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
             "index": 0
           }
         ]
@@ -1662,5 +1042,5 @@
   "tags": [],
   "triggerCount": 1,
   "updatedAt": "2025-11-04T00:00:00.000Z",
-  "versionId": "1"
+  "versionId": "2"
 }
