@@ -22,7 +22,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key from environment variable', 'string') }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'REQUIRED: Your Taskade personal access token from https://www.taskade.com/settings/password. Format: Bearer token for authentication.', 'string') }}"
             }
           ]
         },
@@ -39,19 +39,19 @@
       "position": [600, 100],
       "id": "http-workspaces-get",
       "name": "workspacesGet",
-      "description": "Get all workspaces for a user"
+      "description": "Get all workspaces for a user. Returns an array of workspace objects, each containing an id (alphanumeric string of 16 or 9 characters) and name. Workspaces are the top-level organizational units in Taskade. Use this to list all workspaces accessible to the authenticated user. Response: {ok: true, items: [{id: string, name: string}]}"
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "={{ 'https://www.taskade.com/api/v1/workspaces/' + $fromAI('workspaceId', 'The workspace ID', 'string') + '/projects' }}",
+        "url": "={{ 'https://www.taskade.com/api/v1/workspaces/' + $fromAI('workspaceId', 'REQUIRED: The workspace ID where the project will be created. Alphanumeric string of 16 or 9 characters (may include underscores or hyphens). Get workspace IDs using workspacesGet tool.', 'string') + '/projects' }}",
         "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'REQUIRED: Your Taskade personal access token from https://www.taskade.com/settings/password', 'string') }}"
             },
             {
               "name": "Content-Type",
@@ -64,11 +64,11 @@
           "parameters": [
             {
               "name": "contentType",
-              "value": "={{ $fromAI('contentType', 'Content type: text/markdown or text/plain', 'string') }}"
+              "value": "={{ $fromAI('contentType', 'REQUIRED: Content type for the project. MUST be \"text/markdown\" (no other values accepted). This determines how the project content is formatted.', 'string') }}"
             },
             {
               "name": "content",
-              "value": "={{ $fromAI('content', 'Project content', 'string') }}"
+              "value": "={{ $fromAI('content', 'REQUIRED: Initial content for the new project in markdown format. This will be the project\\'s starting content/template.', 'string') }}"
             }
           ]
         },
@@ -85,19 +85,19 @@
       "position": [600, 200],
       "id": "http-workspace-create-project",
       "name": "workspaceCreateProject",
-      "description": "Create a project in a workspace"
+      "description": "Create a project in a workspace. Projects are containers for tasks, notes, and collaborative work. Returns the newly created project object with id (16-character alphanumeric) and name. Use this to create new projects within a specific workspace. Response: {ok: true, item: {id: string, name: string}}"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={{ 'https://www.taskade.com/api/v1/workspaces/' + $fromAI('workspaceId', 'The workspace ID', 'string') + '/folders' }}",
+        "url": "={{ 'https://www.taskade.com/api/v1/workspaces/' + $fromAI('workspaceId', 'REQUIRED: The workspace ID to get folders from. Alphanumeric string of 16 or 9 characters (may include underscores or hyphens). Get workspace IDs using workspacesGet tool.', 'string') + '/folders' }}",
         "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'REQUIRED: Your Taskade personal access token from https://www.taskade.com/settings/password', 'string') }}"
             }
           ]
         },
@@ -114,19 +114,19 @@
       "position": [600, 300],
       "id": "http-workspace-folders-get",
       "name": "workspaceFoldersGet",
-      "description": "Get all folders for a workspace"
+      "description": "Get all folders for a workspace. Folders organize projects within a workspace. Returns an array of folder objects, each containing id (alphanumeric string of 16 or 9 characters) and name. Folders are nullable in the response. Use this to navigate the folder structure of a workspace. Response: {ok: true, items: [{id: string, name: string}]}"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') }}",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'REQUIRED: The project ID to retrieve. Alphanumeric string that is 16 characters long. Get project IDs using folderProjectsGet, workspaceCreateProject, or projectCreate tools.', 'string') }}",
         "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'REQUIRED: Your Taskade personal access token from https://www.taskade.com/settings/password', 'string') }}"
             }
           ]
         },
@@ -143,7 +143,7 @@
       "position": [600, 400],
       "id": "http-project-get",
       "name": "projectGet",
-      "description": "Get project by ID"
+      "description": "Get project details by ID. Returns a project object containing id (16-character alphanumeric string) and name (project title). Use this to retrieve basic information about a specific project. Response: {ok: true, item: {id: string, name: string}}"
     },
     {
       "parameters": {
@@ -155,7 +155,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'REQUIRED: Your Taskade personal access token from https://www.taskade.com/settings/password', 'string') }}"
             },
             {
               "name": "Content-Type",
@@ -168,15 +168,15 @@
           "parameters": [
             {
               "name": "folderId",
-              "value": "={{ $fromAI('folderId', 'The folder ID (optional)', 'string') }}"
+              "value": "={{ $fromAI('folderId', 'REQUIRED: The folder ID where the project will be created. String with minimum 1 character. Get folder IDs using workspaceFoldersGet tool.', 'string') }}"
             },
             {
               "name": "contentType",
-              "value": "={{ $fromAI('contentType', 'Content type: text/markdown or text/plain', 'string') }}"
+              "value": "={{ $fromAI('contentType', 'REQUIRED: Content type for the project. MUST be \"text/markdown\" (no other values accepted). This determines how the project content is formatted.', 'string') }}"
             },
             {
               "name": "content",
-              "value": "={{ $fromAI('content', 'Project content', 'string') }}"
+              "value": "={{ $fromAI('content', 'REQUIRED: Initial content for the new project in markdown format. This will be the project\\'s starting content/template.', 'string') }}"
             }
           ]
         },
@@ -193,19 +193,19 @@
       "position": [600, 500],
       "id": "http-project-create",
       "name": "projectCreate",
-      "description": "Create a new project in a team"
+      "description": "Create a project in a team. Projects are collaborative workspaces for tasks and content. Returns the newly created project object with id and name. The project will be created in the specified folder. Response is nullable. Use this to create new projects within a team folder. Response: {ok: true, item: {id: string, name: string} | null}"
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID to copy', 'string') + '/copy' }}",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'REQUIRED: The project ID to copy. Alphanumeric string that is 16 characters long. Source project will be duplicated.', 'string') + '/copy' }}",
         "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'REQUIRED: Your Taskade personal access token from https://www.taskade.com/settings/password', 'string') }}"
             },
             {
               "name": "Content-Type",
@@ -218,11 +218,11 @@
           "parameters": [
             {
               "name": "folderId",
-              "value": "={{ $fromAI('folderId', 'Destination folder ID (optional)', 'string') }}"
+              "value": "={{ $fromAI('folderId', 'REQUIRED: Destination folder ID where the copied project will be placed. String with minimum 1 character. Get folder IDs using workspaceFoldersGet tool.', 'string') }}"
             },
             {
               "name": "projectTitle",
-              "value": "={{ $fromAI('projectTitle', 'New project title (optional)', 'string') }}"
+              "value": "={{ $fromAI('projectTitle', 'OPTIONAL: New project title for the copy. String with minimum 1 character. If not provided, the original project name will be used.', 'string') }}"
             }
           ]
         },
@@ -239,27 +239,27 @@
       "position": [600, 600],
       "id": "http-project-copy",
       "name": "projectCopy",
-      "description": "Copy a project to a folder"
+      "description": "Copy a project to a folder. Creates a duplicate of an existing project with all its content and structure in the specified destination folder. Returns the newly copied project object. Response is nullable. Use this to replicate project templates or backup projects. Response: {ok: true, item: {id: string, name: string} | null}"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/blocks' }}",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'REQUIRED: The project ID to get blocks from. Alphanumeric string that is 16 characters long.', 'string') + '/blocks' }}",
         "authentication": "none",
         "sendQuery": true,
         "queryParameters": {
           "parameters": [
             {
               "name": "limit",
-              "value": "={{ $fromAI('limit', 'Number of blocks to return (default 100)', 'number') }}"
+              "value": "={{ $fromAI('limit', 'OPTIONAL: Number of blocks to return. Type: number. Default: 100. Controls pagination page size.', 'number') }}"
             },
             {
               "name": "after",
-              "value": "={{ $fromAI('after', 'Cursor for pagination (UUID)', 'string') }}"
+              "value": "={{ $fromAI('after', 'OPTIONAL: Cursor for pagination. UUID format. Specify block ID to get blocks after it. Do NOT specify both after and before simultaneously. Use for forward pagination.', 'string') }}"
             },
             {
               "name": "before",
-              "value": "={{ $fromAI('before', 'Cursor for pagination (UUID)', 'string') }}"
+              "value": "={{ $fromAI('before', 'OPTIONAL: Cursor for pagination. UUID format. Specify block ID to get blocks before it. Do NOT specify both before and after simultaneously. Use for backward pagination.', 'string') }}"
             }
           ]
         },
@@ -268,7 +268,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'REQUIRED: Your Taskade personal access token from https://www.taskade.com/settings/password', 'string') }}"
             }
           ]
         },
@@ -285,27 +285,27 @@
       "position": [600, 700],
       "id": "http-project-blocks-get",
       "name": "projectBlocksGet",
-      "description": "Get all blocks for a project"
+      "description": "Get all blocks for a project with cursor-based pagination. Blocks are content elements within a project (paragraphs, headings, etc.). Returns an array of block objects, each containing id (UUID), text, and completed (boolean, default false). Use limit, after, or before parameters to paginate through large sets of blocks. Response: {ok: true, items: [{id: string (UUID), text: string, completed: boolean}]}"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks' }}",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'REQUIRED: The project ID to get tasks from. Alphanumeric string that is 16 characters long.', 'string') + '/tasks' }}",
         "authentication": "none",
         "sendQuery": true,
         "queryParameters": {
           "parameters": [
             {
               "name": "limit",
-              "value": "={{ $fromAI('limit', 'Number of tasks to return (default 100)', 'number') }}"
+              "value": "={{ $fromAI('limit', 'OPTIONAL: Number of tasks to return. Type: number. Default: 100. Controls pagination page size.', 'number') }}"
             },
             {
               "name": "after",
-              "value": "={{ $fromAI('after', 'Cursor for pagination (UUID)', 'string') }}"
+              "value": "={{ $fromAI('after', 'OPTIONAL: Cursor for pagination. UUID format. Specify task ID to get tasks after it. Do NOT specify both after and before simultaneously. Use for forward pagination.', 'string') }}"
             },
             {
               "name": "before",
-              "value": "={{ $fromAI('before', 'Cursor for pagination (UUID)', 'string') }}"
+              "value": "={{ $fromAI('before', 'OPTIONAL: Cursor for pagination. UUID format. Specify task ID to get tasks before it. Do NOT specify both before and after simultaneously. Use for backward pagination.', 'string') }}"
             }
           ]
         },
@@ -314,7 +314,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'REQUIRED: Your Taskade personal access token from https://www.taskade.com/settings/password', 'string') }}"
             }
           ]
         },
@@ -331,19 +331,19 @@
       "position": [600, 800],
       "id": "http-project-tasks-get",
       "name": "projectTasksGet",
-      "description": "Get all tasks for a project"
+      "description": "Get all tasks for a project with cursor-based pagination. Tasks are actionable items within a project. Returns an array of task objects, each containing id (UUID), text, parentId (UUID), and completed (boolean, default false). Use limit, after, or before parameters to paginate through large task lists. Response: {ok: true, items: [{id: string (UUID), text: string, parentId: string (UUID), completed: boolean}]}"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks/' + $fromAI('taskId', 'The task ID', 'string') }}",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'REQUIRED: The project ID containing the task. Alphanumeric string that is 16 characters long.', 'string') + '/tasks/' + $fromAI('taskId', 'REQUIRED: The task ID to retrieve. UUID format. Get task IDs using projectTasksGet tool.', 'string') }}",
         "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'REQUIRED: Your Taskade personal access token from https://www.taskade.com/settings/password', 'string') }}"
             }
           ]
         },
@@ -360,19 +360,19 @@
       "position": [600, 900],
       "id": "http-task-get",
       "name": "taskGet",
-      "description": "Get a specific task by ID"
+      "description": "Get task with id. Returns a specific task object containing id (UUID), text, parentId (UUID), and completed (boolean). Response is nullable. Use this to retrieve detailed information about a single task. Response: {ok: true, item: {id: string (UUID), text: string, parentId: string (UUID), completed: boolean} | null}"
     },
     {
       "parameters": {
         "method": "PUT",
-        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks/' + $fromAI('taskId', 'The task ID', 'string') }}",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'REQUIRED: The project ID containing the task. Alphanumeric string that is 16 characters long.', 'string') + '/tasks/' + $fromAI('taskId', 'REQUIRED: The task ID to update. UUID format.', 'string') }}",
         "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'REQUIRED: Your Taskade personal access token from https://www.taskade.com/settings/password', 'string') }}"
             },
             {
               "name": "Content-Type",
@@ -385,11 +385,11 @@
           "parameters": [
             {
               "name": "contentType",
-              "value": "={{ $fromAI('contentType', 'Content type: text/markdown or text/plain', 'string') }}"
+              "value": "={{ $fromAI('contentType', 'REQUIRED: Content type for the task. MUST be \"text/markdown\" OR \"text/plain\". Determines how the task content is formatted.', 'string') }}"
             },
             {
               "name": "content",
-              "value": "={{ $fromAI('content', 'Task content (max 2000 characters)', 'string') }}"
+              "value": "={{ $fromAI('content', 'REQUIRED: New task content. MUST be single line (no \\\\r or \\\\n characters allowed). Maximum 2000 characters. Pattern: ^[^\\\\r\\\\n]*$', 'string') }}"
             }
           ]
         },
@@ -406,19 +406,19 @@
       "position": [600, 1000],
       "id": "http-task-put",
       "name": "taskPut",
-      "description": "Update a task's content"
+      "description": "Update task content. Modifies the text content of an existing task. Content must be a single line with no line breaks, maximum 2000 characters. Returns the updated task object. Response is nullable. Use this to edit task descriptions or titles. Response: {ok: true, item: {id: string (UUID), text: string, parentId: string (UUID), completed: boolean} | null}"
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks/' }}",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'REQUIRED: Unique identifier for the project where tasks will be created. Alphanumeric string that is 16 characters long.', 'string') + '/tasks/' }}",
         "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'REQUIRED: Your Taskade personal access token from https://www.taskade.com/settings/password', 'string') }}"
             },
             {
               "name": "Content-Type",
@@ -431,7 +431,7 @@
           "parameters": [
             {
               "name": "tasks",
-              "value": "={{ $fromAI('tasks', 'Array of tasks with contentType, content, and placement', 'string') }}"
+              "value": "={{ $fromAI('tasks', 'REQUIRED: Array of task objects (max 20 items). Each task MUST have: {\"contentType\": \"text/markdown\"|\"text/plain\", \"content\": \"text (max 2000 chars)\", \"placement\": \"afterbegin\"|\"beforeend\"|\"beforebegin\"|\"afterend\", \"taskId\": \"null\"|UUID}. For project-level placement use taskId: null with placement: afterbegin|beforeend. For relative placement use taskId: UUID with placement: beforebegin|afterbegin|beforeend|afterend. Example: [{\"contentType\":\"text/plain\",\"content\":\"New task\",\"taskId\":null,\"placement\":\"beforeend\"}]', 'string') }}"
             }
           ]
         },
@@ -448,19 +448,19 @@
       "position": [600, 1100],
       "id": "http-task-create",
       "name": "taskCreate",
-      "description": "Create one or more tasks in a project"
+      "description": "Create one or more tasks in a project. Can create up to 20 tasks in a single request. Each task requires contentType (text/markdown or text/plain), content (max 2000 chars), and placement info. Placement determines where tasks appear: use taskId=null with placement=afterbegin/beforeend for project-level positioning, or taskId=UUID with placement=beforebegin/afterbegin/beforeend/afterend for positioning relative to another task. Returns array of created task objects. Response: {ok: true, item: [{id: string (UUID), text: string, parentId: string (UUID), completed: boolean}]}"
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks/' + $fromAI('taskId', 'The task ID', 'string') + '/complete' }}",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'REQUIRED: The project ID containing the task. Alphanumeric string that is 16 characters long.', 'string') + '/tasks/' + $fromAI('taskId', 'REQUIRED: The task ID to mark as complete. UUID format.', 'string') + '/complete' }}",
         "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'REQUIRED: Your Taskade personal access token from https://www.taskade.com/settings/password', 'string') }}"
             }
           ]
         },
@@ -477,19 +477,19 @@
       "position": [600, 1200],
       "id": "http-task-complete",
       "name": "taskComplete",
-      "description": "Mark a task as complete"
+      "description": "Complete a task in a project. Marks the specified task as completed, setting its completed property to true. Returns the updated task object. Response is nullable. Use this to mark tasks as done. To undo completion, use taskUncomplete tool. Response: {ok: true, item: {id: string (UUID), text: string, parentId: string (UUID), completed: true} | null}"
     },
     {
       "parameters": {
         "method": "PUT",
-        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks/' + $fromAI('taskId', 'The task ID', 'string') + '/move' }}",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'REQUIRED: The project ID containing the task. Alphanumeric string that is 16 characters long.', 'string') + '/tasks/' + $fromAI('taskId', 'REQUIRED: The task ID to move. UUID format.', 'string') + '/move' }}",
         "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'REQUIRED: Your Taskade personal access token from https://www.taskade.com/settings/password', 'string') }}"
             },
             {
               "name": "Content-Type",
@@ -502,7 +502,7 @@
           "parameters": [
             {
               "name": "target",
-              "value": "={{ $fromAI('target', 'Target object with taskId and position (beforebegin/afterbegin/beforeend/afterend)', 'string') }}"
+              "value": "={{ $fromAI('target', 'REQUIRED: Target object defining new position. Format: {\"taskId\": \"UUID (min 1 char)\", \"position\": \"beforebegin\"|\"afterbegin\"|\"beforeend\"|\"afterend\"}. Position values: beforebegin=before target task, afterbegin=as first child of target, beforeend=as last child of target, afterend=after target task. Example: {\"taskId\":\"abc123\",\"position\":\"afterend\"}', 'string') }}"
             }
           ]
         },
@@ -519,19 +519,19 @@
       "position": [600, 1300],
       "id": "http-task-move",
       "name": "taskMove",
-      "description": "Move a task within the project"
+      "description": "Move a task within the project. Repositions a task relative to another task using position values: beforebegin (before target), afterbegin (first child of target), beforeend (last child of target), or afterend (after target). Returns the moved task object. Response is nullable. Use this to reorganize task hierarchy and order. Response: {ok: true, item: {id: string (UUID), text: string, parentId: string (UUID), completed: boolean} | null}"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks/' + $fromAI('taskId', 'The task ID', 'string') + '/assignees' }}",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'REQUIRED: The project ID containing the task. Alphanumeric string that is 16 characters long.', 'string') + '/tasks/' + $fromAI('taskId', 'REQUIRED: The task ID to get assignees for. UUID format.', 'string') + '/assignees' }}",
         "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'REQUIRED: Your Taskade personal access token from https://www.taskade.com/settings/password', 'string') }}"
             }
           ]
         },
@@ -548,19 +548,19 @@
       "position": [600, 1400],
       "id": "http-task-assignees-get",
       "name": "taskAssigneesGet",
-      "description": "Get the assignees of a task"
+      "description": "Get the assignees of a task. Returns an array of user objects currently assigned to the task. Each user object contains handle (required) and displayName. Use this to see who is responsible for a task. Related tools: taskPutAssignees (assign users), taskDeleteAssignees (remove assignee). Response: {ok: true, items: [{handle: string, displayName: string}]}"
     },
     {
       "parameters": {
         "method": "PUT",
-        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks/' + $fromAI('taskId', 'The task ID', 'string') + '/assignees' }}",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'REQUIRED: The project ID containing the task. Alphanumeric string that is 16 characters long.', 'string') + '/tasks/' + $fromAI('taskId', 'REQUIRED: The task ID to assign users to. UUID format.', 'string') + '/assignees' }}",
         "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'REQUIRED: Your Taskade personal access token from https://www.taskade.com/settings/password', 'string') }}"
             },
             {
               "name": "Content-Type",
@@ -573,7 +573,7 @@
           "parameters": [
             {
               "name": "handles",
-              "value": "={{ $fromAI('handles', 'Array of user handles to assign', 'string') }}"
+              "value": "={{ $fromAI('handles', 'REQUIRED: Array of user handles to assign to this task. Each handle must be a string with minimum 1 character. IMPORTANT: This REPLACES all existing assignees. To add assignees, include existing handles from taskAssigneesGet plus new ones. Example: [\"user1\",\"user2\"]', 'string') }}"
             }
           ]
         },
@@ -590,19 +590,19 @@
       "position": [600, 1500],
       "id": "http-task-put-assignees",
       "name": "taskPutAssignees",
-      "description": "Assign users to a task"
+      "description": "Task assignment. REPLACES all existing assignees with the provided list of user handles. To add assignees without removing existing ones, first use taskAssigneesGet to get current assignees, then include them in the handles array along with new assignees. Returns the updated task object. Response is nullable. Related tools: taskAssigneesGet (view assignees), taskDeleteAssignees (remove single assignee). Response: {ok: true, item: {id: string (UUID), text: string, parentId: string (UUID), completed: boolean} | null}"
     },
     {
       "parameters": {
         "method": "DELETE",
-        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks/' + $fromAI('taskId', 'The task ID', 'string') + '/assignees/' + $fromAI('assigneeHandle', 'The assignee handle to remove', 'string') }}",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'REQUIRED: The project ID containing the task. Alphanumeric string that is 16 characters long.', 'string') + '/tasks/' + $fromAI('taskId', 'REQUIRED: The task ID to remove assignee from. UUID format.', 'string') + '/assignees/' + $fromAI('assigneeHandle', 'REQUIRED: The user handle to remove from task assignees. String identifying the user. Get assignee handles using taskAssigneesGet tool.', 'string') }}",
         "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'REQUIRED: Your Taskade personal access token from https://www.taskade.com/settings/password', 'string') }}"
             }
           ]
         },
@@ -619,19 +619,19 @@
       "position": [600, 1600],
       "id": "http-task-delete-assignees",
       "name": "taskDeleteAssignees",
-      "description": "Remove an assignee from a task"
+      "description": "Remove assignee from a task. Removes a single user from the task's assignee list by their handle. Returns the updated task object. Response is nullable. Use this to unassign a specific user while keeping other assignees. Related tools: taskPutAssignees (set all assignees), taskAssigneesGet (view assignees). Response: {ok: true, item: {id: string (UUID), text: string, parentId: string (UUID), completed: boolean} | null}"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks/' + $fromAI('taskId', 'The task ID', 'string') + '/date' }}",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'REQUIRED: The project ID containing the task. Alphanumeric string that is 16 characters long.', 'string') + '/tasks/' + $fromAI('taskId', 'REQUIRED: The task ID to get date for. UUID format.', 'string') + '/date' }}",
         "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'REQUIRED: Your Taskade personal access token from https://www.taskade.com/settings/password', 'string') }}"
             }
           ]
         },
@@ -648,19 +648,19 @@
       "position": [600, 1700],
       "id": "http-task-get-date",
       "name": "taskGetDate",
-      "description": "Get the date of a task"
+      "description": "Get the date of a task. Returns date information containing start (required) and end (optional, nullable). Each date object has: date (required, YYYY-MM-DD format matching ^\\d{4}-\\d{2}-\\d{2}$), time (optional nullable, HH:MM:SS format matching ^(?:[0-1][0-9]|[2][0-3]):[0-5][0-9](?::[0-5][0-9])?$), timezone (optional nullable). End can also be {period: string}. Use this to retrieve task scheduling information. Related tools: taskPutDate (set/update), taskDeleteDate (remove). Response: {ok: true, item: {start: {date: string, time: string|null, timezone: string|null}, end: {date: string, time: string|null, timezone: string|null}|{period: string}|null}}"
     },
     {
       "parameters": {
         "method": "PUT",
-        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks/' + $fromAI('taskId', 'The task ID', 'string') + '/date' }}",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'REQUIRED: The project ID containing the task. Alphanumeric string that is 16 characters long.', 'string') + '/tasks/' + $fromAI('taskId', 'REQUIRED: The task ID to set date for. UUID format.', 'string') + '/date' }}",
         "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'REQUIRED: Your Taskade personal access token from https://www.taskade.com/settings/password', 'string') }}"
             },
             {
               "name": "Content-Type",
@@ -673,11 +673,11 @@
           "parameters": [
             {
               "name": "start",
-              "value": "={{ $fromAI('start', 'Start date object with date, time, timezone', 'string') }}"
+              "value": "={{ $fromAI('start', 'REQUIRED: Start date object. Format: {\"date\": \"YYYY-MM-DD\" (pattern ^\\\\d{4}-\\\\d{2}-\\\\d{2}$), \"time\": \"HH:MM:SS\"|null (pattern ^(?:[0-1][0-9]|[2][0-3]):[0-5][0-9](?::[0-5][0-9])?$, nullable), \"timezone\": \"America/New_York\"|null (nullable)}. Date is required, time and timezone are optional. Example: {\"date\":\"2025-12-31\",\"time\":\"14:30:00\",\"timezone\":\"America/New_York\"}', 'string') }}"
             },
             {
               "name": "end",
-              "value": "={{ $fromAI('end', 'End date object with date, time, timezone', 'string') }}"
+              "value": "={{ $fromAI('end', 'OPTIONAL: End date object. Same format as start: {\"date\": \"YYYY-MM-DD\", \"time\": \"HH:MM:SS\"|null, \"timezone\": \"string\"|null}. All fields follow same patterns as start. Leave empty for single-date tasks.', 'string') }}"
             }
           ]
         },
@@ -694,19 +694,19 @@
       "position": [600, 1800],
       "id": "http-task-put-date",
       "name": "taskPutDate",
-      "description": "Create or update date for a task"
+      "description": "Create or update date for a task. Sets or modifies the task's date/time information. Start date is required with format {date: YYYY-MM-DD, time: HH:MM:SS|null, timezone: string|null}. End date is optional with same format. Date must match ^\\d{4}-\\d{2}-\\d{2}$, time must match ^(?:[0-1][0-9]|[2][0-3]):[0-5][0-9](?::[0-5][0-9])?$. Returns the updated task object. Response is nullable. Use for scheduling tasks or deadlines. Related tools: taskGetDate (retrieve), taskDeleteDate (remove). Response: {ok: true, item: {id: string (UUID), text: string, parentId: string (UUID), completed: boolean} | null}"
     },
     {
       "parameters": {
         "method": "DELETE",
-        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks/' + $fromAI('taskId', 'The task ID', 'string') + '/date' }}",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'REQUIRED: The project ID containing the task. Alphanumeric string that is 16 characters long.', 'string') + '/tasks/' + $fromAI('taskId', 'REQUIRED: The task ID to delete date from. UUID format.', 'string') + '/date' }}",
         "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'REQUIRED: Your Taskade personal access token from https://www.taskade.com/settings/password', 'string') }}"
             }
           ]
         },
@@ -723,19 +723,19 @@
       "position": [600, 1900],
       "id": "http-task-delete-date",
       "name": "taskDeleteDate",
-      "description": "Delete the date of a task"
+      "description": "Delete date of a task. Removes all date/time information from the task, clearing both start and end dates. Returns the updated task object. Response is nullable. Use this to unschedule a task or remove deadline information. Related tools: taskPutDate (set/update), taskGetDate (retrieve). Response: {ok: true, item: {id: string (UUID), text: string, parentId: string (UUID), completed: boolean} | null}"
     },
     {
       "parameters": {
         "method": "PUT",
-        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'The project ID', 'string') + '/tasks/' + $fromAI('taskId', 'The task ID', 'string') + '/note' }}",
+        "url": "={{ 'https://www.taskade.com/api/v1/projects/' + $fromAI('projectId', 'REQUIRED: The project ID containing the task. Alphanumeric string that is 16 characters long.', 'string') + '/tasks/' + $fromAI('taskId', 'REQUIRED: The task ID to add/update note for. UUID format.', 'string') + '/note' }}",
         "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'REQUIRED: Your Taskade personal access token from https://www.taskade.com/settings/password', 'string') }}"
             },
             {
               "name": "Content-Type",
@@ -748,11 +748,11 @@
           "parameters": [
             {
               "name": "type",
-              "value": "={{ $fromAI('type', 'Note type: text/plain or text/markdown', 'string') }}"
+              "value": "={{ $fromAI('type', 'REQUIRED: Note type. MUST be \"text/plain\" OR \"text/markdown\". Determines how the note content is formatted and rendered.', 'string') }}"
             },
             {
               "name": "value",
-              "value": "={{ $fromAI('value', 'Note content', 'string') }}"
+              "value": "={{ $fromAI('value', 'REQUIRED: Note content. String with minimum 1 character. MUST be single line (no \\\\r or \\\\n characters allowed). Pattern: ^[^\\\\r\\\\n]*$. The actual note text to attach to the task.', 'string') }}"
             }
           ]
         },
@@ -769,19 +769,19 @@
       "position": [600, 2000],
       "id": "http-task-note-put",
       "name": "taskNotePut",
-      "description": "Add or update a note to the task"
+      "description": "Add/update a note to the task. Creates or replaces the task's note with new content. Note must be single line (no \\r or \\n), minimum 1 character, matching pattern ^[^\\r\\n]*$. Type must be text/plain or text/markdown. Returns the note object with type and value. Response is nullable. Use this to add detailed information or context to tasks. Related: taskNoteGet (retrieve), taskNoteDelete (remove). Response: {ok: true, item: {type: string, value: string} | null}"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={{ 'https://www.taskade.com/api/v1/folders/' + $fromAI('folderId', 'The folder ID', 'string') + '/projects' }}",
+        "url": "={{ 'https://www.taskade.com/api/v1/folders/' + $fromAI('folderId', 'REQUIRED: Folder/Workspace/Space ID to get projects from. Alphanumeric string of 16 or 9 characters (may include underscores or hyphens). Can be a folder ID, workspace ID, or space ID for the home team. Get folder IDs using workspaceFoldersGet tool.', 'string') + '/projects' }}",
         "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "={{ 'Bearer ' + $fromAI('api_key', 'Taskade API Key', 'string') }}"
+              "value": "={{ 'Bearer ' + $fromAI('api_key', 'REQUIRED: Your Taskade personal access token from https://www.taskade.com/settings/password', 'string') }}"
             }
           ]
         },
@@ -798,7 +798,7 @@
       "position": [600, 2100],
       "id": "http-folder-projects-get",
       "name": "folderProjectsGet",
-      "description": "Get all projects in a folder"
+      "description": "Get all projects in a team, or in the home team of a workspace. Returns an array of project objects from the specified folder/workspace/space. Each project object contains id (16-character alphanumeric) and name. Projects are nullable in the array. Use this to list all projects in a specific organizational unit. Response: {ok: true, items: [{id: string, name: string} | null]}"
     }
   ],
   "connections": {
@@ -1042,5 +1042,5 @@
   "tags": [],
   "triggerCount": 1,
   "updatedAt": "2025-11-04T00:00:00.000Z",
-  "versionId": "2"
+  "versionId": "3"
 }
