@@ -16,10 +16,11 @@
     "fetch:openapi": "curl -o taskade-public.yaml https://www.taskade.com/api/documentation/yaml",
     "generate:taskade-mcp-tools": "tsx scripts/gen-taskade-mcp-tools.ts",
     "build:cli": "tsx scripts/build-cli.ts",
-    "build": "run-s generate:taskade-mcp-tools build:cli && yarn --cwd=../../ lint:fix",
+    "build": "run-s generate:taskade-mcp-tools build:cli && pnpm -C ../../ run lint:fix",
     "start:server": "tsx src/http.ts --watch"
   },
   "devDependencies": {
+    "@readme/openapi-parser": "^4.1.2",
     "@taskade/mcp-openapi-codegen": "*"
   },
   "dependencies": {
