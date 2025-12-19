@@ -14,10 +14,6 @@ export class TaskadeMCPServer extends McpServer {
     super({
       name: 'taskade',
       version: '0.0.1',
-      capabilities: {
-        resources: {},
-        tools: {},
-      },
     });
 
     this.config = opts;
@@ -38,7 +34,9 @@ export class TaskadeMCPServer extends McpServer {
               },
               {
                 type: 'text',
-                text: 'The url to projects is in the format of: https://www.taskade.com/d/{projectId}. You should link all projects in the response to the user.',
+                text:
+                  'The url to projects is in the format of: https://www.taskade.com/d/{projectId}. ' +
+                  'You should link all projects in the response to the user.',
               },
             ],
           };
