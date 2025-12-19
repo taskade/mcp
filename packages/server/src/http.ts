@@ -4,6 +4,13 @@ import { startHTTPServer } from 'mcp-proxy';
 
 import { TaskadeMCPServer } from './server';
 
+console.error(
+  '\n⚠️  SECURITY WARNING: HTTP/SSE mode passes access tokens via query parameters.\n' +
+    '   For production use, ensure this server is behind HTTPS/TLS.\n' +
+    '   Tokens in HTTP URLs may be logged or intercepted.\n' +
+    '   See SECURITY.md for best practices.\n',
+);
+
 await startHTTPServer({
   createServer: async (req) => {
     const parsedUrl = url.parse(req.url!, true);
