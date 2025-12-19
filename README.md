@@ -2,7 +2,7 @@
 
 All things related to [Taskade](https://taskade.com/)'s MCP (Model Context Protocol) initiatives.
 
-- [Official MCP server](https://github.com/taskade/mcp/tree/main/packages/server) - Connect Taskade’s API to any MCP-compatible client like Claude or Cursor.
+- [Official MCP server](https://github.com/taskade/mcp/tree/main/packages/server) - Connect Taskade's API to any MCP-compatible client like Claude or Cursor.
 - [OpenAPI Codegen](https://github.com/taskade/mcp/tree/main/packages/openapi-codegen) - Generate MCP tools from any OpenAPI schema in minutes.
 
 ## ⚡ Taskade MCP Demo
@@ -10,6 +10,28 @@ MCP-powered Taskade agent running inside Claude Desktop by Anthropic:
 
 ![Image](https://github.com/user-attachments/assets/0cee987b-b0d4-4d10-bb7f-da49a080d731)
 
+## 📖 Documentation
+
+| Guide | Description |
+|-------|-------------|
+| [Claude Desktop Setup](./docs/CLAUDE_DESKTOP_CONFIG.md) | Configure Claude Desktop with Taskade MCP |
+| [Cursor SSE Setup](./docs/CURSOR_SSE_CONFIG.md) | Configure Cursor with SSE transport |
+| [Security Policy](./SECURITY.md) | Token handling and security best practices |
+
+## 🔐 Security
+
+This project handles API tokens that provide access to your Taskade workspace. Please follow these security practices:
+
+| Practice | Requirement |
+|----------|-------------|
+| Token Storage | Environment variables only — never hardcode |
+| Version Control | `.env` files are gitignored — never commit tokens |
+| Transport | Use HTTPS for SSE/HTTP mode in production |
+| Rotation | Rotate tokens quarterly or after suspected exposure |
+
+Generate your Personal Access Token at [Taskade Settings](https://www.taskade.com/settings/password).
+
+For detailed security guidelines, see [SECURITY.md](./SECURITY.md).
 
 ## 🛠 Codegen for OpenAPI
 
