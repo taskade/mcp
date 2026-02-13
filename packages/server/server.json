@@ -6,12 +6,12 @@
     "url": "https://github.com/taskade/mcp.git",
     "source": "github"
   },
-  "version": "0.0.1",
+  "version": "0.0.2",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "@taskade/mcp-server",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "transport": {
         "type": "stdio"
       },
