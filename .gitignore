@@ -91,5 +91,8 @@ typings/
 lib/
 dist/
 
-# macOS finder attribute 
+# macOS finder attribute
 .DS_Store
+
+# MCP Registry tokens
+.mcpregistry_*
