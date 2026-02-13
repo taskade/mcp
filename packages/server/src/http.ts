@@ -18,5 +18,5 @@ await startHTTPServer({
       accessToken: accessToken,
     });
   },
-  port: 3000,
+  port: Number(process.env.PORT || 3000),
 });
