@@ -1,0 +1,28 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.taskade/mcp-server",
+  "description": "Connect Taskade to any AI assistant — 62+ tools for workspaces, projects, tasks, AI agents, templates, media, sharing, and more.",
+  "repository": {
+    "url": "https://github.com/taskade/mcp.git",
+    "source": "github"
+  },
+  "version": "0.0.1",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@taskade/mcp-server",
+      "version": "0.0.1",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "description": "Your Taskade API key. Get it from Taskade Settings > API.",
+          "isRequired": true,
+          "isSecret": true,
+          "name": "TASKADE_API_KEY"
+        }
+      ]
+    }
+  ]
+}

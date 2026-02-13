@@ -1,6 +1,7 @@
 {
   "name": "@taskade/mcp-server",
   "version": "0.0.1",
+  "mcpName": "io.github.taskade/mcp-server",
   "author": "Prev Wong",
   "license": "MIT",
   "type": "module",

@@ -1,0 +1,15 @@
+runtime: node
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    required:
+      - apiKey
+    properties:
+      apiKey:
+        type: string
+        title: "Taskade API Key"
+        description: "Your Taskade API key. Get it from Taskade Settings > API."
+  commandFunction:
+    |-
+    (config) => ({ command: 'npx', args: ['-y', '@taskade/mcp-server', '--token', config.apiKey] })
