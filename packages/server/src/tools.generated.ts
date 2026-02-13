@@ -253,6 +253,36 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     },
   );
   server.tool(
+    'projectComplete',
+    'Mark the project as completed',
+    z.object({ projectId: z.string() }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'projectComplete',
+        path: '/projects/{projectId}/complete',
+        method: 'POST',
+        input: args,
+        pathParamKeys: ['projectId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'projectRestore',
+    'Restore project',
+    z.object({ projectId: z.string() }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'projectRestore',
+        path: '/projects/{projectId}/restore',
+        method: 'POST',
+        input: args,
+        pathParamKeys: ['projectId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
     'projectCopy',
     'Copy a project to a folder',
     z.object({
@@ -286,6 +316,88 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
         method: 'POST',
         input: args,
         pathParamKeys: [],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'projectFromTemplate',
+    'Create a project from a custom template',
+    z.object({
+      folderId: z.string().min(1).optional(),
+      templateId: z.string().min(1).optional(),
+    }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'projectFromTemplate',
+        path: '/projects/from-template',
+        method: 'POST',
+        input: args,
+        pathParamKeys: [],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'projectMembersGet',
+    'Get members of a project',
+    z.object({
+      projectId: z.string(),
+      limit: z.number().default(20),
+      page: z.number().default(1),
+    }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'projectMembersGet',
+        path: '/projects/{projectId}/members',
+        method: 'GET',
+        input: args,
+        pathParamKeys: ['projectId'],
+        queryParamKeys: ['limit', 'page'],
+      });
+    },
+  );
+  server.tool(
+    'projectFieldsGet',
+    'Get all fields for a project',
+    z.object({ projectId: z.string() }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'projectFieldsGet',
+        path: '/projects/{projectId}/fields',
+        method: 'GET',
+        input: args,
+        pathParamKeys: ['projectId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'projectShareLinkGet',
+    'Get share link for the project',
+    z.object({ projectId: z.string() }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'projectShareLinkGet',
+        path: '/projects/{projectId}/shareLink',
+        method: 'GET',
+        input: args,
+        pathParamKeys: ['projectId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'projectShareLinkEnable',
+    'Enable share link in the project',
+    z.object({ projectId: z.string() }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'projectShareLinkEnable',
+        path: '/projects/{projectId}/shareLink',
+        method: 'PUT',
+        input: args,
+        pathParamKeys: ['projectId'],
         queryParamKeys: [],
       });
     },
@@ -346,6 +458,21 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     },
   );
   server.tool(
+    'taskDelete',
+    'Delete a task in a project',
+    z.object({ projectId: z.string(), taskId: z.string() }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'taskDelete',
+        path: '/projects/{projectId}/tasks/{taskId}',
+        method: 'DELETE',
+        input: args,
+        pathParamKeys: ['projectId', 'taskId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
     'taskPut',
     'Update task.',
     z.object({
@@ -373,6 +500,21 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
       return await config.executeToolCall({
         name: 'taskComplete',
         path: '/projects/{projectId}/tasks/{taskId}/complete',
+        method: 'POST',
+        input: args,
+        pathParamKeys: ['projectId', 'taskId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'taskUncomplete',
+    'Mark a task as incomplete in a project',
+    z.object({ projectId: z.string(), taskId: z.string() }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'taskUncomplete',
+        path: '/projects/{projectId}/tasks/{taskId}/uncomplete',
         method: 'POST',
         input: args,
         pathParamKeys: ['projectId', 'taskId'],
@@ -575,6 +717,21 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     },
   );
   server.tool(
+    'taskNoteGet',
+    'Get the note of a task',
+    z.object({ projectId: z.string(), taskId: z.string() }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'taskNoteGet',
+        path: '/projects/{projectId}/tasks/{taskId}/note',
+        method: 'GET',
+        input: args,
+        pathParamKeys: ['projectId', 'taskId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
     'taskNotePut',
     'Add/update a note to the task',
     z.object({
@@ -595,6 +752,86 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     },
   );
   server.tool(
+    'taskNoteDelete',
+    'Delete the note of a task',
+    z.object({ projectId: z.string(), taskId: z.string() }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'taskNoteDelete',
+        path: '/projects/{projectId}/tasks/{taskId}/note',
+        method: 'DELETE',
+        input: args,
+        pathParamKeys: ['projectId', 'taskId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'taskFieldsValueGet',
+    'Get all field values for a task',
+    z.object({ projectId: z.string(), taskId: z.string() }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'taskFieldsValueGet',
+        path: '/projects/{projectId}/tasks/{taskId}/fields',
+        method: 'GET',
+        input: args,
+        pathParamKeys: ['projectId', 'taskId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'taskFieldValueGet',
+    'Get the field value of a task',
+    z.object({ projectId: z.string(), taskId: z.string(), fieldId: z.string() }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'taskFieldValueGet',
+        path: '/projects/{projectId}/tasks/{taskId}/fields/{fieldId}',
+        method: 'GET',
+        input: args,
+        pathParamKeys: ['projectId', 'taskId', 'fieldId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'taskFieldValueDelete',
+    'Delete the field value of a task',
+    z.object({ projectId: z.string(), taskId: z.string(), fieldId: z.string() }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'taskFieldValueDelete',
+        path: '/projects/{projectId}/tasks/{taskId}/fields/{fieldId}',
+        method: 'DELETE',
+        input: args,
+        pathParamKeys: ['projectId', 'taskId', 'fieldId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'taskFieldValuePut',
+    'Update/create the field value of a task',
+    z.object({
+      value: z.union([z.number(), z.string().min(1)]).optional(),
+      projectId: z.string(),
+      taskId: z.string(),
+      fieldId: z.string(),
+    }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'taskFieldValuePut',
+        path: '/projects/{projectId}/tasks/{taskId}/fields/{fieldId}',
+        method: 'PUT',
+        input: args,
+        pathParamKeys: ['projectId', 'taskId', 'fieldId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
     'folderProjectsGet',
     'Get all projects in a team, or in the home team of a workspace.',
     z.object({ folderId: z.string() }).shape,
@@ -605,6 +842,622 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
         method: 'GET',
         input: args,
         pathParamKeys: ['folderId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'folderAgentGenerate',
+    'Generate agent based on input text prompts',
+    z.object({ text: z.string().optional(), folderId: z.string() }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'folderAgentGenerate',
+        path: '/folders/{folderId}/agent-generate',
+        method: 'POST',
+        input: args,
+        pathParamKeys: ['folderId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'folderCreateAgent',
+    'Create an agent in a team or workspace.',
+    z.object({
+      name: z.string().optional(),
+      data: z
+        .union([
+          z
+            .object({
+              type: z.literal('data'),
+              data: z
+                .object({
+                  commands: z.array(
+                    z
+                      .object({
+                        name: z
+                          .string()
+                          .min(1)
+                          .describe(
+                            'Human-readable name of the command in title case. This should probably be a verb.',
+                          ),
+                        prompt: z
+                          .string()
+                          .min(1)
+                          .describe(
+                            'Tell the agent what this command will do. It should be positioned as a direct instruction to the agent. At least 30 words.',
+                          ),
+                        id: z.string().min(1).describe('ID based on the name in snake case.'),
+                        mode: z
+                          .enum(['default', 'plan-and-execute-v1', 'plan-and-execute-v2'])
+                          .default('default'),
+                      })
+                      .strict(),
+                  ),
+                  description: z
+                    .string()
+                    .describe(
+                      'Role and purpose of agent, positioned as a direct instruction to the agent. Example: "You are a doctor that helps save lives.". At least 100 words.',
+                    )
+                    .optional(),
+                  tone: z
+                    .enum([
+                      'authoritative',
+                      'clinical',
+                      'cold',
+                      'confident',
+                      'cynical',
+                      'emotional',
+                      'empathetic',
+                      'formal',
+                      'friendly',
+                      'humourous',
+                      'informal',
+                      'ironic',
+                      'optimistic',
+                      'pessimistic',
+                      'playful',
+                      'sarcastic',
+                      'serious',
+                      'sympathetic',
+                      'tentative',
+                      'warm',
+                      'creative',
+                      'inspiring',
+                      'casual',
+                    ])
+                    .optional(),
+                  avatar: z
+                    .object({
+                      type: z.literal('emoji'),
+                      data: z
+                        .object({
+                          value: z
+                            .string()
+                            .describe('Pick the most suitable emoji for this agent.'),
+                        })
+                        .strict(),
+                    })
+                    .strict()
+                    .optional(),
+                  knowledgeEnabled: z.boolean().optional(),
+                  language: z
+                    .string()
+                    .describe('The language of the agent, e.g. en-US, zh-Hans')
+                    .optional(),
+                  inputPlaceholder: z.string().optional(),
+                })
+                .strict(),
+            })
+            .strict(),
+          z
+            .object({
+              type: z.literal('template'),
+              template: z
+                .object({
+                  type: z.enum([
+                    'Tasker',
+                    'Researcher',
+                    'Marketer',
+                    'EmailWriter',
+                    'Sales',
+                    'CustomerSupport',
+                    'ProjectManager',
+                    'ContentCreator',
+                    'Copywriter',
+                    'LegalAdvisor',
+                    'SeoSpecialist',
+                    'ProductivityCoach',
+                    'EngineeringExpert',
+                    'Translator',
+                    'Summarizer',
+                    'ResumeBuilder',
+                    'Storyteller',
+                    'Tutor',
+                    'BrandStrategist',
+                    'SocialMediaSpecialist',
+                    'BusinessStrategist',
+                    'FinancialAnalyst',
+                    'HumanResourcesManager',
+                    'DataScientist',
+                    'ITConsultant',
+                    'FinancialAdvisor',
+                    'HealthCoach',
+                    'SustainabilityConsultant',
+                    'UXDesigner',
+                    'QualityAssuranceAnalyst',
+                    'ProductManager',
+                    'GrowthHacker',
+                    'BusinessDevelopmentManager',
+                    'PublicRelationsSpecialist',
+                    'EventPlanner',
+                    'DataAnalyst',
+                    'Editor',
+                    'CEO',
+                    'InterviewCoach',
+                    'TechSupportAdvisor',
+                    'Doctor',
+                    'BlogExpert',
+                    'TweetOptimizer',
+                    'EmailMarketer',
+                    'CourseCreator',
+                    'ScriptCreator',
+                    'ScreenplayWriter',
+                    'Proofreader',
+                    'SalesColdEmailCoach',
+                    'CodeExplainer',
+                    'CreativeWritingCoach',
+                    'AdvertisingCopywriter',
+                    'VideoScriptWriter',
+                    'ProjectArchitect',
+                    'AICouncil',
+                    'Negotiator',
+                    'VCAssociate',
+                    'Books',
+                    'StartupMentor',
+                    'SmallBusiness',
+                    'WebDevelopment',
+                    'PromptEngineer',
+                    'ArticleWriter',
+                    'WorkflowAgent',
+                    'StrategyAgent',
+                    'ViralAgent',
+                    'SOPOnboardingAgent',
+                    'PressReleaseAgent',
+                  ]),
+                  avatar: z
+                    .object({
+                      type: z.literal('emoji'),
+                      data: z
+                        .object({
+                          value: z
+                            .string()
+                            .describe('Pick the most suitable emoji for this agent.'),
+                        })
+                        .strict(),
+                    })
+                    .strict()
+                    .optional(),
+                })
+                .strict(),
+            })
+            .strict(),
+        ])
+        .optional(),
+      folderId: z.string(),
+    }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'folderCreateAgent',
+        path: '/folders/{folderId}/agents',
+        method: 'POST',
+        input: args,
+        pathParamKeys: ['folderId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'folderAgentGet',
+    'Get agents in a folder.',
+    z.object({
+      folderId: z.string(),
+      limit: z.number().default(20),
+      page: z.number().default(1),
+    }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'folderAgentGet',
+        path: '/folders/{folderId}/agents',
+        method: 'GET',
+        input: args,
+        pathParamKeys: ['folderId'],
+        queryParamKeys: ['limit', 'page'],
+      });
+    },
+  );
+  server.tool(
+    'mediasGet',
+    'Get medias in a folder',
+    z.object({
+      folderId: z.string(),
+      limit: z.number().default(100),
+      page: z.number().default(1),
+    }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'mediasGet',
+        path: '/folders/{folderId}/medias',
+        method: 'GET',
+        input: args,
+        pathParamKeys: ['folderId'],
+        queryParamKeys: ['limit', 'page'],
+      });
+    },
+  );
+  server.tool(
+    'folderProjectTemplatesGet',
+    'Get projects templates in a folder.',
+    z.object({
+      folderId: z.string(),
+      limit: z.number().default(20),
+      page: z.number().default(1),
+    }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'folderProjectTemplatesGet',
+        path: '/folders/{folderId}/project-templates',
+        method: 'GET',
+        input: args,
+        pathParamKeys: ['folderId'],
+        queryParamKeys: ['limit', 'page'],
+      });
+    },
+  );
+  server.tool(
+    'meProjectsGet',
+    'Get all projects of mine',
+    z.object({
+      limit: z.number().default(100),
+      page: z.number().default(1),
+      sort: z.enum(['viewed-asc', 'viewed-desc']).default('viewed-desc'),
+    }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'meProjectsGet',
+        path: '/me/projects',
+        method: 'GET',
+        input: args,
+        pathParamKeys: [],
+        queryParamKeys: ['limit', 'page', 'sort'],
+      });
+    },
+  );
+  server.tool(
+    'agentPublicAccessEnable',
+    'Enable public access in the agent',
+    z.object({ agentId: z.string() }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'agentPublicAccessEnable',
+        path: '/agents/{agentId}/publicAccess',
+        method: 'PUT',
+        input: args,
+        pathParamKeys: ['agentId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'agentGet',
+    'Get agent with id',
+    z.object({ agentId: z.string() }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'agentGet',
+        path: '/agents/{agentId}',
+        method: 'GET',
+        input: args,
+        pathParamKeys: ['agentId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'deleteAgent',
+    'Delete an agent',
+    z.object({ agentId: z.string() }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'deleteAgent',
+        path: '/agents/{agentId}',
+        method: 'DELETE',
+        input: args,
+        pathParamKeys: ['agentId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'agentUpdate',
+    'Update agent',
+    z.object({
+      name: z.string().optional(),
+      data: z
+        .object({
+          commands: z.array(
+            z
+              .object({
+                name: z
+                  .string()
+                  .min(1)
+                  .describe(
+                    'Human-readable name of the command in title case. This should probably be a verb.',
+                  ),
+                prompt: z
+                  .string()
+                  .min(1)
+                  .describe(
+                    'Tell the agent what this command will do. It should be positioned as a direct instruction to the agent. At least 30 words.',
+                  ),
+                id: z.string().min(1).describe('ID based on the name in snake case.'),
+                mode: z
+                  .enum(['default', 'plan-and-execute-v1', 'plan-and-execute-v2'])
+                  .default('default'),
+              })
+              .strict(),
+          ),
+          description: z
+            .string()
+            .describe(
+              'Role and purpose of agent, positioned as a direct instruction to the agent. Example: "You are a doctor that helps save lives.". At least 100 words.',
+            )
+            .optional(),
+          tone: z
+            .enum([
+              'authoritative',
+              'clinical',
+              'cold',
+              'confident',
+              'cynical',
+              'emotional',
+              'empathetic',
+              'formal',
+              'friendly',
+              'humourous',
+              'informal',
+              'ironic',
+              'optimistic',
+              'pessimistic',
+              'playful',
+              'sarcastic',
+              'serious',
+              'sympathetic',
+              'tentative',
+              'warm',
+              'creative',
+              'inspiring',
+              'casual',
+            ])
+            .optional(),
+          avatar: z
+            .object({
+              type: z.literal('emoji'),
+              data: z
+                .object({
+                  value: z.string().describe('Pick the most suitable emoji for this agent.'),
+                })
+                .strict(),
+            })
+            .strict()
+            .optional(),
+          knowledgeEnabled: z.boolean().optional(),
+          language: z
+            .string()
+            .describe('The language of the agent, e.g. en-US, zh-Hans')
+            .optional(),
+          inputPlaceholder: z.string().optional(),
+        })
+        .strict()
+        .optional(),
+      agentId: z.string(),
+    }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'agentUpdate',
+        path: '/agents/{agentId}',
+        method: 'PATCH',
+        input: args,
+        pathParamKeys: ['agentId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'agentPublicGet',
+    'Get public agent',
+    z.object({ agentId: z.string() }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'agentPublicGet',
+        path: '/agents/{agentId}/public-agent',
+        method: 'GET',
+        input: args,
+        pathParamKeys: ['agentId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'agentPublicUpdate',
+    'Update public agent',
+    z.object({
+      preferences: z
+        .object({
+          mode: z.enum(['template', 'chatbot']).optional(),
+          canCopyKnowledge: z.boolean().optional(),
+          hideBranding: z.boolean().optional(),
+          theme: z.enum(['light', 'dark', 'auto']).optional(),
+          autoEndChats: z.boolean().optional(),
+          meta: z
+            .object({
+              title: z.string().optional(),
+              description: z.string().optional(),
+            })
+            .strict()
+            .optional(),
+        })
+        .strict()
+        .optional(),
+      agentId: z.string(),
+    }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'agentPublicUpdate',
+        path: '/agents/{agentId}/public-agent',
+        method: 'PATCH',
+        input: args,
+        pathParamKeys: ['agentId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'agentKnowledgeProjectCreate',
+    'Create a knowledge project',
+    z.object({ projectId: z.string().optional(), agentId: z.string() }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'agentKnowledgeProjectCreate',
+        path: '/agents/{agentId}/knowledge/project',
+        method: 'POST',
+        input: args,
+        pathParamKeys: ['agentId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'agentKnowledgeMediaCreate',
+    'Create a knowledge media',
+    z.object({ mediaId: z.string().optional(), agentId: z.string() }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'agentKnowledgeMediaCreate',
+        path: '/agents/{agentId}/knowledge/media',
+        method: 'POST',
+        input: args,
+        pathParamKeys: ['agentId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'agentKnowledgeProjectRemove',
+    'Remove a knowledge project',
+    z.object({ agentId: z.string(), projectId: z.string() }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'agentKnowledgeProjectRemove',
+        path: '/agents/{agentId}/knowledge/project/{projectId}',
+        method: 'DELETE',
+        input: args,
+        pathParamKeys: ['agentId', 'projectId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'agentKnowledgeMediaRemove',
+    'Remove a knowledge media',
+    z.object({ agentId: z.string(), mediaId: z.string() }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'agentKnowledgeMediaRemove',
+        path: '/agents/{agentId}/knowledge/media/{mediaId}',
+        method: 'DELETE',
+        input: args,
+        pathParamKeys: ['agentId', 'mediaId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'agentConvosGet',
+    'Get agent conversations',
+    z.object({
+      agentId: z.string(),
+      limit: z.number().default(20),
+      page: z.number().default(1),
+    }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'agentConvosGet',
+        path: '/agents/{agentId}/convos/',
+        method: 'GET',
+        input: args,
+        pathParamKeys: ['agentId'],
+        queryParamKeys: ['limit', 'page'],
+      });
+    },
+  );
+  server.tool(
+    'agentConvoGet',
+    'Get agent conversation by id',
+    z.object({ agentId: z.string(), convoId: z.string() }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'agentConvoGet',
+        path: '/agents/{agentId}/convos/{convoId}',
+        method: 'GET',
+        input: args,
+        pathParamKeys: ['agentId', 'convoId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'mediaGet',
+    'Get media with id',
+    z.object({ mediaId: z.string() }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'mediaGet',
+        path: '/medias/{mediaId}',
+        method: 'GET',
+        input: args,
+        pathParamKeys: ['mediaId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'mediaDelete',
+    'Delete a media',
+    z.object({ mediaId: z.string() }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'mediaDelete',
+        path: '/medias/{mediaId}',
+        method: 'DELETE',
+        input: args,
+        pathParamKeys: ['mediaId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'publicAgentGet',
+    'Get public agent by public agent ID',
+    z.object({ publicAgentId: z.string() }).shape,
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'publicAgentGet',
+        path: '/public-agents/{publicAgentId}',
+        method: 'GET',
+        input: args,
+        pathParamKeys: ['publicAgentId'],
         queryParamKeys: [],
       });
     },
