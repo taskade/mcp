@@ -1,0 +1,111 @@
+{
+  "name": "Taskade MCP — AI Agent with Project Management Tools",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "trigger-chat",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a helpful project management assistant. You have access to Taskade tools via MCP to manage projects, tasks, and AI agents. Use these tools to help users organize their work."
+        }
+      },
+      "id": "ai-agent",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [420, 300]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o"
+      },
+      "id": "openai-chat",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [420, 500],
+      "credentials": {
+        "openAiApi": {
+          "id": "YOUR_OPENAI_CREDENTIAL_ID",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "connectionType": "stdio",
+        "command": "npx",
+        "arguments": "-y @taskade/mcp-server --token YOUR_TASKADE_API_KEY"
+      },
+      "id": "mcp-taskade",
+      "name": "Taskade MCP",
+      "type": "n8n-nodes-mcp.mcpClientTool",
+      "typeVersion": 1,
+      "position": [620, 500]
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Taskade MCP": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateId": "taskade-mcp-ai-agent",
+    "instanceId": ""
+  },
+  "tags": [
+    {
+      "name": "MCP"
+    },
+    {
+      "name": "Project Management"
+    },
+    {
+      "name": "AI Agent"
+    },
+    {
+      "name": "Taskade"
+    }
+  ]
+}
