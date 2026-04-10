@@ -25,7 +25,7 @@ MCP-powered Taskade agent running inside Claude Desktop by Anthropic:
 
 | Build Agents via MCP | Automate Workflows | Manage Projects |
 |:---:|:---:|:---:|
-| <img src="https://www.taskade.com/static_images/ai-agent-generator-v2.gif" width="280" alt="Create AI agents from your IDE via Taskade MCP"> | <img src="https://www.taskade.com/static_images/ai-automation-flows.gif" width="280" alt="Automate workflows via Taskade MCP"> | <img src="https://www.taskade.com/static_images/create-your-app-in-minutes-v2.gif" width="280" alt="Manage projects and apps via Taskade MCP"> |
+| <img src="https://raw.githubusercontent.com/taskade/taskade/main/media/agents/agent-generator.gif" width="280" alt="Create AI agents from your IDE via Taskade MCP"> | <img src="https://raw.githubusercontent.com/taskade/taskade/main/media/automations/automation-flows.gif" width="280" alt="Automate workflows via Taskade MCP"> | <img src="https://raw.githubusercontent.com/taskade/taskade/main/media/genesis/create-app.gif" width="280" alt="Manage projects and apps via Taskade MCP"> |
 | Create, train, deploy AI agents from Claude/Cursor | Build multi-step automations across 100+ services | Full workspace management from your AI assistant |
 
 ---
