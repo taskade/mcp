@@ -1,11 +1,19 @@
+<div align="center">
+
 # Taskade MCP Server
 
-Connect [Taskade](https://www.taskade.com) to any AI assistant — Claude, Cursor, Windsurf, n8n, and more — via the [Model Context Protocol](https://modelcontextprotocol.io/).
+**Connect [Taskade](https://www.taskade.com) to any AI assistant — Claude, Cursor, Windsurf, n8n, and more — via the [Model Context Protocol](https://modelcontextprotocol.io/).**
+
+[![npm](https://img.shields.io/npm/v/@taskade/mcp-server?style=flat-square&color=FF2D60)](https://www.npmjs.com/package/@taskade/mcp-server)
+[![GitHub stars](https://img.shields.io/github/stars/taskade/mcp?style=flat-square)](https://github.com/taskade/mcp)
+[![License](https://img.shields.io/github/license/taskade/mcp?style=flat-square)](https://github.com/taskade/mcp/blob/main/LICENSE)
 
 **50+ tools** for workspaces, projects, tasks, AI agents, knowledge bases, templates, automations, media, and sharing — all from your AI client.
 
+</div>
+
 - [MCP Server](https://github.com/taskade/mcp/tree/main/packages/server) — Connect Taskade to Claude Desktop, Cursor, Windsurf, or any MCP client.
-- [OpenAPI Codegen](https://github.com/taskade/mcp/tree/main/packages/openapi-codegen) — Generate MCP tools from any OpenAPI schema.
+- [OpenAPI Codegen](https://github.com/taskade/mcp/tree/main/packages/openapi-codegen) — Generate MCP tools from any OpenAPI spec — not just Taskade.
 
 ---
 
@@ -14,6 +22,11 @@ Connect [Taskade](https://www.taskade.com) to any AI assistant — Claude, Curso
 MCP-powered Taskade agent running inside Claude Desktop by Anthropic:
 
 ![Taskade MCP Demo — AI agent managing tasks and projects in Claude Desktop](https://github.com/user-attachments/assets/0cee987b-b0d4-4d10-bb7f-da49a080d731)
+
+| Build Agents via MCP | Automate Workflows | Manage Projects |
+|:---:|:---:|:---:|
+| <img src="https://www.taskade.com/static_images/ai-agent-generator-v2.gif" width="280" alt="Create AI agents from your IDE via Taskade MCP"> | <img src="https://www.taskade.com/static_images/ai-automation-flows.gif" width="280" alt="Automate workflows via Taskade MCP"> | <img src="https://www.taskade.com/static_images/create-your-app-in-minutes-v2.gif" width="280" alt="Manage projects and apps via Taskade MCP"> |
+| Create, train, deploy AI agents from Claude/Cursor | Build multi-step automations across 100+ services | Full workspace management from your AI assistant |
 
 ---
 
@@ -381,14 +394,14 @@ Works with any OpenAPI 3.0+ spec. Generate MCP tools for your own APIs in minute
 
 ## What is Taskade?
 
-[Taskade](https://www.taskade.com) ([YC W19](https://www.ycombinator.com/companies/taskade)) is the AI-powered workspace for teams — deploy agents, automate workflows, and ship faster.
+[Taskade](https://www.taskade.com) ([Y Combinator S19](https://www.ycombinator.com/companies/taskade)) is the AI-native workspace for building apps, deploying agents, and automating workflows — from a single prompt. **150,000+ apps generated. Trusted by 3M, Nike, Tesla, Netflix, Airbnb, Disney, Adobe.** Rated 4.8/5 across 9,300+ reviews.
 
-- **AI Agents** — Autonomous agents with memory, knowledge bases, and custom tools
-- **Automations** — No-code workflow automation with 100+ integrations
-- **Real-time Collaboration** — Multiplayer workspace with chat, video, and shared projects
-- **Genesis Apps** — Build and publish AI-powered apps to the [Taskade community](https://www.taskade.com/community)
+- **Genesis Apps** — Build complete apps from prompts. Dashboards, CRMs, portals, forms — deployed instantly. [Try it →](https://www.taskade.com/create)
+- **AI Agents** — Custom agents with 22+ tools, persistent memory, multi-agent teams, public embedding
+- **Automations** — No-code workflow automation with 100+ integrations, branching, looping, filtering
+- **Real-time Collaboration** — Multiplayer workspace with chat, video, 7 project views
 - **Templates** — 700+ templates for project management, engineering, marketing, and more
-- **API & MCP** — Full REST API and Model Context Protocol for developer integrations
+- **API & MCP** — REST API v2, this MCP Server, Agent API, webhooks, OAuth 2.0
 
 **Links:**
 - App: [taskade.com](https://www.taskade.com)
