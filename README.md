@@ -167,6 +167,160 @@ Create, manage, and publish autonomous AI agents with custom knowledge and tools
 
 ---
 
+## Why Taskade MCP?
+
+Taskade MCP gives your AI assistant **full access to your workspace** — projects, tasks, agents, knowledge bases, templates, and automations. Instead of writing API code, describe what you need in natural language.
+
+```
+┌──────────────────────────────────────────────────────────┐
+│                HOW TASKADE MCP WORKS                     │
+└──────────────────────────────────────────────────────────┘
+
+  You (in Claude/Cursor/Windsurf):
+  "Create a support agent trained on our docs project"
+                         ↓
+  ┌──────────────────────────────────┐
+  │     Taskade MCP Server           │
+  │     (50+ tools, 7 categories)    │
+  └──────────────────────────────────┘
+       ↓              ↓            ↓
+  folderCreateAgent  agentKnowledge  agentPublicAccess
+  (creates agent)    (attaches docs)  (publishes it)
+                         ↓
+  Result: Live AI chatbot trained on your data
+```
+
+| What You Say | What Happens |
+|-------------|-------------|
+| "Show me all overdue tasks" | Reads projects → filters tasks → formats report |
+| "Create a support agent trained on our docs" | Creates agent → attaches knowledge → publishes |
+| "Set up next week's sprint from our template" | Copies template → populates tasks → assigns team |
+| "Summarize yesterday's completed work" | Reads task history → generates standup summary |
+
+### Why MCP Instead of REST API?
+
+| | REST API | MCP Server |
+|-|----------|-----------|
+| **Setup** | Write HTTP client, handle auth, parse JSON | `npx @taskade/mcp-server` — one command |
+| **Interface** | Code against endpoints | Natural language — describe what you need |
+| **Chaining** | Manual orchestration | AI chains tools intelligently |
+| **Error handling** | Write error handling code | AI interprets errors and retries |
+
+### Why Taskade MCP Over Other MCP Servers?
+
+Taskade is the only MCP server that includes **AI agent management** (create, train, deploy agents), **knowledge base training** (attach docs, projects, media), and **OpenAPI codegen** (generate MCP tools from any API spec). 50+ tools across 7 categories.
+
+---
+
+## Agent Recipes
+
+<details>
+<summary><b>Recipe 1: Daily Standup Summarizer</b></summary>
+<br>
+
+**Problem:** Team standup notes scattered across Slack, email, and docs.
+
+```
+You: "Check my Taskade workspace for yesterday's completed tasks,
+      summarize them as a standup update, then create today's
+      priority tasks based on what's still open."
+
+Claude uses:
+  1. meProjectsGet → find your active projects
+  2. projectTasksGet → pull tasks from each project
+  3. taskCreate → create today's priority tasks
+
+Result: A formatted standup summary + fresh task list in Taskade.
+```
+</details>
+
+<details>
+<summary><b>Recipe 2: Knowledge Base Agent Builder</b></summary>
+<br>
+
+**Problem:** You have docs scattered across files and need an AI agent trained on them.
+
+```
+You: "Create an AI support agent called 'Help Bot' in my
+      Customer Success folder, train it on our Documentation
+      project, and publish it publicly."
+
+Claude uses:
+  1. workspaceFoldersGet → find "Customer Success" folder
+  2. folderCreateAgent → create "Help Bot" with support instructions
+  3. agentKnowledgeProjectCreate → attach Documentation project
+  4. agentPublicAccessEnable → publish with shareable link
+
+Result: Live AI chatbot trained on your docs, ready to embed.
+```
+</details>
+
+<details>
+<summary><b>Recipe 3: Sprint Planning Automation</b></summary>
+<br>
+
+**Problem:** Creating sprint projects manually every two weeks.
+
+```
+You: "Create a new sprint project from our 'Sprint Template',
+      name it 'Sprint 2026-W15', move the top 10 backlog
+      items into it, and assign them to the engineering team."
+
+Claude uses:
+  1. folderProjectTemplatesGet → find "Sprint Template"
+  2. projectFromTemplate → create "Sprint 2026-W15"
+  3. projectTasksGet → get backlog items
+  4. taskMove → move top 10 tasks to new sprint
+  5. taskPutAssignees → assign engineering team members
+
+Result: Sprint ready to go, fully populated and assigned.
+```
+</details>
+
+<details>
+<summary><b>Recipe 4: Competitive Intelligence Agent</b></summary>
+<br>
+
+**Problem:** You need an agent that monitors competitors and reports findings.
+
+```
+You: "Generate an AI agent that researches our top 5 competitors.
+      Train it on our Competitive Analysis project.
+      Name it 'Market Intel Agent'."
+
+Claude uses:
+  1. folderAgentGenerate → generate agent from research prompt
+  2. agentKnowledgeProjectCreate → connect Competitive Analysis project
+  3. agentUpdate → refine instructions for research cadence
+
+Result: AI research agent with domain knowledge, ready for briefings.
+```
+</details>
+
+<details>
+<summary><b>Recipe 5: Client Onboarding Pipeline</b></summary>
+<br>
+
+**Problem:** Each new client needs the same project structure, tasks, and materials.
+
+```
+You: "For our new client Acme Corp: create a project from
+      the 'Client Onboarding' template, add tasks for
+      kickoff meeting and SOW review, set due dates for
+      the next 2 weeks, then share the project link."
+
+Claude uses:
+  1. projectFromTemplate → create "Acme Corp Onboarding"
+  2. taskCreate → add kickoff, requirements, SOW tasks
+  3. taskPutDate → set dates across next 2 weeks
+  4. projectShareLinkEnable → generate share link
+
+Result: Client onboarding project live and shareable in 30 seconds.
+```
+</details>
+
+---
+
 ## Use Cases
 
 ### Project Management with AI
