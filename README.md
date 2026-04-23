@@ -427,6 +427,54 @@ See [open issues](https://github.com/taskade/mcp/issues) for planned features an
 
 ---
 
+## FAQ & Troubleshooting
+
+### Getting Started
+
+**Q: Do I need a Taskade account to use the MCP server?**
+Yes. You need a free Taskade account and an API key from [Taskade Settings > API](https://www.taskade.com/settings/api).
+
+**Q: Which AI clients are supported?**
+Any client that supports the Model Context Protocol — Claude Desktop, Cursor, Windsurf, n8n (via HTTP/SSE mode), and any custom MCP client.
+
+**Q: Can I use this with Claude in the browser (not Claude Desktop)?**
+The MCP server requires a local client. For browser-based Claude, use the [Taskade web app](https://taskade.com) directly or integrate via the [Taskade REST API](https://developers.taskade.com).
+
+### Configuration
+
+**Q: How do I switch between workspaces?**
+The MCP server automatically lists all your workspaces via `workspacesGet`. Ask your AI assistant to "show my workspaces" and then specify which one to use.
+
+**Q: Can I use multiple API keys?**
+Each MCP server instance takes one `TASKADE_API_KEY`. For multiple accounts, run separate instances with different env vars or config files.
+
+**Q: How do I change the default port?**
+Set the `PORT` environment variable: `PORT=8080 npx @taskade/mcp-server --http`.
+
+### Troubleshooting
+
+**Q: "Authentication failed" or "Invalid API key" error**
+- Verify your API key at [Taskade Settings > API](https://www.taskade.com/settings/api)
+- Ensure `TASKADE_API_KEY` is set in your MCP client config (not as a command-line arg)
+- Try regenerating a new token if the key was revoked
+
+**Q: MCP server won't start in Claude Desktop**
+- Ensure Node.js 18+ is installed (`node --version`)
+- Check that `npx` is available in your PATH
+- Review Claude Desktop logs: `~/Library/Logs/Claude/mcp-log.txt` (macOS) or `%APPDATA%\Claude\logs\` (Windows)
+
+**Q: Tools not appearing in my AI client**
+- Restart the MCP client after adding the config
+- Verify the `mcpServers` key is at the top level of your config JSON
+- For Cursor: go to Settings > Features > MCP and confirm Taskade is listed
+
+**Q: HTTP/SSE mode connection refused**
+- Check that no other process is using port 3000: `lsof -i :3000`
+- Ensure `--http` flag is passed: `npx @taskade/mcp-server --http`
+- Verify the SSE URL includes your access token: `http://localhost:3000/sse?access_token=YOUR_KEY`
+
+---
+
 ## Contributing
 
 Help us improve MCP tools, OpenAPI workflows, and agent capabilities.
