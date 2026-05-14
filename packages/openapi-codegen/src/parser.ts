@@ -7,6 +7,7 @@ import {
   isOperation,
   isParameterObject,
   isRequestBodyObject,
+  normalizeAllOf,
 } from './openapi';
 
 export type ParsedTool = {
@@ -65,7 +66,9 @@ export const parseOpenApi = (
               obj = queryParamsSchema;
             }
 
-            obj.properties![param.name] = convertOpenApiSchemaToJsonSchema(param.schema);
+            obj.properties![param.name] = normalizeAllOf(
+              convertOpenApiSchemaToJsonSchema(param.schema),
+            );
 
             if (param.required) {
               obj.required!.push(param.name);
@@ -81,13 +84,20 @@ export const parseOpenApi = (
             operation.requestBody.content['application/json'] &&
             operation.requestBody.content['application/json'].schema
           ) {
-            const bodySchema = convertOpenApiSchemaToJsonSchema(
-              operation.requestBody.content['application/json'].schema,
+            const bodySchema = normalizeAllOf(
+              convertOpenApiSchemaToJsonSchema(
+                operation.requestBody.content['application/json'].schema,
+              ),
             );
 
             if (bodySchema.type === 'object' && bodySchema.properties) {
               for (const [name, propSchema] of Object.entries(bodySchema.properties)) {
                 inputSchema.properties![name] = propSchema;
+              }
+
+              if (Array.isArray(bodySchema.required) && bodySchema.required.length > 0) {
+                const merged = new Set([...(inputSchema.required ?? []), ...bodySchema.required]);
+                inputSchema.required = Array.from(merged);
               }
             }
           }

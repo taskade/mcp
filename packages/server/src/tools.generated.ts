@@ -192,8 +192,8 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'workspaceCreateProject',
     'Create a project in a workspace',
     z.object({
-      contentType: z.literal('text/markdown').optional(),
-      content: z.string().optional(),
+      contentType: z.literal('text/markdown'),
+      content: z.string(),
       workspaceId: z.string(),
     }).shape,
     async (args) => {
@@ -286,7 +286,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'projectCopy',
     'Copy a project to a folder',
     z.object({
-      folderId: z.string().min(1).optional(),
+      folderId: z.string().min(1),
       projectTitle: z.string().min(1).optional(),
       projectId: z.string(),
     }).shape,
@@ -305,9 +305,9 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'projectCreate',
     'Create a project in a team',
     z.object({
-      folderId: z.string().min(1).optional(),
-      contentType: z.literal('text/markdown').optional(),
-      content: z.string().optional(),
+      folderId: z.string().min(1),
+      contentType: z.literal('text/markdown'),
+      content: z.string(),
     }).shape,
     async (args) => {
       return await config.executeToolCall({
@@ -323,10 +323,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
   server.tool(
     'projectFromTemplate',
     'Create a project from a custom template',
-    z.object({
-      folderId: z.string().min(1).optional(),
-      templateId: z.string().min(1).optional(),
-    }).shape,
+    z.object({ folderId: z.string().min(1), templateId: z.string().min(1) }).shape,
     async (args) => {
       return await config.executeToolCall({
         name: 'projectFromTemplate',
@@ -476,8 +473,8 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'taskPut',
     'Update task.',
     z.object({
-      contentType: z.enum(['text/markdown', 'text/plain']).optional(),
-      content: z.string().regex(new RegExp('^[^\\r\\n]*$')).max(2000).optional(),
+      contentType: z.enum(['text/markdown', 'text/plain']),
+      content: z.string().regex(new RegExp('^[^\\r\\n]*$')).max(2000),
       projectId: z.string(),
       taskId: z.string(),
     }).shape,
@@ -528,29 +525,26 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     z.object({
       tasks: z
         .array(
-          z.intersection(
-            z.object({
-              contentType: z.enum(['text/markdown', 'text/plain']),
-              content: z.string().max(2000),
-            }),
-            z.union([
-              z
-                .object({
-                  taskId: z.literal('null').optional(),
-                  placement: z.enum(['afterbegin', 'beforeend']),
-                })
-                .strict(),
-              z
-                .object({
-                  taskId: z.string(),
-                  placement: z.enum(['beforebegin', 'afterbegin', 'beforeend', 'afterend']),
-                })
-                .strict(),
-            ]),
-          ),
+          z.union([
+            z
+              .object({
+                contentType: z.enum(['text/markdown', 'text/plain']),
+                content: z.string().max(2000),
+                taskId: z.literal('null').optional(),
+                placement: z.enum(['afterbegin', 'beforeend']),
+              })
+              .strict(),
+            z
+              .object({
+                contentType: z.enum(['text/markdown', 'text/plain']),
+                content: z.string().max(2000),
+                taskId: z.string(),
+                placement: z.enum(['beforebegin', 'afterbegin', 'beforeend', 'afterend']),
+              })
+              .strict(),
+          ]),
         )
-        .max(20)
-        .optional(),
+        .max(20),
       projectId: z.string(),
     }).shape,
     async (args) => {
@@ -573,8 +567,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
           taskId: z.string().min(1),
           position: z.enum(['beforebegin', 'afterbegin', 'beforeend', 'afterend']),
         })
-        .strict()
-        .optional(),
+        .strict(),
       projectId: z.string(),
       taskId: z.string(),
     }).shape,
@@ -608,7 +601,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'taskPutAssignees',
     'Task assignment',
     z.object({
-      handles: z.array(z.string().min(1)).optional(),
+      handles: z.array(z.string().min(1)),
       projectId: z.string(),
       taskId: z.string(),
     }).shape,
@@ -687,8 +680,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
             .optional(),
           timezone: z.union([z.string(), z.null()]).optional(),
         })
-        .strict()
-        .optional(),
+        .strict(),
       end: z
         .object({
           date: z.string().regex(new RegExp('^\\d{4}-\\d{2}-\\d{2}$')),
@@ -735,8 +727,8 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'taskNotePut',
     'Add/update a note to the task',
     z.object({
-      type: z.enum(['text/plain', 'text/markdown']).optional(),
-      value: z.string().regex(new RegExp('^[^\\r\\n]*$')).min(1).optional(),
+      type: z.enum(['text/plain', 'text/markdown']),
+      value: z.string().regex(new RegExp('^[^\\r\\n]*$')).min(1),
       projectId: z.string(),
       taskId: z.string(),
     }).shape,
@@ -815,7 +807,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'taskFieldValuePut',
     'Update/create the field value of a task',
     z.object({
-      value: z.union([z.number(), z.string().min(1)]).optional(),
+      value: z.union([z.number(), z.string().min(1)]),
       projectId: z.string(),
       taskId: z.string(),
       fieldId: z.string(),
@@ -849,7 +841,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
   server.tool(
     'folderAgentGenerate',
     'Generate agent based on input text prompts',
-    z.object({ text: z.string().optional(), folderId: z.string() }).shape,
+    z.object({ text: z.string(), folderId: z.string() }).shape,
     async (args) => {
       return await config.executeToolCall({
         name: 'folderAgentGenerate',
@@ -865,186 +857,180 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'folderCreateAgent',
     'Create an agent in a team or workspace.',
     z.object({
-      name: z.string().optional(),
-      data: z
-        .union([
-          z
-            .object({
-              type: z.literal('data'),
-              data: z
-                .object({
-                  commands: z.array(
-                    z
+      name: z.string(),
+      data: z.union([
+        z
+          .object({
+            type: z.literal('data'),
+            data: z
+              .object({
+                commands: z.array(
+                  z
+                    .object({
+                      name: z
+                        .string()
+                        .min(1)
+                        .describe(
+                          'Human-readable name of the command in title case. This should probably be a verb.',
+                        ),
+                      prompt: z
+                        .string()
+                        .min(1)
+                        .describe(
+                          'Tell the agent what this command will do. It should be positioned as a direct instruction to the agent. At least 30 words.',
+                        ),
+                      id: z.string().min(1).describe('ID based on the name in snake case.'),
+                      mode: z
+                        .enum(['default', 'plan-and-execute-v1', 'plan-and-execute-v2'])
+                        .default('default'),
+                    })
+                    .strict(),
+                ),
+                description: z
+                  .string()
+                  .describe(
+                    'Role and purpose of agent, positioned as a direct instruction to the agent. Example: "You are a doctor that helps save lives.". At least 100 words.',
+                  )
+                  .optional(),
+                tone: z
+                  .enum([
+                    'authoritative',
+                    'clinical',
+                    'cold',
+                    'confident',
+                    'cynical',
+                    'emotional',
+                    'empathetic',
+                    'formal',
+                    'friendly',
+                    'humourous',
+                    'informal',
+                    'ironic',
+                    'optimistic',
+                    'pessimistic',
+                    'playful',
+                    'sarcastic',
+                    'serious',
+                    'sympathetic',
+                    'tentative',
+                    'warm',
+                    'creative',
+                    'inspiring',
+                    'casual',
+                  ])
+                  .optional(),
+                avatar: z
+                  .object({
+                    type: z.literal('emoji'),
+                    data: z
                       .object({
-                        name: z
-                          .string()
-                          .min(1)
-                          .describe(
-                            'Human-readable name of the command in title case. This should probably be a verb.',
-                          ),
-                        prompt: z
-                          .string()
-                          .min(1)
-                          .describe(
-                            'Tell the agent what this command will do. It should be positioned as a direct instruction to the agent. At least 30 words.',
-                          ),
-                        id: z.string().min(1).describe('ID based on the name in snake case.'),
-                        mode: z
-                          .enum(['default', 'plan-and-execute-v1', 'plan-and-execute-v2'])
-                          .default('default'),
+                        value: z.string().describe('Pick the most suitable emoji for this agent.'),
                       })
                       .strict(),
-                  ),
-                  description: z
-                    .string()
-                    .describe(
-                      'Role and purpose of agent, positioned as a direct instruction to the agent. Example: "You are a doctor that helps save lives.". At least 100 words.',
-                    )
-                    .optional(),
-                  tone: z
-                    .enum([
-                      'authoritative',
-                      'clinical',
-                      'cold',
-                      'confident',
-                      'cynical',
-                      'emotional',
-                      'empathetic',
-                      'formal',
-                      'friendly',
-                      'humourous',
-                      'informal',
-                      'ironic',
-                      'optimistic',
-                      'pessimistic',
-                      'playful',
-                      'sarcastic',
-                      'serious',
-                      'sympathetic',
-                      'tentative',
-                      'warm',
-                      'creative',
-                      'inspiring',
-                      'casual',
-                    ])
-                    .optional(),
-                  avatar: z
-                    .object({
-                      type: z.literal('emoji'),
-                      data: z
-                        .object({
-                          value: z
-                            .string()
-                            .describe('Pick the most suitable emoji for this agent.'),
-                        })
-                        .strict(),
-                    })
-                    .strict()
-                    .optional(),
-                  knowledgeEnabled: z.boolean().optional(),
-                  language: z
-                    .string()
-                    .describe('The language of the agent, e.g. en-US, zh-Hans')
-                    .optional(),
-                  inputPlaceholder: z.string().optional(),
-                })
-                .strict(),
-            })
-            .strict(),
-          z
-            .object({
-              type: z.literal('template'),
-              template: z
-                .object({
-                  type: z.enum([
-                    'Tasker',
-                    'Researcher',
-                    'Marketer',
-                    'EmailWriter',
-                    'Sales',
-                    'CustomerSupport',
-                    'ProjectManager',
-                    'ContentCreator',
-                    'Copywriter',
-                    'LegalAdvisor',
-                    'SeoSpecialist',
-                    'ProductivityCoach',
-                    'EngineeringExpert',
-                    'Translator',
-                    'Summarizer',
-                    'ResumeBuilder',
-                    'Storyteller',
-                    'Tutor',
-                    'BrandStrategist',
-                    'SocialMediaSpecialist',
-                    'BusinessStrategist',
-                    'FinancialAnalyst',
-                    'HumanResourcesManager',
-                    'DataScientist',
-                    'ITConsultant',
-                    'FinancialAdvisor',
-                    'HealthCoach',
-                    'SustainabilityConsultant',
-                    'UXDesigner',
-                    'QualityAssuranceAnalyst',
-                    'ProductManager',
-                    'GrowthHacker',
-                    'BusinessDevelopmentManager',
-                    'PublicRelationsSpecialist',
-                    'EventPlanner',
-                    'DataAnalyst',
-                    'Editor',
-                    'CEO',
-                    'InterviewCoach',
-                    'TechSupportAdvisor',
-                    'Doctor',
-                    'BlogExpert',
-                    'TweetOptimizer',
-                    'EmailMarketer',
-                    'CourseCreator',
-                    'ScriptCreator',
-                    'ScreenplayWriter',
-                    'Proofreader',
-                    'SalesColdEmailCoach',
-                    'CodeExplainer',
-                    'CreativeWritingCoach',
-                    'AdvertisingCopywriter',
-                    'VideoScriptWriter',
-                    'ProjectArchitect',
-                    'AICouncil',
-                    'Negotiator',
-                    'VCAssociate',
-                    'Books',
-                    'StartupMentor',
-                    'SmallBusiness',
-                    'WebDevelopment',
-                    'PromptEngineer',
-                    'ArticleWriter',
-                    'WorkflowAgent',
-                    'StrategyAgent',
-                    'ViralAgent',
-                    'SOPOnboardingAgent',
-                    'PressReleaseAgent',
-                  ]),
-                  avatar: z
-                    .object({
-                      type: z.literal('emoji'),
-                      data: z
-                        .object({
-                          value: z
-                            .string()
-                            .describe('Pick the most suitable emoji for this agent.'),
-                        })
-                        .strict(),
-                    })
-                    .strict()
-                    .optional(),
-                })
-                .strict(),
-            })
-            .strict(),
-        ])
-        .optional(),
+                  })
+                  .strict()
+                  .optional(),
+                knowledgeEnabled: z.boolean().optional(),
+                language: z
+                  .string()
+                  .describe('The language of the agent, e.g. en-US, zh-Hans')
+                  .optional(),
+                inputPlaceholder: z.string().optional(),
+              })
+              .strict(),
+          })
+          .strict(),
+        z
+          .object({
+            type: z.literal('template'),
+            template: z
+              .object({
+                type: z.enum([
+                  'Tasker',
+                  'Researcher',
+                  'Marketer',
+                  'EmailWriter',
+                  'Sales',
+                  'CustomerSupport',
+                  'ProjectManager',
+                  'ContentCreator',
+                  'Copywriter',
+                  'LegalAdvisor',
+                  'SeoSpecialist',
+                  'ProductivityCoach',
+                  'EngineeringExpert',
+                  'Translator',
+                  'Summarizer',
+                  'ResumeBuilder',
+                  'Storyteller',
+                  'Tutor',
+                  'BrandStrategist',
+                  'SocialMediaSpecialist',
+                  'BusinessStrategist',
+                  'FinancialAnalyst',
+                  'HumanResourcesManager',
+                  'DataScientist',
+                  'ITConsultant',
+                  'FinancialAdvisor',
+                  'HealthCoach',
+                  'SustainabilityConsultant',
+                  'UXDesigner',
+                  'QualityAssuranceAnalyst',
+                  'ProductManager',
+                  'GrowthHacker',
+                  'BusinessDevelopmentManager',
+                  'PublicRelationsSpecialist',
+                  'EventPlanner',
+                  'DataAnalyst',
+                  'Editor',
+                  'CEO',
+                  'InterviewCoach',
+                  'TechSupportAdvisor',
+                  'Doctor',
+                  'BlogExpert',
+                  'TweetOptimizer',
+                  'EmailMarketer',
+                  'CourseCreator',
+                  'ScriptCreator',
+                  'ScreenplayWriter',
+                  'Proofreader',
+                  'SalesColdEmailCoach',
+                  'CodeExplainer',
+                  'CreativeWritingCoach',
+                  'AdvertisingCopywriter',
+                  'VideoScriptWriter',
+                  'ProjectArchitect',
+                  'AICouncil',
+                  'Negotiator',
+                  'VCAssociate',
+                  'Books',
+                  'StartupMentor',
+                  'SmallBusiness',
+                  'WebDevelopment',
+                  'PromptEngineer',
+                  'ArticleWriter',
+                  'WorkflowAgent',
+                  'StrategyAgent',
+                  'ViralAgent',
+                  'SOPOnboardingAgent',
+                  'PressReleaseAgent',
+                ]),
+                avatar: z
+                  .object({
+                    type: z.literal('emoji'),
+                    data: z
+                      .object({
+                        value: z.string().describe('Pick the most suitable emoji for this agent.'),
+                      })
+                      .strict(),
+                  })
+                  .strict()
+                  .optional(),
+              })
+              .strict(),
+          })
+          .strict(),
+      ]),
       folderId: z.string(),
     }).shape,
     async (args) => {
@@ -1308,8 +1294,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
             .strict()
             .optional(),
         })
-        .strict()
-        .optional(),
+        .strict(),
       agentId: z.string(),
     }).shape,
     async (args) => {
@@ -1326,7 +1311,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
   server.tool(
     'agentKnowledgeProjectCreate',
     'Create a knowledge project',
-    z.object({ projectId: z.string().optional(), agentId: z.string() }).shape,
+    z.object({ projectId: z.string(), agentId: z.string() }).shape,
     async (args) => {
       return await config.executeToolCall({
         name: 'agentKnowledgeProjectCreate',
@@ -1341,7 +1326,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
   server.tool(
     'agentKnowledgeMediaCreate',
     'Create a knowledge media',
-    z.object({ mediaId: z.string().optional(), agentId: z.string() }).shape,
+    z.object({ mediaId: z.string(), agentId: z.string() }).shape,
     async (args) => {
       return await config.executeToolCall({
         name: 'agentKnowledgeMediaCreate',
