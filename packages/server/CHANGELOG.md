@@ -1,5 +1,11 @@
 # @taskade/mcp-server
 
+## 0.0.3
+
+### Patch Changes
+
+- [`6b1ba50`](https://github.com/taskade/mcp/commit/6b1ba50acd2a5a2c64c37863432fe1cd1ad08d68) Thanks [@prevwong](https://github.com/prevwong)! - Temporary fix for openapi codegen
+
 ## 0.0.2
 
 ### Patch Changes
