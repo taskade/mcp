@@ -5,7 +5,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/taskade/mcp/"
+    "url": "git+https://github.com/taskade/mcp.git"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "type": "module",
   "exports": {

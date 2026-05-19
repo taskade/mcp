@@ -7,7 +7,10 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/taskade/mcp/"
+    "url": "git+https://github.com/taskade/mcp.git"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "main": "bin/cli.mjs",
   "bin": {
