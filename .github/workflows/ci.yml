@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build (regenerates MCP tools)
+        run: yarn build
+
+      - name: Ensure generated tools are up to date
+        run: git diff --exit-code packages/server/src/tools.generated.ts
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Test
+        run: yarn test

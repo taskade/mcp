@@ -8,6 +8,7 @@
     "build": "lerna run build",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint --fix . --ext .js,.jsx,.ts,.tsx",
+    "test": "vitest run",
     "changeset:version": "changeset version",
     "changeset:publish": "changeset publish",
     "publish": "run-s build lint changeset:publish"
@@ -29,7 +30,8 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^3.5.3",
     "tsx": "^4.19.4",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^4.1.8"
   },
   "private": true,
   "workspaces": [
