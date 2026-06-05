@@ -91,7 +91,61 @@ Add to your Cursor MCP settings:
 }
 ```
 
-### 4. HTTP / SSE Mode (remote & custom clients)
+### 4. Windsurf
+
+Add to `~/.codeium/windsurf/mcp_config.json` (or **Settings → Cascade → MCP → Add Server**):
+
+```json
+{
+  "mcpServers": {
+    "taskade": {
+      "command": "npx",
+      "args": ["-y", "@taskade/mcp-server"],
+      "env": {
+        "TASKADE_API_KEY": "your-api-key-here"
+      }
+    }
+  }
+}
+```
+
+### 5. Cline
+
+In VS Code, open the Cline **MCP Servers** panel → **Configure MCP Servers** and add:
+
+```json
+{
+  "mcpServers": {
+    "taskade": {
+      "command": "npx",
+      "args": ["-y", "@taskade/mcp-server"],
+      "env": {
+        "TASKADE_API_KEY": "your-api-key-here"
+      }
+    }
+  }
+}
+```
+
+### 6. VS Code
+
+Add a `.vscode/mcp.json` to your workspace (VS Code uses the `servers` key; `${input:…}` prompts for your key on first run):
+
+```json
+{
+  "servers": {
+    "taskade": {
+      "command": "npx",
+      "args": ["-y", "@taskade/mcp-server"],
+      "env": {
+        "TASKADE_API_KEY": "${input:taskade_api_key}"
+      }
+    }
+  }
+}
+```
+
+### 7. HTTP / SSE Mode (remote & custom clients)
 
 ```bash
 TASKADE_API_KEY=your-api-key npx @taskade/mcp-server --http
