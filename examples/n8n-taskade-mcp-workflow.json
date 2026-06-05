@@ -43,7 +43,8 @@
       "parameters": {
         "connectionType": "stdio",
         "command": "npx",
-        "arguments": "-y @taskade/mcp-server --token YOUR_TASKADE_API_KEY"
+        "arguments": "-y @taskade/mcp-server",
+        "environments": "TASKADE_API_KEY=YOUR_TASKADE_API_KEY"
       },
       "id": "mcp-taskade",
       "name": "Taskade MCP",
