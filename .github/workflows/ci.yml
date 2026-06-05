@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build (regenerates MCP tools)
+        run: yarn build
+
+      - name: Ensure working tree is clean after build
+        # `yarn build` regenerates tools.generated.ts and runs lint:fix. Asserting the
+        # whole tree is unchanged catches both stale generated output and any file the
+        # build would have auto-fixed (so lint issues can't be silently absorbed).
+        run: git diff --exit-code
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Test
+        run: yarn test
