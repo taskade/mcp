@@ -13,7 +13,7 @@ export class TaskadeMCPServer extends McpServer {
   constructor(opts: TaskadeServerOpts) {
     super({
       name: 'taskade',
-      version: '0.0.1',
+      version: '0.0.3',
       capabilities: {
         resources: {},
         tools: {},
