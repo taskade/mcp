@@ -53,7 +53,10 @@ jobs:
       - name: Publish to MCP Registry
         if: steps.changesets.outputs.hasChangesets == 'false'
         working-directory: packages/server
+        env:
+          # Pinned for reproducible, reviewable releases — bump deliberately.
+          MCP_PUBLISHER_VERSION: v1.7.9
         run: |
-          curl -sL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_linux_amd64.tar.gz" | tar xz mcp-publisher
+          curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/download/${MCP_PUBLISHER_VERSION}/mcp-publisher_linux_amd64.tar.gz" | tar -xz -f - mcp-publisher
           ./mcp-publisher login github-oidc
           ./mcp-publisher publish
