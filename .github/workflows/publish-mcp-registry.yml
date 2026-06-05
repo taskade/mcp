@@ -1,0 +1,47 @@
+name: Publish to MCP Registry
+
+# Publishes io.github.taskade/mcp-server to the official MCP Registry
+# (https://registry.modelcontextprotocol.io) using GitHub OIDC — no secrets.
+#
+# Trigger:
+#   - automatically when a release tags the server package (changesets pushes a
+#     `@taskade/mcp-server@<version>` tag right after the npm publish succeeds), so
+#     the npm version always exists before we register it.
+#   - manually via "Run workflow" to (re)publish the current npm version.
+#
+# Note: the server.json version is auto-synced from packages/server/package.json
+# at publish time, so it can never drift out of sync with the published npm
+# version again (the registry rejects a version that isn't on npm).
+
+on:
+  push:
+    tags:
+      - "@taskade/mcp-server@*"
+  workflow_dispatch:
+
+jobs:
+  publish-registry:
+    name: Publish to MCP Registry
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # required for GitHub OIDC auth to the registry
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Sync server.json version to the published npm version
+        run: |
+          node -e "const fs=require('fs');const p='packages/server/server.json';const s=JSON.parse(fs.readFileSync(p,'utf8'));const v=require('./packages/server/package.json').version;s.version=v;(s.packages||[]).forEach(k=>{k.version=v});fs.writeFileSync(p,JSON.stringify(s,null,2)+'\n');console.log('server.json synced to '+v)"
+
+      - name: Install mcp-publisher
+        run: |
+          curl -L "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
+          sudo mv mcp-publisher /usr/local/bin/
+
+      - name: Authenticate via GitHub OIDC
+        run: mcp-publisher login github-oidc
+
+      - name: Publish to MCP Registry
+        working-directory: packages/server
+        run: mcp-publisher publish
