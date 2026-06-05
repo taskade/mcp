@@ -175,7 +175,7 @@ export class OpenAPIToolRuntimeConfig {
   }
 
   get fetch() {
-    const fetch = this.config.fetch ?? window['fetch'];
+    const fetch = this.config.fetch ?? globalThis.fetch;
 
     if (!fetch) {
       throw new Error('fetch is not defined');
