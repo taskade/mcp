@@ -2,7 +2,7 @@
 
 # Taskade MCP Server
 
-**Connect [Taskade](https://www.taskade.com) to any AI assistant — Claude, Cursor, Windsurf, n8n, and more — via the [Model Context Protocol](https://modelcontextprotocol.io/).**
+**Connect [Taskade](https://www.taskade.com) to any AI assistant — Claude, Cursor, Windsurf, VS Code, and more — via the [Model Context Protocol](https://modelcontextprotocol.io/).**
 
 [![npm](https://img.shields.io/npm/v/@taskade/mcp-server?style=flat-square&color=FF2D60)](https://www.npmjs.com/package/@taskade/mcp-server)
 [![GitHub stars](https://img.shields.io/github/stars/taskade/mcp?style=flat-square)](https://github.com/taskade/mcp)
@@ -14,6 +14,22 @@
 
 - [MCP Server](https://github.com/taskade/mcp/tree/main/packages/server) — Connect Taskade to Claude Desktop, Cursor, Windsurf, or any MCP client.
 - [OpenAPI Codegen](https://github.com/taskade/mcp/tree/main/packages/openapi-codegen) — Generate MCP tools from any OpenAPI spec — not just Taskade.
+
+---
+
+## Contents
+
+- [Demo](#demo)
+- [Quick Start](#quick-start)
+- [Tools (57)](#tools-57)
+- [Why Taskade MCP?](#why-taskade-mcp)
+- [Agent Recipes](#agent-recipes)
+- [Use Cases](#use-cases)
+- [OpenAPI Codegen](#openapi-codegen)
+- [What is Taskade?](#what-is-taskade)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+- [License](#license)
 
 ---
 
@@ -72,7 +88,7 @@ Add to your Cursor MCP settings:
 }
 ```
 
-### 4. HTTP / SSE Mode (for n8n, custom clients)
+### 4. HTTP / SSE Mode (remote & custom clients)
 
 ```bash
 TASKADE_API_KEY=your-api-key npx @taskade/mcp-server --http
@@ -361,10 +377,6 @@ Automate project creation from templates:
 - "List all templates in my workspace"
 - "Create 5 new client onboarding projects from the Client Template"
 - "Copy the Sprint Retrospective project for this week"
-
-### n8n Automation Integration
-
-Connect Taskade to 400+ apps via n8n workflows. See the [n8n Integration Guide](./N8N_WORKFLOW_GUIDE.md) for setup instructions.
 
 ---
 
