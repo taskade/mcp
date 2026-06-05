@@ -29,15 +29,7 @@ Ask the AI agent natural language questions like:
 - "What tasks are overdue?"
 - "Create an AI agent that monitors project deadlines"
 
-### Alternative: HTTP/SSE mode
-
-If you prefer to run the MCP server as a standalone HTTP service:
-
-```bash
-PORT=3001 npx @taskade/mcp-server --http --token YOUR_TASKADE_API_KEY
-```
-
-Then configure the n8n MCP node to use **HTTP Streamable** transport with URL `http://localhost:3001/mcp`.
+> **Note:** The published `@taskade/mcp-server` CLI runs over **stdio** only — configure the n8n MCP Client node with the command `npx -y @taskade/mcp-server` and a `TASKADE_API_KEY` environment variable. The `--http`/`--token` flags are **not** supported by the published CLI. A standalone HTTP/SSE transport is not yet exposed; track the hosted remote endpoint at [#6](https://github.com/taskade/mcp/issues/6).
 
 ## More examples coming soon
 
