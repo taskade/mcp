@@ -73,22 +73,25 @@ export const codegen = async (opts: CodegenOpts) => {
       return;
     }
 
-    const annotations: Record<string, any> = {};
+    // Derive MCP tool annotations from the HTTP method: GET/HEAD are read-only,
+    // DELETE is destructive. A human-friendly title can be supplied via opts.actions.
+    const method = tool.method.toUpperCase();
+    const annotations: Record<string, any> = {
+      readOnlyHint: method === 'GET' || method === 'HEAD',
+      destructiveHint: method === 'DELETE',
+    };
 
-    if (opts.actions?.[tool.name]) {
-      annotations.title = opts.actions[tool.name].title;
-      annotations.description = opts.actions[tool.name].description;
+    const actionTitle = opts.actions?.[tool.name]?.title;
+    if (actionTitle) {
+      annotations.title = actionTitle;
     }
 
-    const toolArgs = [
-      `"${tool.name}"`,
-      `"${tool.description}"`,
-      generateToolInputFromParsedTool(tool),
-    ];
+    const description = opts.actions?.[tool.name]?.description ?? tool.description;
 
-    if (Object.keys(annotations).length > 0) {
-      toolArgs.push(JSON.stringify(annotations));
-    }
+    const toolArgs = [`"${tool.name}"`, `"${description}"`, generateToolInputFromParsedTool(tool)];
+
+    // annotations always carry read-only/destructive hints, so always include them
+    toolArgs.push(JSON.stringify(annotations));
 
     toolArgs.push(`async (args) => {
             return await config.executeToolCall({

@@ -196,6 +196,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
       content: z.string(),
       workspaceId: z.string(),
     }).shape,
+    {
+      readOnlyHint: false,
+      destructiveHint: false,
+      title: 'Create Workspace Project',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'workspaceCreateProject',
@@ -211,6 +216,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'workspacesGet',
     'Get all workspaces for a user',
     z.object({}).shape,
+    { readOnlyHint: true, destructiveHint: false, title: 'Get All Workspaces' },
     async (args) => {
       return await config.executeToolCall({
         name: 'workspacesGet',
@@ -226,6 +232,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'workspaceFoldersGet',
     'Get all folders for a workspace',
     z.object({ workspaceId: z.string() }).shape,
+    {
+      readOnlyHint: true,
+      destructiveHint: false,
+      title: 'Get Workspace Folders',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'workspaceFoldersGet',
@@ -241,6 +252,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'projectGet',
     'Get project',
     z.object({ projectId: z.string() }).shape,
+    {
+      readOnlyHint: true,
+      destructiveHint: false,
+      title: 'Get Project Details',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'projectGet',
@@ -256,6 +272,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'projectComplete',
     'Mark the project as completed',
     z.object({ projectId: z.string() }).shape,
+    { readOnlyHint: false, destructiveHint: false, title: 'Complete Project' },
     async (args) => {
       return await config.executeToolCall({
         name: 'projectComplete',
@@ -271,6 +288,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'projectRestore',
     'Restore project',
     z.object({ projectId: z.string() }).shape,
+    { readOnlyHint: false, destructiveHint: false, title: 'Restore Project' },
     async (args) => {
       return await config.executeToolCall({
         name: 'projectRestore',
@@ -290,6 +308,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
       projectTitle: z.string().min(1).optional(),
       projectId: z.string(),
     }).shape,
+    { readOnlyHint: false, destructiveHint: false, title: 'Copy Project' },
     async (args) => {
       return await config.executeToolCall({
         name: 'projectCopy',
@@ -309,6 +328,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
       contentType: z.literal('text/markdown'),
       content: z.string(),
     }).shape,
+    {
+      readOnlyHint: false,
+      destructiveHint: false,
+      title: 'Create New Project',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'projectCreate',
@@ -324,6 +348,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'projectFromTemplate',
     'Create a project from a custom template',
     z.object({ folderId: z.string().min(1), templateId: z.string().min(1) }).shape,
+    {
+      readOnlyHint: false,
+      destructiveHint: false,
+      title: 'Create Project from Template',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'projectFromTemplate',
@@ -343,6 +372,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
       limit: z.number().default(20),
       page: z.number().default(1),
     }).shape,
+    {
+      readOnlyHint: true,
+      destructiveHint: false,
+      title: 'Get Project Members',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'projectMembersGet',
@@ -358,6 +392,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'projectFieldsGet',
     'Get all fields for a project',
     z.object({ projectId: z.string() }).shape,
+    { readOnlyHint: true, destructiveHint: false, title: 'Get Project Fields' },
     async (args) => {
       return await config.executeToolCall({
         name: 'projectFieldsGet',
@@ -373,6 +408,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'projectShareLinkGet',
     'Get share link for the project',
     z.object({ projectId: z.string() }).shape,
+    {
+      readOnlyHint: true,
+      destructiveHint: false,
+      title: 'Get Project Share Link',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'projectShareLinkGet',
@@ -388,6 +428,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'projectShareLinkEnable',
     'Enable share link in the project',
     z.object({ projectId: z.string() }).shape,
+    {
+      readOnlyHint: false,
+      destructiveHint: false,
+      title: 'Enable Project Share Link',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'projectShareLinkEnable',
@@ -408,6 +453,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
       after: z.string().uuid().optional(),
       before: z.string().uuid().optional(),
     }).shape,
+    { readOnlyHint: true, destructiveHint: false, title: 'Get Project Blocks' },
     async (args) => {
       return await config.executeToolCall({
         name: 'projectBlocksGet',
@@ -428,6 +474,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
       after: z.string().uuid().optional(),
       before: z.string().uuid().optional(),
     }).shape,
+    { readOnlyHint: true, destructiveHint: false, title: 'Get Project Tasks' },
     async (args) => {
       return await config.executeToolCall({
         name: 'projectTasksGet',
@@ -443,6 +490,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'taskGet',
     'Get task with id',
     z.object({ projectId: z.string(), taskId: z.string() }).shape,
+    { readOnlyHint: true, destructiveHint: false, title: 'Get Task Details' },
     async (args) => {
       return await config.executeToolCall({
         name: 'taskGet',
@@ -458,6 +506,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'taskDelete',
     'Delete a task in a project',
     z.object({ projectId: z.string(), taskId: z.string() }).shape,
+    { readOnlyHint: false, destructiveHint: true, title: 'Delete Task' },
     async (args) => {
       return await config.executeToolCall({
         name: 'taskDelete',
@@ -478,6 +527,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
       projectId: z.string(),
       taskId: z.string(),
     }).shape,
+    { readOnlyHint: false, destructiveHint: false, title: 'Update Task' },
     async (args) => {
       return await config.executeToolCall({
         name: 'taskPut',
@@ -493,6 +543,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'taskComplete',
     'Complete a task in a project',
     z.object({ projectId: z.string(), taskId: z.string() }).shape,
+    { readOnlyHint: false, destructiveHint: false, title: 'Complete Task' },
     async (args) => {
       return await config.executeToolCall({
         name: 'taskComplete',
@@ -508,6 +559,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'taskUncomplete',
     'Mark a task as incomplete in a project',
     z.object({ projectId: z.string(), taskId: z.string() }).shape,
+    {
+      readOnlyHint: false,
+      destructiveHint: false,
+      title: 'Mark Task Incomplete',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'taskUncomplete',
@@ -547,6 +603,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
         .max(20),
       projectId: z.string(),
     }).shape,
+    { readOnlyHint: false, destructiveHint: false, title: 'Create New Task' },
     async (args) => {
       return await config.executeToolCall({
         name: 'taskCreate',
@@ -571,6 +628,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
       projectId: z.string(),
       taskId: z.string(),
     }).shape,
+    { readOnlyHint: false, destructiveHint: false, title: 'Move Task' },
     async (args) => {
       return await config.executeToolCall({
         name: 'taskMove',
@@ -586,6 +644,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'taskAssigneesGet',
     'Get the assignees of a task',
     z.object({ projectId: z.string(), taskId: z.string() }).shape,
+    { readOnlyHint: true, destructiveHint: false, title: 'Get Task Assignees' },
     async (args) => {
       return await config.executeToolCall({
         name: 'taskAssigneesGet',
@@ -605,6 +664,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
       projectId: z.string(),
       taskId: z.string(),
     }).shape,
+    {
+      readOnlyHint: false,
+      destructiveHint: false,
+      title: 'Update Task Assignees',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'taskPutAssignees',
@@ -624,6 +688,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
       taskId: z.string(),
       assigneeHandle: z.string(),
     }).shape,
+    {
+      readOnlyHint: false,
+      destructiveHint: true,
+      title: 'Remove Task Assignees',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'taskDeleteAssignees',
@@ -639,6 +708,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'taskGetDate',
     'Get the date of a task',
     z.object({ projectId: z.string(), taskId: z.string() }).shape,
+    { readOnlyHint: true, destructiveHint: false, title: 'Get Task Date' },
     async (args) => {
       return await config.executeToolCall({
         name: 'taskGetDate',
@@ -654,6 +724,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'taskDeleteDate',
     'Delete date of a task',
     z.object({ projectId: z.string(), taskId: z.string() }).shape,
+    { readOnlyHint: false, destructiveHint: true, title: 'Remove Task Date' },
     async (args) => {
       return await config.executeToolCall({
         name: 'taskDeleteDate',
@@ -697,6 +768,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
       projectId: z.string(),
       taskId: z.string(),
     }).shape,
+    { readOnlyHint: false, destructiveHint: false, title: 'Set Task Date' },
     async (args) => {
       return await config.executeToolCall({
         name: 'taskPutDate',
@@ -712,6 +784,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'taskNoteGet',
     'Get the note of a task',
     z.object({ projectId: z.string(), taskId: z.string() }).shape,
+    { readOnlyHint: true, destructiveHint: false, title: 'Get Task Note' },
     async (args) => {
       return await config.executeToolCall({
         name: 'taskNoteGet',
@@ -732,6 +805,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
       projectId: z.string(),
       taskId: z.string(),
     }).shape,
+    { readOnlyHint: false, destructiveHint: false, title: 'Update Task Note' },
     async (args) => {
       return await config.executeToolCall({
         name: 'taskNotePut',
@@ -747,6 +821,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'taskNoteDelete',
     'Delete the note of a task',
     z.object({ projectId: z.string(), taskId: z.string() }).shape,
+    { readOnlyHint: false, destructiveHint: true, title: 'Delete Task Note' },
     async (args) => {
       return await config.executeToolCall({
         name: 'taskNoteDelete',
@@ -762,6 +837,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'taskFieldsValueGet',
     'Get all field values for a task',
     z.object({ projectId: z.string(), taskId: z.string() }).shape,
+    {
+      readOnlyHint: true,
+      destructiveHint: false,
+      title: 'Get All Task Field Values',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'taskFieldsValueGet',
@@ -777,6 +857,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'taskFieldValueGet',
     'Get the field value of a task',
     z.object({ projectId: z.string(), taskId: z.string(), fieldId: z.string() }).shape,
+    {
+      readOnlyHint: true,
+      destructiveHint: false,
+      title: 'Get Task Field Value',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'taskFieldValueGet',
@@ -792,6 +877,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'taskFieldValueDelete',
     'Delete the field value of a task',
     z.object({ projectId: z.string(), taskId: z.string(), fieldId: z.string() }).shape,
+    {
+      readOnlyHint: false,
+      destructiveHint: true,
+      title: 'Delete Task Field Value',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'taskFieldValueDelete',
@@ -812,6 +902,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
       taskId: z.string(),
       fieldId: z.string(),
     }).shape,
+    {
+      readOnlyHint: false,
+      destructiveHint: false,
+      title: 'Set Task Field Value',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'taskFieldValuePut',
@@ -827,6 +922,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'folderProjectsGet',
     'Get all projects in a team, or in the home team of a workspace.',
     z.object({ folderId: z.string() }).shape,
+    {
+      readOnlyHint: true,
+      destructiveHint: false,
+      title: 'Get Projects in Folder',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'folderProjectsGet',
@@ -842,6 +942,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'folderAgentGenerate',
     'Generate agent based on input text prompts',
     z.object({ text: z.string(), folderId: z.string() }).shape,
+    {
+      readOnlyHint: false,
+      destructiveHint: false,
+      title: 'Generate AI Agent from Prompt',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'folderAgentGenerate',
@@ -1033,6 +1138,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
       ]),
       folderId: z.string(),
     }).shape,
+    { readOnlyHint: false, destructiveHint: false, title: 'Create AI Agent' },
     async (args) => {
       return await config.executeToolCall({
         name: 'folderCreateAgent',
@@ -1052,6 +1158,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
       limit: z.number().default(20),
       page: z.number().default(1),
     }).shape,
+    {
+      readOnlyHint: true,
+      destructiveHint: false,
+      title: 'Get Agents in Folder',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'folderAgentGet',
@@ -1071,6 +1182,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
       limit: z.number().default(100),
       page: z.number().default(1),
     }).shape,
+    {
+      readOnlyHint: true,
+      destructiveHint: false,
+      title: 'Get Media in Folder',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'mediasGet',
@@ -1090,6 +1206,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
       limit: z.number().default(20),
       page: z.number().default(1),
     }).shape,
+    {
+      readOnlyHint: true,
+      destructiveHint: false,
+      title: 'Get Project Templates',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'folderProjectTemplatesGet',
@@ -1109,6 +1230,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
       page: z.number().default(1),
       sort: z.enum(['viewed-asc', 'viewed-desc']).default('viewed-desc'),
     }).shape,
+    { readOnlyHint: true, destructiveHint: false, title: 'Get My Projects' },
     async (args) => {
       return await config.executeToolCall({
         name: 'meProjectsGet',
@@ -1124,6 +1246,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'agentPublicAccessEnable',
     'Enable public access in the agent',
     z.object({ agentId: z.string() }).shape,
+    {
+      readOnlyHint: false,
+      destructiveHint: false,
+      title: 'Enable Agent Public Access',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'agentPublicAccessEnable',
@@ -1139,6 +1266,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'agentGet',
     'Get agent with id',
     z.object({ agentId: z.string() }).shape,
+    { readOnlyHint: true, destructiveHint: false, title: 'Get Agent Details' },
     async (args) => {
       return await config.executeToolCall({
         name: 'agentGet',
@@ -1154,6 +1282,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'deleteAgent',
     'Delete an agent',
     z.object({ agentId: z.string() }).shape,
+    { readOnlyHint: false, destructiveHint: true, title: 'Delete Agent' },
     async (args) => {
       return await config.executeToolCall({
         name: 'deleteAgent',
@@ -1249,6 +1378,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
         .optional(),
       agentId: z.string(),
     }).shape,
+    { readOnlyHint: false, destructiveHint: false, title: 'Update Agent' },
     async (args) => {
       return await config.executeToolCall({
         name: 'agentUpdate',
@@ -1264,6 +1394,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'agentPublicGet',
     'Get public agent',
     z.object({ agentId: z.string() }).shape,
+    { readOnlyHint: true, destructiveHint: false, title: 'Get Public Agent' },
     async (args) => {
       return await config.executeToolCall({
         name: 'agentPublicGet',
@@ -1297,6 +1428,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
         .strict(),
       agentId: z.string(),
     }).shape,
+    {
+      readOnlyHint: false,
+      destructiveHint: false,
+      title: 'Update Public Agent',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'agentPublicUpdate',
@@ -1312,6 +1448,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'agentKnowledgeProjectCreate',
     'Create a knowledge project',
     z.object({ projectId: z.string(), agentId: z.string() }).shape,
+    {
+      readOnlyHint: false,
+      destructiveHint: false,
+      title: 'Add Knowledge Project to Agent',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'agentKnowledgeProjectCreate',
@@ -1327,6 +1468,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'agentKnowledgeMediaCreate',
     'Create a knowledge media',
     z.object({ mediaId: z.string(), agentId: z.string() }).shape,
+    {
+      readOnlyHint: false,
+      destructiveHint: false,
+      title: 'Add Knowledge Media to Agent',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'agentKnowledgeMediaCreate',
@@ -1342,6 +1488,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'agentKnowledgeProjectRemove',
     'Remove a knowledge project',
     z.object({ agentId: z.string(), projectId: z.string() }).shape,
+    {
+      readOnlyHint: false,
+      destructiveHint: true,
+      title: 'Remove Knowledge Project from Agent',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'agentKnowledgeProjectRemove',
@@ -1357,6 +1508,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'agentKnowledgeMediaRemove',
     'Remove a knowledge media',
     z.object({ agentId: z.string(), mediaId: z.string() }).shape,
+    {
+      readOnlyHint: false,
+      destructiveHint: true,
+      title: 'Remove Knowledge Media from Agent',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'agentKnowledgeMediaRemove',
@@ -1376,6 +1532,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
       limit: z.number().default(20),
       page: z.number().default(1),
     }).shape,
+    {
+      readOnlyHint: true,
+      destructiveHint: false,
+      title: 'Get Agent Conversations',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'agentConvosGet',
@@ -1391,6 +1552,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'agentConvoGet',
     'Get agent conversation by id',
     z.object({ agentId: z.string(), convoId: z.string() }).shape,
+    {
+      readOnlyHint: true,
+      destructiveHint: false,
+      title: 'Get Agent Conversation',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'agentConvoGet',
@@ -1406,6 +1572,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'mediaGet',
     'Get media with id',
     z.object({ mediaId: z.string() }).shape,
+    { readOnlyHint: true, destructiveHint: false, title: 'Get Media Details' },
     async (args) => {
       return await config.executeToolCall({
         name: 'mediaGet',
@@ -1421,6 +1588,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'mediaDelete',
     'Delete a media',
     z.object({ mediaId: z.string() }).shape,
+    { readOnlyHint: false, destructiveHint: true, title: 'Delete Media' },
     async (args) => {
       return await config.executeToolCall({
         name: 'mediaDelete',
@@ -1436,6 +1604,11 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'publicAgentGet',
     'Get public agent by public agent ID',
     z.object({ publicAgentId: z.string() }).shape,
+    {
+      readOnlyHint: true,
+      destructiveHint: false,
+      title: 'Get Public Agent by Public ID',
+    },
     async (args) => {
       return await config.executeToolCall({
         name: 'publicAgentGet',
