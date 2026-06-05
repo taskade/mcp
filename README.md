@@ -101,13 +101,13 @@ The server starts at `http://localhost:3000` (configure with `PORT` env var). Co
 | `projectCopy` | Copy a project to a folder |
 | `projectComplete` | Mark project as completed |
 | `projectRestore` | Restore a completed project |
-| `projectFromTemplate` | Create project from a template |
 | `projectMembersGet` | List project members |
 | `projectFieldsGet` | Get custom fields for a project |
 | `projectShareLinkGet` | Get the share link |
 | `projectShareLinkEnable` | Enable the share link |
 | `projectBlocksGet` | Get all blocks in a project |
 | `projectTasksGet` | Get all tasks in a project |
+| `folderProjectsGet` | List projects in a folder |
 
 ### Tasks
 
