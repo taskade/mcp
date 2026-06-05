@@ -57,6 +57,7 @@ jobs:
           # Pinned for reproducible, reviewable releases — bump deliberately.
           MCP_PUBLISHER_VERSION: v1.7.9
         run: |
+          set -euo pipefail
           curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/download/${MCP_PUBLISHER_VERSION}/mcp-publisher_linux_amd64.tar.gz" | tar -xz -f - mcp-publisher
           ./mcp-publisher login github-oidc
           ./mcp-publisher publish
