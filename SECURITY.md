@@ -35,7 +35,7 @@ This is a public repository. Never commit:
 .mcpregistry_*          # MCP registry auth tokens
 ```
 
-These patterns are covered by `.gitignore` and `packages/server/.npmignore`. Before committing, sanity-check your staged changes:
+`.env*` files are gitignored (except `.env.example`) and excluded from the npm package; the other patterns above are **not** auto-ignored, so sanity-check your staged changes before committing:
 
 ```bash
 git diff --cached | grep -iE "(token|key|secret|password|credential)" | grep -v placeholder
