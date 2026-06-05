@@ -8,6 +8,10 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write # required for mcp-publisher GitHub OIDC login
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -40,3 +44,16 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # Publishes packages/server/server.json to the official MCP Registry
+      # (registry.modelcontextprotocol.io) using GitHub Actions OIDC — no stored
+      # secrets. Runs under the same condition as the npm publish above so the
+      # registry version tracks the npm release. Requires a one-time manual
+      # namespace seed by a maintainer: `mcp-publisher login github && mcp-publisher publish`.
+      - name: Publish to MCP Registry
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        working-directory: packages/server
+        run: |
+          curl -sL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_linux_amd64.tar.gz" | tar xz mcp-publisher
+          ./mcp-publisher login github-oidc
+          ./mcp-publisher publish
