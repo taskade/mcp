@@ -25,8 +25,11 @@ jobs:
       - name: Build (regenerates MCP tools)
         run: yarn build
 
-      - name: Ensure generated tools are up to date
-        run: git diff --exit-code packages/server/src/tools.generated.ts
+      - name: Ensure working tree is clean after build
+        # `yarn build` regenerates tools.generated.ts and runs lint:fix. Asserting the
+        # whole tree is unchanged catches both stale generated output and any file the
+        # build would have auto-fixed (so lint issues can't be silently absorbed).
+        run: git diff --exit-code
 
       - name: Lint
         run: yarn lint
