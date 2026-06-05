@@ -4,7 +4,7 @@ Ready-to-use templates for connecting Taskade MCP Server to popular AI and autom
 
 ## n8n
 
-Import [`n8n-taskade-mcp-workflow.json`](./n8n-taskade-mcp-workflow.json) into n8n to create an AI agent with access to all 62+ Taskade tools.
+Import [`n8n-taskade-mcp-workflow.json`](./n8n-taskade-mcp-workflow.json) into n8n to create an AI agent with access to all 57 Taskade tools.
 
 ### Prerequisites
 
