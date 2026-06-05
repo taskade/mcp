@@ -22,7 +22,7 @@ public disclosure. We're happy to credit reporters who request it.
 
 - The stdio transport (default for Claude Desktop / Cursor / VS Code) does not expose tokens over the network.
 - Use HTTPS/TLS for any HTTP-based transport in production.
-- Avoid passing tokens in URL query parameters — they can be logged by proxies and web servers. Prefer the `Authorization` header or environment variables.
+- The HTTP/SSE transport currently passes the token as an `access_token` URL query parameter, which proxies and servers may log. Until a header-based transport is available, prefer **stdio** (token via the `TASKADE_API_KEY` environment variable), especially in production.
 
 ## Never Commit Secrets
 
@@ -35,7 +35,7 @@ This is a public repository. Never commit:
 .mcpregistry_*          # MCP registry auth tokens
 ```
 
-`.env*` files are gitignored (except `.env.example`) and excluded from the npm package; the other patterns above are **not** auto-ignored, so sanity-check your staged changes before committing:
+`.env*` files (except `.env.example`) and `.mcpregistry_*` are gitignored and excluded from the npm package; the key/credential patterns above are **not** auto-ignored, so sanity-check your staged changes before committing:
 
 ```bash
 git diff --cached | grep -iE "(token|key|secret|password|credential)" | grep -v placeholder
@@ -49,4 +49,5 @@ credential immediately), then remove it from history and notify a maintainer. Se
 
 Taskade's data practices are described in the [Taskade Privacy Policy](https://www.taskade.com/privacy).
 The MCP server sends requests only to the Taskade public API (`https://www.taskade.com/api/v1`)
-using the token you provide; it does not transmit your data to any third party.
+using the token you provide; it does not send your data to other third-party services. (In
+HTTP/SSE mode the token travels in the request URL and may be logged — prefer stdio.)
