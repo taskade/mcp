@@ -51,6 +51,8 @@ MCP-powered Taskade agent running inside Claude Desktop by Anthropic:
 
 ## Quick Start
 
+> ⚡ **Zero-install (hosted):** add **`https://www.taskade.com/mcp`** as a remote MCP server and authorize with your Taskade account — it's an OAuth-protected hosted endpoint, so there's nothing to install and no token to copy. Works today with **Claude** (web, Desktop, mobile) and **Claude Code**; support for more remote clients is rolling out. Prefer to self-host or use another client? Follow the steps below.
+
 ### 1. Get Your API Key
 
 Go to [Taskade Settings > API](https://www.taskade.com/settings/api) and create a Personal Access Token.
@@ -487,7 +489,6 @@ Works with any OpenAPI 3.0+ spec. Generate MCP tools for your own APIs in minute
 
 See [open issues](https://github.com/taskade/mcp/issues) for planned features and improvements.
 
-- **Hosted MCP Endpoint** — `mcp.taskade.com` for zero-install MCP access ([#6](https://github.com/taskade/mcp/issues/6))
 - **Automation & Flow Tools** — Create, enable, and manage workflow automations via MCP
 - **Agent Chat via MCP** — Send messages to AI agents and receive responses
 - **Webhook Triggers** — Receive real-time notifications from Taskade events
