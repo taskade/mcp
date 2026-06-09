@@ -27,6 +27,12 @@ jobs:
           node-version: 22
           registry-url: "https://registry.npmjs.org"
 
+      # npm OIDC trusted publishing requires npm >= 11.5.1; Node 22 bundles npm 10.x,
+      # which signs provenance but cannot do the trusted-publishing token exchange
+      # (publish then fails with E404-on-PUT).
+      - name: Upgrade npm for trusted publishing
+        run: npm install -g npm@latest && npm --version
+
       - name: Install dependencies
         run: yarn install
 
