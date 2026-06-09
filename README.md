@@ -51,7 +51,7 @@ MCP-powered Taskade agent running inside Claude Desktop by Anthropic:
 
 ## Quick Start
 
-> ⚡ **Zero-install (hosted):** point any MCP client that supports **remote servers** at **`https://www.taskade.com/mcp`** and authorize with your Taskade account — it's an OAuth-protected hosted endpoint, so there's nothing to install and no token to copy. Prefer to self-host or use a stdio-only client? Follow the steps below.
+> ⚡ **Zero-install (hosted):** add **`https://www.taskade.com/mcp`** as a remote MCP server and authorize with your Taskade account — it's an OAuth-protected hosted endpoint, so there's nothing to install and no token to copy. Works today with **Claude** (web, Desktop, mobile) and **Claude Code**; support for more remote clients is rolling out. Prefer to self-host or use another client? Follow the steps below.
 
 ### 1. Get Your API Key
 
