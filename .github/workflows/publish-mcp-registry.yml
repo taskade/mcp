@@ -35,8 +35,12 @@ jobs:
           node -e "const fs=require('fs');const p='packages/server/server.json';const s=JSON.parse(fs.readFileSync(p,'utf8'));const v=require('./packages/server/package.json').version;s.version=v;(s.packages||[]).forEach(k=>{k.version=v});fs.writeFileSync(p,JSON.stringify(s,null,2)+'\n');console.log('server.json synced to '+v)"
 
       - name: Install mcp-publisher
+        env:
+          # Pinned for reproducible, reviewable releases — bump deliberately.
+          MCP_PUBLISHER_VERSION: v1.7.9
         run: |
-          curl -L "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
+          set -euo pipefail
+          curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/download/${MCP_PUBLISHER_VERSION}/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar -xz -f - mcp-publisher
           sudo mv mcp-publisher /usr/local/bin/
 
       - name: Authenticate via GitHub OIDC
