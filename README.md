@@ -480,7 +480,7 @@ Works with any OpenAPI 3.0+ spec. Generate MCP tools for your own APIs in minute
 - Agents: [taskade.com/agents](https://www.taskade.com/agents)
 - Templates: [taskade.com/templates](https://www.taskade.com/templates)
 - Community: [taskade.com/community](https://www.taskade.com/community)
-- Developer Docs: [developers.taskade.com](https://developers.taskade.com)
+- Developer Docs: [docs.taskade.com](https://docs.taskade.com)
 - Blog: [taskade.com/blog](https://www.taskade.com/blog)
 
 ---
@@ -493,7 +493,7 @@ See [open issues](https://github.com/taskade/mcp/issues) for planned features an
 - **Agent Chat via MCP** — Send messages to AI agents and receive responses
 - **Webhook Triggers** — Receive real-time notifications from Taskade events
 - **`agent.js`** — Open-source autonomous agent toolkit (coming soon)
-- **TaskOS** — Agent platform at [developers.taskade.com](https://developers.taskade.com)
+- **TaskOS** — Agent platform at [docs.taskade.com](https://docs.taskade.com)
 
 ---
 
@@ -515,6 +515,14 @@ Help us improve MCP tools, OpenAPI workflows, and agent capabilities.
 - [Pull Requests](https://github.com/taskade/mcp/pulls) — Contributions welcome
 - [Community](https://www.taskade.com/community) — Join the Taskade community
 - [Contact](mailto:hello@taskade.com) — hello@taskade.com
+
+---
+
+## More from Taskade
+
+- [Taskade Docs](https://docs.taskade.com) ([source](https://github.com/taskade/docs)) — developer documentation and API reference
+- [Integration Kit](https://github.com/taskade/integrations) — open-source Zapier/n8n actions & triggers
+- [Taskade](https://github.com/taskade/taskade) — platform home, including Genesis, the AI app builder
 
 ---
 
