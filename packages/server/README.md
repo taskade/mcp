@@ -23,7 +23,7 @@ Add the taskade mcp server to your client (ie: Cursor):
 }
 ```
 
-> You will need a valid Taskade personal access token, generate one [here](https://www.taskade.com/settings/password)
+> You will need a valid Taskade personal access token, generate one [here](https://www.taskade.com/settings/api)
 
 
 
@@ -51,7 +51,7 @@ For example, to install the server on Claude, edit your `claude_desktop_config.j
     }
 }
 ```
-> You will need a valid Taskade personal access token, generate one [here](https://www.taskade.com/settings/password)
+> You will need a valid Taskade personal access token, generate one [here](https://www.taskade.com/settings/api)
 
 ### Connect Via SSE/Streamable HTTP
 
