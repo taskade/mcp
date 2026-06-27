@@ -17,10 +17,22 @@ const deriveName = (p: string) => p.replace(/^\//, '').split('/')[0];
 const pruneToEnabled = (doc: any) => {
   const enabled = new Set<string>(ENABLED_TASKADE_V2_ACTIONS);
   const paths: Record<string, unknown> = {};
+  const matched = new Set<string>();
   for (const [p, ms] of Object.entries(doc.paths ?? {})) {
     if (enabled.has(deriveName(p))) {
       paths[p] = ms;
+      matched.add(deriveName(p));
     }
+  }
+
+  // Fail loudly if an allow-listed action has no matching path (typo, renamed/removed
+  // upstream op). Without this the action is silently dropped and we ship fewer tools
+  // than ENABLED_TASKADE_V2_ACTIONS declares, with a green build.
+  const missing = [...enabled].filter((name) => !matched.has(name));
+  if (missing.length > 0) {
+    throw new Error(
+      `v2 codegen: enabled action(s) have no matching path in taskade-public.v2.json: ${missing.join(', ')}`,
+    );
   }
 
   const allSchemas = doc.components?.schemas ?? {};
@@ -54,7 +66,17 @@ const pruneToEnabled = (doc: any) => {
 };
 
 const raw = JSON.parse(fs.readFileSync('taskade-public.v2.json', 'utf8'));
-const document = await dereference(pruneToEnabled(raw) as never);
+let document;
+try {
+  document = await dereference(pruneToEnabled(raw) as never);
+} catch (error) {
+  // The live v2 spec has a known broken self-$ref in components.schemas.Field; pruneToEnabled
+  // sidesteps it only while the allow-list stays clear of schemas that reach Field. If this
+  // throws, an enabled tool likely now references the broken node — see the pruneToEnabled note.
+  throw new Error(
+    `v2 codegen: failed to dereference the pruned spec (likely the known upstream Field self-$ref reached by a newly enabled action): ${(error as Error).message}`,
+  );
+}
 
 const actions = Object.fromEntries(
   Object.entries(HUMANIZED_TASKADE_V2_ACTIONS).map(([name, title]) => [name, { title }]),

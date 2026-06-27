@@ -191,7 +191,11 @@ export const setupToolsV2 = (server: McpServer, opts: OpenAPIToolRuntimeConfigOp
   server.tool(
     'promptAgent',
     'Prompt an agent',
-    z.object({}).shape,
+    z.object({
+      spaceId: z.string().describe('The space ID to prompt the agent for'),
+      agentId: z.string().describe('The agent ID to prompt'),
+      prompt: z.string().describe('The prompt to send to the agent'),
+    }).shape,
     {
       readOnlyHint: false,
       destructiveHint: false,

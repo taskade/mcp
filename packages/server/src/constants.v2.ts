@@ -16,7 +16,11 @@ export const ENABLED_TASKADE_V2_ACTIONS = [
   'unsubscribeWebhook',
 ] as const;
 
-export const HUMANIZED_TASKADE_V2_ACTIONS: Record<string, string> = {
+export type TaskadeV2Action = (typeof ENABLED_TASKADE_V2_ACTIONS)[number];
+
+// Keyed to the allow-list so the two cannot drift: a missing, extra, or misspelled
+// action here is a compile error rather than a silently untitled tool.
+export const HUMANIZED_TASKADE_V2_ACTIONS: Record<TaskadeV2Action, string> = {
   promptAgent: 'Chat with an AI Agent',
   listConversations: 'List Agent Conversations',
   getConversation: 'Get Agent Conversation',
