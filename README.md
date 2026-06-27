@@ -11,7 +11,7 @@
 [![Add to Cursor](https://img.shields.io/badge/Add_to-Cursor-0098FF?style=flat-square)](cursor://anysphere.cursor-deeplink/mcp/install?name=taskade&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkB0YXNrYWRlL21jcC1zZXJ2ZXIiXSwiZW52Ijp7IlRBU0tBREVfQVBJX0tFWSI6InlvdXItYXBpLWtleS1oZXJlIn19)
 [![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-007ACC?style=flat-square&logo=visualstudiocode&logoColor=white)](vscode:mcp/install?%7B%22name%22%3A%22taskade%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40taskade%2Fmcp-server%22%5D%2C%22env%22%3A%7B%22TASKADE_API_KEY%22%3A%22%24%7Binput%3Ataskade_api_key%7D%22%7D%7D)
 
-**57 tools** for workspaces, projects, tasks, AI agents, knowledge bases, templates, automations, media, and sharing — all from your AI client.
+**62 tools** for workspaces, projects, tasks, AI agents, agent chat, webhooks, knowledge bases, templates, media, and sharing — all from your AI client.
 
 </div>
 
@@ -24,7 +24,7 @@
 
 - [Demo](#demo)
 - [Quick Start](#quick-start)
-- [Tools (57)](#tools-57)
+- [Tools (62)](#tools-62)
 - [Why Taskade MCP?](#why-taskade-mcp)
 - [Agent Recipes](#agent-recipes)
 - [Use Cases](#use-cases)
@@ -157,7 +157,7 @@ The server starts at `http://localhost:3000` (configure with `PORT` env var). Co
 
 ---
 
-## Tools (57)
+## Tools (62)
 
 ### Workspaces
 
@@ -253,6 +253,18 @@ Create, manage, and publish autonomous AI agents with custom knowledge and tools
 |------|-------------|
 | `meProjectsGet` | List all your projects |
 
+### Agent Chat & Webhooks (API v2, beta)
+
+Capabilities the v1 API doesn't have: hold a live conversation with an AI agent, and receive real-time events.
+
+| Tool | Description |
+|------|-------------|
+| `promptAgent` | Send a message to an AI agent and get its reply |
+| `listConversations` | List an agent's conversations |
+| `getConversation` | Get a conversation's messages |
+| `subscribeWebhook` | Subscribe to real-time Taskade event webhooks |
+| `unsubscribeWebhook` | Remove a webhook subscription |
+
 ---
 
 ## Why Taskade MCP?
@@ -269,7 +281,7 @@ Taskade MCP gives your AI assistant **full access to your workspace** — projec
                          ↓
   ┌──────────────────────────────────┐
   │     Taskade MCP Server           │
-  │     (57 tools, 7 categories)     │
+  │     (62 tools, 8 categories)     │
   └──────────────────────────────────┘
        ↓              ↓            ↓
   folderCreateAgent  agentKnowledge  agentPublicAccess
@@ -296,7 +308,7 @@ Taskade MCP gives your AI assistant **full access to your workspace** — projec
 
 ### Why Taskade MCP Over Other MCP Servers?
 
-Taskade is the only MCP server that includes **AI agent management** (create, train, deploy agents), **knowledge base training** (attach docs, projects, media), and **OpenAPI codegen** (generate MCP tools from any API spec). 57 tools across 7 categories.
+Taskade is the only MCP server that includes **AI agent management** (create, train, deploy agents), **knowledge base training** (attach docs, projects, media), and **OpenAPI codegen** (generate MCP tools from any API spec). 62 tools across 8 categories.
 
 ---
 
