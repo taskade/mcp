@@ -21,6 +21,34 @@ export type ParsedTool = {
   outputSchema: IJsonSchema;
 };
 
+/**
+ * Derive a stable camelCase tool name from an operation's path when the spec omits
+ * `operationId` — e.g. Taskade API v2's flat RPC routes (`POST /promptAgent`). Path
+ * params (`{id}`) are dropped and remaining segments are camelCased
+ * (`/media/{mediaId}/content` → `mediaContent`). Falls back to the HTTP method for a
+ * root path. Specs that DO provide `operationId` (e.g. Taskade v1) are unaffected.
+ */
+export const deriveToolName = (method: string, path: string): string => {
+  const words = path
+    .split('/')
+    .filter((segment) => segment && !segment.startsWith('{'))
+    .join('-')
+    .split(/[-_]/)
+    .filter(Boolean);
+
+  if (words.length === 0) {
+    return method.toLowerCase();
+  }
+
+  return words
+    .map((word, index) =>
+      index === 0
+        ? word.charAt(0).toLowerCase() + word.slice(1)
+        : word.charAt(0).toUpperCase() + word.slice(1),
+    )
+    .join('');
+};
+
 export const parseOpenApi = (
   paths: OpenAPIV3_1.PathsObject | OpenAPIV3.PathsObject | OpenAPIV2.PathsObject,
 ): ParsedTool[] => {
@@ -129,10 +157,10 @@ export const parseOpenApi = (
       }
 
       tools.push({
-        name: operation.operationId!,
+        name: operation.operationId ?? deriveToolName(method, path),
         method: method,
         path: path,
-        description: operation.description!,
+        description: operation.description ?? operation.summary ?? '',
         inputSchema,
         queryParamsSchema,
         pathParamsSchema,
