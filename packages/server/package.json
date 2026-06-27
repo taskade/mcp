@@ -17,7 +17,7 @@
     "taskade-mcp-server": "bin/cli.mjs"
   },
   "scripts": {
-    "fetch:openapi": "curl -o taskade-public.yaml https://www.taskade.com/api/documentation/yaml",
+    "fetch:openapi": "curl -fsSL -o taskade-public.yaml https://www.taskade.com/api/documentation/v1/yaml",
     "generate:taskade-mcp-tools": "tsx scripts/gen-taskade-mcp-tools.ts",
     "build:cli": "tsx scripts/build-cli.ts",
     "build": "run-s generate:taskade-mcp-tools build:cli && yarn --cwd=../../ lint:fix",
