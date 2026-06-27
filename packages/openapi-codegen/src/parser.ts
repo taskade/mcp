@@ -26,7 +26,8 @@ export type ParsedTool = {
  * `operationId` — e.g. Taskade API v2's flat RPC routes (`POST /promptAgent`). Path
  * params (`{id}`) are dropped and remaining segments are camelCased
  * (`/media/{mediaId}/content` → `mediaContent`). Falls back to the HTTP method for a
- * root path. Specs that DO provide `operationId` (e.g. Taskade v1) are unaffected.
+ * root or param-only path (`/`, `/{id}`). Specs that DO provide `operationId` (e.g.
+ * Taskade v1) are unaffected.
  */
 export const deriveToolName = (method: string, path: string): string => {
   const words = path
