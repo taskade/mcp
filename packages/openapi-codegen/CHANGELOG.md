@@ -1,5 +1,21 @@
 # @taskade/mcp-openapi-codegen
 
+## 0.0.4
+
+### Patch Changes
+
+- [#53](https://github.com/taskade/mcp/pull/53) [`93017a7`](https://github.com/taskade/mcp/commit/93017a77cca91b57b7518648f2dd21010ef9ca7d) Thanks [@johnxie](https://github.com/johnxie)! - Derive a camelCase tool name from an operation's path when the OpenAPI spec omits
+  `operationId` (and fall back to `summary` for the description). Enables generating
+  tools from specs like Taskade API v2's flat RPC routes (`POST /promptAgent`). Specs
+  that provide `operationId` (e.g. Taskade v1) are unaffected.
+
+- [#55](https://github.com/taskade/mcp/pull/55) [`f4c9cf5`](https://github.com/taskade/mcp/commit/f4c9cf55c269d5fd5cc1c2d42317e5c84816af95) Thanks [@johnxie](https://github.com/johnxie)! - Add a Taskade API **v2** tool layer alongside the existing v1 tools (additive — v1's
+  57 tools are unchanged). Exposes the highest-value capabilities v1 lacks: **agent chat**
+  (`promptAgent`, `listConversations`, `getConversation`) and **webhooks**
+  (`subscribeWebhook`, `unsubscribeWebhook`). The codegen gains an `exportName` option so
+  the second tool set (`setupToolsV2`) can be registered next to the first. v2 is beta;
+  the enabled set will grow as it stabilizes.
+
 ## 0.0.3
 
 ### Patch Changes
