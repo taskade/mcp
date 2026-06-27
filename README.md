@@ -501,9 +501,9 @@ Works with any OpenAPI 3.0+ spec. Generate MCP tools for your own APIs in minute
 
 See [open issues](https://github.com/taskade/mcp/issues) for planned features and improvements.
 
+**Recently shipped (v0.1.0):** Agent chat (`promptAgent`) and webhook triggers, live now via the [Taskade API v2 tool layer](#agent-chat--webhooks-api-v2-beta).
+
 - **Automation & Flow Tools** — Create, enable, and manage workflow automations via MCP
-- **Agent Chat via MCP** — Send messages to AI agents and receive responses
-- **Webhook Triggers** — Receive real-time notifications from Taskade events
 - **`agent.js`** — Open-source autonomous agent toolkit (coming soon)
 - **TaskOS** — Agent platform at [docs.taskade.com](https://docs.taskade.com)
 
