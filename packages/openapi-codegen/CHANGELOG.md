@@ -1,5 +1,14 @@
 # @taskade/mcp-openapi-codegen
 
+## 0.0.4
+
+### Patch Changes
+
+- [#53](https://github.com/taskade/mcp/pull/53) [`93017a7`](https://github.com/taskade/mcp/commit/93017a77cca91b57b7518648f2dd21010ef9ca7d) Thanks [@johnxie](https://github.com/johnxie)! - Derive a camelCase tool name from an operation's path when the OpenAPI spec omits
+  `operationId` (and fall back to `summary` for the description). Enables generating
+  tools from specs like Taskade API v2's flat RPC routes (`POST /promptAgent`). Specs
+  that provide `operationId` (e.g. Taskade v1) are unaffected.
+
 ## 0.0.3
 
 ### Patch Changes
