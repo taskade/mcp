@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { prepareToolCallOperation } from './runtime';
+import {
+  OpenAPIToolRuntimeConfig,
+  prepareToolCallOperation,
+  ToolCallOpenApiOperation,
+} from './runtime';
 
 describe('prepareToolCallOperation', () => {
   it('splits input into path params, query params, and JSON body', () => {
@@ -32,5 +36,65 @@ describe('prepareToolCallOperation', () => {
     expect(result.url).toBe('/projects/p1');
     expect(result.body).toBeUndefined();
     expect(result.headers['Content-Type']).toBeUndefined();
+  });
+});
+
+const op: ToolCallOpenApiOperation = {
+  name: 'thing',
+  path: '/thing',
+  method: 'POST',
+  input: {},
+};
+
+const fakeFetch = (status: number, body: unknown) => async () => ({
+  ok: status >= 200 && status < 300,
+  status,
+  statusText: `Status ${status}`,
+  json: async () => body,
+  text: async () => (typeof body === 'string' ? body : JSON.stringify(body)),
+});
+
+describe('OpenAPIToolRuntimeConfig.executeToolCall', () => {
+  it('returns the response body normally on a 2xx', async () => {
+    const config = new OpenAPIToolRuntimeConfig({
+      url: 'https://example.com',
+      fetch: fakeFetch(200, { hello: 'world' }),
+    });
+    const result = await config.executeToolCall(op);
+    expect(result.isError).toBeFalsy();
+    expect(JSON.stringify(result.content)).toContain('hello');
+  });
+
+  it('surfaces a 401 as isError instead of a fake success', async () => {
+    const config = new OpenAPIToolRuntimeConfig({
+      url: 'https://example.com',
+      fetch: fakeFetch(401, { error: 'Unauthorized' }),
+    });
+    const result = await config.executeToolCall(op);
+    expect(result.isError).toBe(true);
+    expect(JSON.stringify(result.content)).toContain('401');
+    expect(JSON.stringify(result.content)).toContain('Unauthorized');
+  });
+
+  it('surfaces a 500 as isError', async () => {
+    const config = new OpenAPIToolRuntimeConfig({
+      url: 'https://example.com',
+      fetch: fakeFetch(500, 'Internal Server Error'),
+    });
+    const result = await config.executeToolCall(op);
+    expect(result.isError).toBe(true);
+    expect(JSON.stringify(result.content)).toContain('500');
+  });
+
+  it('surfaces a network/transport failure as isError', async () => {
+    const config = new OpenAPIToolRuntimeConfig({
+      url: 'https://example.com',
+      fetch: async () => {
+        throw new Error('ECONNREFUSED');
+      },
+    });
+    const result = await config.executeToolCall(op);
+    expect(result.isError).toBe(true);
+    expect(JSON.stringify(result.content)).toContain('ECONNREFUSED');
   });
 });

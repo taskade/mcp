@@ -133,6 +133,17 @@ export class OpenAPIToolRuntimeConfig {
       },
     });
 
+    if (!response.ok) {
+      // Surface API errors instead of handing the error body back as a successful
+      // tool result. Read the body as text (works for JSON or non-JSON errors) and
+      // throw — executeToolCall turns this into an `isError` CallToolResult so the
+      // model sees a real failure rather than a 401/422/500 payload that looks like success.
+      const body = await response.text().catch(() => '');
+      throw new Error(
+        `Taskade API request failed: ${response.status} ${response.statusText}${body ? ` — ${body}` : ''}`,
+      );
+    }
+
     return await response.json();
   }
 
@@ -144,8 +155,21 @@ export class OpenAPIToolRuntimeConfig {
         this.defaultExecuteToolCall(payload));
       return this.normaliseResponse(operation, response);
     } catch (error) {
+      // Return a proper error result (instead of rethrowing) so the model gets a
+      // clear, actionable failure message. Covers HTTP errors (thrown above) and
+      // network/transport failures alike.
       console.error('OPENAPI_TOOL_CALL_ERROR', error);
-      throw error;
+      return {
+        isError: true,
+        content: [
+          {
+            type: 'text',
+            text: `Tool "${operation.name}" failed: ${
+              error instanceof Error ? error.message : String(error)
+            }`,
+          },
+        ],
+      };
     }
   }
 
