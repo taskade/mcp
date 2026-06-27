@@ -26,7 +26,8 @@ export type ParsedTool = {
  * `operationId` — e.g. Taskade API v2's flat RPC routes (`POST /promptAgent`). Path
  * params (`{id}`) are dropped and remaining segments are camelCased
  * (`/media/{mediaId}/content` → `mediaContent`). Falls back to the HTTP method for a
- * root path. Specs that DO provide `operationId` (e.g. Taskade v1) are unaffected.
+ * root or param-only path (`/`, `/{id}`). Specs that DO provide `operationId` (e.g.
+ * Taskade v1) are unaffected.
  */
 export const deriveToolName = (method: string, path: string): string => {
   const words = path
@@ -118,7 +119,15 @@ export const parseOpenApi = (
               ),
             );
 
-            if (bodySchema.type === 'object' && bodySchema.properties) {
+            // A request body marked `nullable: true` is rewritten by
+            // convertOpenApiSchemaToJsonSchema to `type: ['object', 'null']`, so a strict
+            // `=== 'object'` check would skip it and emit a parameterless tool (e.g. v2's
+            // promptAgent). Accept an object type whether scalar or in a nullable union.
+            const isObjectBody = Array.isArray(bodySchema.type)
+              ? bodySchema.type.includes('object')
+              : bodySchema.type === 'object';
+
+            if (isObjectBody && bodySchema.properties) {
               for (const [name, propSchema] of Object.entries(bodySchema.properties)) {
                 inputSchema.properties![name] = propSchema;
               }

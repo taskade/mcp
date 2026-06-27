@@ -14,8 +14,14 @@ describe('deriveToolName', () => {
     expect(deriveToolName('get', '/bundles/{spaceId}/export/zip')).toBe('bundlesExportZip');
   });
 
-  it('falls back to the HTTP method for a root path', () => {
+  it('camelCases hyphen- and underscore-separated segments', () => {
+    expect(deriveToolName('post', '/list-conversations')).toBe('listConversations');
+    expect(deriveToolName('get', '/user_profile')).toBe('userProfile');
+  });
+
+  it('falls back to the HTTP method for a root or param-only path', () => {
     expect(deriveToolName('get', '/')).toBe('get');
+    expect(deriveToolName('POST', '/{id}')).toBe('post');
   });
 });
 
@@ -38,5 +44,47 @@ describe('parseOpenApi name resolution', () => {
     expect(tools).toHaveLength(1);
     expect(tools[0].name).toBe('promptAgent');
     expect(tools[0].description).toBe('Prompt an agent');
+  });
+
+  it('falls back to an empty description when neither description nor summary is present', () => {
+    const tools = parseOpenApi({
+      '/promptAgent': { post: { responses: {} } },
+    } as never);
+    expect(tools).toHaveLength(1);
+    expect(tools[0].description).toBe('');
+  });
+
+  it('keeps request-body params when the body schema is nullable (API v2 promptAgent)', () => {
+    const tools = parseOpenApi({
+      '/promptAgent': {
+        post: {
+          summary: 'Prompt an agent',
+          requestBody: {
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  nullable: true,
+                  properties: {
+                    spaceId: { type: 'string' },
+                    agentId: { type: 'string' },
+                    prompt: { type: 'string' },
+                  },
+                  required: ['spaceId', 'agentId', 'prompt'],
+                },
+              },
+            },
+          },
+          responses: {},
+        },
+      },
+    } as never);
+    expect(tools).toHaveLength(1);
+    expect(Object.keys(tools[0].inputSchema.properties ?? {})).toEqual([
+      'spaceId',
+      'agentId',
+      'prompt',
+    ]);
+    expect(tools[0].inputSchema.required).toEqual(['spaceId', 'agentId', 'prompt']);
   });
 });
