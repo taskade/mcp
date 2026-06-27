@@ -1,5 +1,15 @@
 # @taskade/mcp-openapi-codegen
 
+## 0.0.5
+
+### Patch Changes
+
+- [#58](https://github.com/taskade/mcp/pull/58) [`34e978d`](https://github.com/taskade/mcp/commit/34e978d198da792a7bee98ab53938f16662ed0c4) Thanks [@johnxie](https://github.com/johnxie)! - Surface API errors instead of returning them as successful tool results. The runtime now
+  checks `response.ok`: a non-2xx response (401/403/422/5xx) or a network failure comes back
+  as an `isError` tool result carrying the status and body, rather than the error payload
+  being handed to the model as if the call had succeeded. Applies to all generated tools
+  (v1 + v2); the 2xx path and the `normalizeResponse` handlers are unchanged.
+
 ## 0.0.4
 
 ### Patch Changes
