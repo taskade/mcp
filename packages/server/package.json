@@ -18,9 +18,11 @@
   },
   "scripts": {
     "fetch:openapi": "curl -fsSL -o taskade-public.yaml https://www.taskade.com/api/documentation/v1/yaml",
+    "fetch:openapi:v2": "curl -fsSL -o taskade-public.v2.json https://www.taskade.com/api/documentation/v2/json",
     "generate:taskade-mcp-tools": "tsx scripts/gen-taskade-mcp-tools.ts",
+    "generate:taskade-mcp-tools:v2": "tsx scripts/gen-taskade-mcp-tools-v2.ts",
     "build:cli": "tsx scripts/build-cli.ts",
-    "build": "run-s generate:taskade-mcp-tools build:cli && yarn --cwd=../../ lint:fix",
+    "build": "run-s generate:taskade-mcp-tools generate:taskade-mcp-tools:v2 build:cli && yarn --cwd=../../ lint:fix",
     "start:server": "tsx src/http.ts --watch"
   },
   "devDependencies": {

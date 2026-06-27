@@ -2,6 +2,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import fetch from 'node-fetch';
 
 import { setupTools } from './tools.generated';
+import { setupToolsV2 } from './tools.v2.generated';
 
 type TaskadeServerOpts = {
   accessToken: string;
@@ -182,6 +183,30 @@ export class TaskadeMCPServer extends McpServer {
               {
                 type: 'text',
                 text: 'This public agent is accessible at: https://www.taskade.com/a/{publicAgentId}. Share this link with the user.',
+              },
+            ],
+          };
+        },
+      },
+    });
+
+    // Taskade API v2 (beta) — additive layer for capabilities v1 lacks (agent chat,
+    // webhooks). Same bearer token; base URL is /api/v2. The v1 tools above are
+    // unaffected.
+    setupToolsV2(this, {
+      url: 'https://www.taskade.com/api/v2',
+      fetch,
+      headers: {
+        Authorization: `Bearer ${this.config.accessToken}`,
+      },
+      normalizeResponse: {
+        promptAgent: (response) => {
+          return {
+            content: [
+              { type: 'text', text: JSON.stringify(response) },
+              {
+                type: 'text',
+                text: "This is the agent's reply. Relay it to the user; manage agents at https://www.taskade.com/agents.",
               },
             ],
           };

@@ -42,10 +42,17 @@ type CodegenOpts = {
   document: OpenAPIV3_1.Document | OpenAPIV3.Document | OpenAPIV2.Document;
   isActionsEnabled?: IsActionsEnabledOpt;
   actions?: Record<string, ActionConfig>;
+  /**
+   * Name of the generated setup function. Defaults to `setupTools`. Override it
+   * (e.g. `setupToolsV2`) so a second generated tool set can be imported alongside
+   * the first without an export-name collision.
+   */
+  exportName?: string;
 };
 
 export const codegen = async (opts: CodegenOpts) => {
   const { document, path: outputPath } = opts;
+  const exportName = opts.exportName ?? 'setupTools';
 
   const tools = parseOpenApi(document.paths ?? {});
 
@@ -62,7 +69,7 @@ export const codegen = async (opts: CodegenOpts) => {
 
       ${runtime}\n
 
-      export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts) => {
+      export const ${exportName} = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts) => {
 
       const config = new OpenAPIToolRuntimeConfig(opts);
 
