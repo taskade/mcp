@@ -5,7 +5,7 @@ The **Workspace MCP** server connects any MCP-compatible AI client (Claude, Curs
 > 📖 **Full documentation lives in the canonical sources — this package README is intentionally a stub to avoid drift.**
 
 - **Setup, all clients, full tool reference:** [taskade/mcp README](https://github.com/taskade/mcp#readme)
-- **Workspace MCP guide:** [docs.taskade.com](https://github.com/taskade/docs/blob/main/apis-living-system-development/workspace-mcp.md)
+- **Workspace MCP guide:** [github.com/taskade/docs](https://github.com/taskade/docs/blob/main/apis-living-system-development/workspace-mcp.md)
 - **Which Taskade MCP do I want?** (Workspace vs Genesis App vs Connectors): [Genesis App MCP guide](https://github.com/taskade/docs/blob/main/apis-living-system-development/genesis-app-mcp.md)
 
 ## Quick start
