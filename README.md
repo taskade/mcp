@@ -2,6 +2,8 @@
 
 # Taskade MCP Server
 
+> The **Workspace MCP** (`@taskade/mcp-server`) — run your Taskade workspace from any AI client.
+
 **Connect [Taskade](https://www.taskade.com) to any AI assistant — Claude, Cursor, Windsurf, VS Code, and more — via the [Model Context Protocol](https://modelcontextprotocol.io/).**
 
 [![npm](https://img.shields.io/npm/v/@taskade/mcp-server?style=flat-square&color=FF2D60)](https://www.npmjs.com/package/@taskade/mcp-server)
@@ -45,7 +47,7 @@ MCP-powered Taskade agent running inside Claude Desktop by Anthropic:
 | Build Agents via MCP | Automate Workflows | Manage Projects |
 |:---:|:---:|:---:|
 | <img src="https://raw.githubusercontent.com/taskade/taskade/main/media/agents/agent-generator.gif" width="280" alt="Create AI agents from your IDE via Taskade MCP"> | <img src="https://raw.githubusercontent.com/taskade/taskade/main/media/automations/automation-flows.gif" width="280" alt="Automate workflows via Taskade MCP"> | <img src="https://raw.githubusercontent.com/taskade/taskade/main/media/genesis/create-app.gif" width="280" alt="Manage projects and apps via Taskade MCP"> |
-| Create, train, deploy AI agents from Claude/Cursor | Build multi-step automations across 100+ services | Full workspace management from your AI assistant |
+| Create, train, deploy AI agents from Claude/Cursor | Build multi-step automations across 100+ services | Full workspace management from your AI assistant *(paid plans; some endpoints gated on free)* |
 
 ---
 
@@ -279,7 +281,7 @@ Capabilities the v1 API doesn't have: hold a live conversation with an AI agent,
 
 ## Why Taskade MCP?
 
-Taskade MCP gives your AI assistant **full access to your workspace** — projects, tasks, agents, knowledge bases, templates, and automations. Instead of writing API code, describe what you need in natural language.
+Taskade MCP gives your AI assistant **access to your workspace** — projects, tasks, agents, knowledge bases, templates, and automations (on paid plans; some endpoints such as workspace listing are gated for free accounts). Instead of writing API code, describe what you need in natural language.
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -503,6 +505,8 @@ Works with any OpenAPI 3.0+ spec. Generate MCP tools for your own APIs in minute
 - Templates: [taskade.com/templates](https://www.taskade.com/templates)
 - Community: [taskade.com/community](https://www.taskade.com/community)
 - Developer Docs: [docs.taskade.com](https://docs.taskade.com)
+- **Workspace MCP guide:** https://github.com/taskade/docs/blob/main/apis-living-system-development/workspace-mcp.md
+- **Genesis App MCP guide** (a different, hosted surface): https://github.com/taskade/docs/blob/main/apis-living-system-development/genesis-app-mcp.md
 - Blog: [taskade.com/blog](https://www.taskade.com/blog)
 
 ---
