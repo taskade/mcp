@@ -51,7 +51,17 @@ MCP-powered Taskade agent running inside Claude Desktop by Anthropic:
 
 ## Quick Start
 
-> ⚡ **Zero-install (hosted):** add **`https://www.taskade.com/mcp`** as a remote MCP server and authorize with your Taskade account — it's an OAuth-protected hosted endpoint, so there's nothing to install and no token to copy. Works today with **Claude** (web, Desktop, mobile) and **Claude Code**; support for more remote clients is rolling out. Prefer to self-host or use another client? Follow the steps below.
+> ⚡ **Prefer a hosted option?** `https://www.taskade.com/mcp` is the OAuth-protected **[Genesis App MCP](https://github.com/taskade/docs/blob/main/apis-living-system-development/genesis-app-mcp.md)** — a *separate hosted surface* from this Workspace MCP server. See its guide to learn what it does and whether it fits your use case. To read and write your workspace **content** (projects, tasks, agents) as described below, use the Workspace MCP server (this package).
+
+## Which Taskade MCP do I want?
+
+Taskade speaks MCP through three surfaces — this repo is the first one:
+
+| I want to… | Use | Where / auth |
+|---|---|---|
+| Have my AI client **read & write my projects, tasks, agents** | **Workspace MCP** — this repo (`@taskade/mcp-server`) | Local stdio · personal token · most plans |
+| **Edit my published app's code** from my IDE | **[Genesis App MCP](https://github.com/taskade/docs/blob/main/apis-living-system-development/genesis-app-mcp.md)** | Hosted · OAuth 2.0 (`https://www.taskade.com/mcp`) · Business+ |
+| Let my agents **reach Slack / Shopify / Gmail** | **[MCP Connectors](https://github.com/taskade/docs/blob/main/genesis-living-system-builder/genesis/mcp-connectors.md)** | Hosted, in-product |
 
 ### 1. Get Your API Key
 
