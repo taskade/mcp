@@ -1,5 +1,15 @@
 # @taskade/mcp-server
 
+## 0.1.2
+
+### Patch Changes
+
+- [#68](https://github.com/taskade/mcp/pull/68) [`cd2a4d7`](https://github.com/taskade/mcp/commit/cd2a4d76aba68a426581ab96ee95db5f68b4aee6) Thanks [@johnxie](https://github.com/johnxie)! - MCP clients now see the real package version (was hardcoded 0.0.3). Releasing also publishes the canonical package README stub (#64) and corrected API-token link (#61) to npm.
+
+- [#66](https://github.com/taskade/mcp/pull/66) [`4294c28`](https://github.com/taskade/mcp/commit/4294c288a771730ae284c6f7a89dd73ab5420969) Thanks [@johnxie](https://github.com/johnxie)! - Task and workspace tool results now include canonical Taskade URL hints (task node deep links, space and subspace URLs).
+
+- [#69](https://github.com/taskade/mcp/pull/69) [`0ea4b4a`](https://github.com/taskade/mcp/commit/0ea4b4a41cd60724e25743b3b9fbd0982bed36dc) Thanks [@johnxie](https://github.com/johnxie)! - Generated tools now carry the full MCP annotation set: derived idempotentHint and openWorldHint:false alongside readOnly/destructive hints; per-action overrides supported.
+
 ## 0.1.1
 
 ### Patch Changes
