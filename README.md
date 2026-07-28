@@ -525,7 +525,7 @@ See [open issues](https://github.com/taskade/mcp/issues) for planned features an
 
 ## Privacy & Security
 
-Your Taskade API token authorizes the MCP server to call the Taskade public API on your behalf. The server talks **only** to `https://www.taskade.com/api/v1` and does not send your data to other third-party services.
+Your Taskade API token authorizes the MCP server to call the Taskade public API on your behalf. The server talks **only** to the Taskade public API — `https://www.taskade.com/api/v1` and `https://www.taskade.com/api/v2` — and does not send your data to other third-party services.
 
 - **Privacy** — see the [Taskade Privacy Policy](https://www.taskade.com/privacy).
 - **Security & vulnerability reporting** — see [SECURITY.md](./SECURITY.md).
