@@ -268,7 +268,7 @@ Export and import whole spaces as portable JSON bundles (SpaceBundleData v1 — 
 | `bundleExport` | Export a space (subspace / app) as a JSON bundle — agents, automations, projects, templates, apps |
 | `bundleImport` | Import a JSON bundle into a workspace — validated against SpaceBundleData v1, all items installed into the target workspace |
 
-> **Note:** imports are subject to your plan's server-side limits — an over-quota import fails with a `4XX` error. The raw ZIP/`.tsk` and media file endpoints (`bundleExportZip`, `bundleImportZip`, `mediaUpload`, `mediaDownload`) exchange binary payloads and are not exposed as tools yet.
+> **Note:** imports are subject to your plan's server-side limits — an over-quota import fails with a `4XX` error. The raw ZIP/`.tsk` and media file endpoints (`bundleExportZip`, `bundleImportZip`, `mediaUpload`, `mediaDownload`, `mediaDownloadAll`) exchange binary payloads and are not exposed as tools yet.
 
 ### Personal
 
