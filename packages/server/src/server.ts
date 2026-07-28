@@ -121,6 +121,61 @@ export class TaskadeMCPServer extends McpServer {
             ],
           };
         },
+        taskCreate: (response) => {
+          return {
+            content: [
+              { type: 'text', text: JSON.stringify(response) },
+              {
+                type: 'text',
+                text: 'The url to new tasks is in the format of: https://www.taskade.com/d/{projectId}#node-{taskId}. Share the links with the user.',
+              },
+            ],
+          };
+        },
+        taskGet: (response) => {
+          return {
+            content: [
+              { type: 'text', text: JSON.stringify(response) },
+              {
+                type: 'text',
+                text: 'The url to this task is: https://www.taskade.com/d/{projectId}#node-{taskId}. Link it in your response.',
+              },
+            ],
+          };
+        },
+        projectTasksGet: (response) => {
+          return {
+            content: [
+              { type: 'text', text: JSON.stringify(response) },
+              {
+                type: 'text',
+                text: 'The url to tasks is in the format of: https://www.taskade.com/d/{projectId}#node-{taskId}. You should link all tasks in the response to the user.',
+              },
+            ],
+          };
+        },
+        workspacesGet: (response) => {
+          return {
+            content: [
+              { type: 'text', text: JSON.stringify(response) },
+              {
+                type: 'text',
+                text: 'The url to workspaces is in the format of: https://www.taskade.com/spaces/{workspaceId}. You should link all workspaces in the response to the user.',
+              },
+            ],
+          };
+        },
+        workspaceFoldersGet: (response) => {
+          return {
+            content: [
+              { type: 'text', text: JSON.stringify(response) },
+              {
+                type: 'text',
+                text: 'The url to workspace folders is in the format of: https://www.taskade.com/spaces/{workspaceId}/subspaces/{folderId}. You should link all folders in the response to the user.',
+              },
+            ],
+          };
+        },
         folderAgentGet: (response) => {
           return {
             content: [
