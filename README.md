@@ -13,7 +13,7 @@
 [![Add to Cursor](https://img.shields.io/badge/Add_to-Cursor-0098FF?style=flat-square)](cursor://anysphere.cursor-deeplink/mcp/install?name=taskade&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkB0YXNrYWRlL21jcC1zZXJ2ZXIiXSwiZW52Ijp7IlRBU0tBREVfQVBJX0tFWSI6InlvdXItYXBpLWtleS1oZXJlIn19)
 [![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-007ACC?style=flat-square&logo=visualstudiocode&logoColor=white)](vscode:mcp/install?%7B%22name%22%3A%22taskade%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40taskade%2Fmcp-server%22%5D%2C%22env%22%3A%7B%22TASKADE_API_KEY%22%3A%22%24%7Binput%3Ataskade_api_key%7D%22%7D%7D)
 
-**62 tools** for workspaces, projects, tasks, AI agents, agent chat, webhooks, knowledge bases, templates, media, and sharing — all from your AI client.
+**66 tools** for workspaces, projects, tasks, AI agents, agent chat, webhooks, knowledge bases, templates, media, and sharing — all from your AI client.
 
 </div>
 
@@ -26,7 +26,7 @@
 
 - [Demo](#demo)
 - [Quick Start](#quick-start)
-- [Tools (62)](#tools-62)
+- [Tools (66)](#tools-66)
 - [Why Taskade MCP?](#why-taskade-mcp)
 - [Agent Recipes](#agent-recipes)
 - [Use Cases](#use-cases)
@@ -169,7 +169,7 @@ The server starts at `http://localhost:3000` (configure with `PORT` env var). Co
 
 ---
 
-## Tools (62)
+## Tools (66)
 
 ### Workspaces
 
@@ -274,8 +274,14 @@ Capabilities the v1 API doesn't have: hold a live conversation with an AI agent,
 | `promptAgent` | Send a message to an AI agent and get its reply |
 | `listConversations` | List an agent's conversations |
 | `getConversation` | Get a conversation's messages |
-| `subscribeWebhook` | Subscribe to real-time Taskade event webhooks |
-| `unsubscribeWebhook` | Remove a webhook subscription |
+| `createWebhook` | Register a signed (HMAC) webhook for one or more events |
+| `listWebhooks` | List your registered signed webhooks |
+| `getWebhook` | Get a signed webhook by id |
+| `deleteWebhook` | Delete a signed webhook |
+| `subscribeWebhook` | Subscribe to event webhooks (legacy, unsigned — prefer `createWebhook`) |
+| `unsubscribeWebhook` | Remove a legacy webhook subscription |
+
+> **Warning:** `createWebhook` returns the HMAC signing secret exactly **once** — it cannot be retrieved again (not even via `getWebhook`). Store it securely before doing anything else; you need it to verify the signatures on incoming deliveries.
 
 ---
 
@@ -293,7 +299,7 @@ Taskade MCP gives your AI assistant **access to your workspace** — projects, t
                          ↓
   ┌──────────────────────────────────┐
   │     Taskade MCP Server           │
-  │     (62 tools, 8 categories)     │
+  │     (66 tools, 8 categories)     │
   └──────────────────────────────────┘
        ↓              ↓            ↓
   folderCreateAgent  agentKnowledge  agentPublicAccess
@@ -320,7 +326,7 @@ Taskade MCP gives your AI assistant **access to your workspace** — projects, t
 
 ### Why Taskade MCP Over Other MCP Servers?
 
-Taskade is the only MCP server that includes **AI agent management** (create, train, deploy agents), **knowledge base training** (attach docs, projects, media), and **OpenAPI codegen** (generate MCP tools from any API spec). 62 tools across 8 categories.
+Taskade is the only MCP server that includes **AI agent management** (create, train, deploy agents), **knowledge base training** (attach docs, projects, media), and **OpenAPI codegen** (generate MCP tools from any API spec). 66 tools across 8 categories.
 
 ---
 

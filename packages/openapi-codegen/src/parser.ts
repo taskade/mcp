@@ -21,13 +21,28 @@ export type ParsedTool = {
   outputSchema: IJsonSchema;
 };
 
+export type ParseOpenApiOpts = {
+  /**
+   * Explicit tool-name overrides keyed by `"<lowercase-method> <path>"`, e.g.
+   * `{ 'post /webhooks': 'createWebhook' }`. An override wins over both
+   * `operationId` and the path-derived fallback. Needed for REST-shaped specs
+   * without `operationId`, where `deriveToolName` drops `{param}` segments and
+   * ignores the HTTP method — all four of `POST /webhooks`, `GET /webhooks`,
+   * `GET /webhooks/{id}` and `DELETE /webhooks/{id}` would otherwise collide
+   * as `webhooks`.
+   */
+  nameOverrides?: Record<string, string>;
+};
+
 /**
  * Derive a stable camelCase tool name from an operation's path when the spec omits
  * `operationId` — e.g. Taskade API v2's flat RPC routes (`POST /promptAgent`). Path
  * params (`{id}`) are dropped and remaining segments are camelCased
  * (`/media/{mediaId}/content` → `mediaContent`). Falls back to the HTTP method for a
  * root or param-only path (`/`, `/{id}`). Specs that DO provide `operationId` (e.g.
- * Taskade v1) are unaffected.
+ * Taskade v1) are unaffected. NOTE: because `{param}` segments are dropped and the
+ * method is ignored, sibling REST routes (`GET /webhooks` vs `GET /webhooks/{id}`)
+ * collide — disambiguate those via `ParseOpenApiOpts.nameOverrides`.
  */
 export const deriveToolName = (method: string, path: string): string => {
   const words = path
@@ -52,6 +67,7 @@ export const deriveToolName = (method: string, path: string): string => {
 
 export const parseOpenApi = (
   paths: OpenAPIV3_1.PathsObject | OpenAPIV3.PathsObject | OpenAPIV2.PathsObject,
+  opts: ParseOpenApiOpts = {},
 ): ParsedTool[] => {
   const tools: ParsedTool[] = [];
 
@@ -166,7 +182,10 @@ export const parseOpenApi = (
       }
 
       tools.push({
-        name: operation.operationId ?? deriveToolName(method, path),
+        name:
+          opts.nameOverrides?.[`${method.toLowerCase()} ${path}`] ??
+          operation.operationId ??
+          deriveToolName(method, path),
         method: method,
         path: path,
         description: operation.description ?? operation.summary ?? '',

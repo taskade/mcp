@@ -267,7 +267,11 @@ export const setupToolsV2 = (server: McpServer, opts: OpenAPIToolRuntimeConfigOp
   server.tool(
     'getConversation',
     'Get agent conversation by ID',
-    z.object({ agentId: z.string().min(1), convoId: z.string().min(1) }).shape,
+    z.object({
+      agentId: z.string().min(1),
+      convoId: z.string().min(1),
+      includeTranscript: z.boolean().default(false),
+    }).shape,
     {
       readOnlyHint: false,
       destructiveHint: false,
@@ -288,7 +292,7 @@ export const setupToolsV2 = (server: McpServer, opts: OpenAPIToolRuntimeConfigOp
   );
   server.tool(
     'subscribeWebhook',
-    'Subscribe to a webhook for a Taskade event',
+    '[Deprecated: use POST /webhooks] Subscribe to a webhook for a Taskade event (unsigned)',
     z.object({
       targetUrl: z.string().url(),
       triggerType: z.enum([
@@ -320,7 +324,7 @@ export const setupToolsV2 = (server: McpServer, opts: OpenAPIToolRuntimeConfigOp
   );
   server.tool(
     'unsubscribeWebhook',
-    'Remove a previously-created webhook subscription',
+    '[Deprecated: use DELETE /webhooks/:id] Remove a previously-created webhook subscription',
     z.object({ hookId: z.string().min(1) }).shape,
     {
       readOnlyHint: false,
@@ -336,6 +340,109 @@ export const setupToolsV2 = (server: McpServer, opts: OpenAPIToolRuntimeConfigOp
         method: 'POST',
         input: args,
         pathParamKeys: [],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'createWebhook',
+    'Register a signed outbound webhook for one or more Taskade events. The response includes the HMAC signing secret exactly ONCE — it cannot be retrieved again later, so store it securely (e.g. a secret manager) before doing anything else.',
+    z.object({
+      targetUrl: z.string().url(),
+      events: z
+        .array(
+          z.enum([
+            'task.due',
+            'comment.created',
+            'task.assigned',
+            'project.created',
+            'project.assigned',
+            'project.joined',
+          ]),
+        )
+        .min(1),
+      spaceIds: z.array(z.string().min(1)).max(100).default([]),
+    }).shape,
+    {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+      openWorldHint: false,
+      title: 'Create a Signed Webhook',
+    },
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'createWebhook',
+        path: '/webhooks',
+        method: 'POST',
+        input: args,
+        pathParamKeys: [],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'listWebhooks',
+    'List your registered outbound webhooks',
+    z.object({}).shape,
+    {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
+      title: 'List Signed Webhooks',
+    },
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'listWebhooks',
+        path: '/webhooks',
+        method: 'GET',
+        input: args,
+        pathParamKeys: [],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'getWebhook',
+    'Get one registered outbound webhook by id (its URL-encoded target URL)',
+    z.object({ id: z.string().min(1) }).shape,
+    {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
+      title: 'Get a Signed Webhook',
+    },
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'getWebhook',
+        path: '/webhooks/{id}',
+        method: 'GET',
+        input: args,
+        pathParamKeys: ['id'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'deleteWebhook',
+    'Delete a registered outbound webhook by id (its URL-encoded target URL)',
+    z.object({ id: z.string().min(1) }).shape,
+    {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: true,
+      openWorldHint: false,
+      title: 'Delete a Signed Webhook',
+    },
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'deleteWebhook',
+        path: '/webhooks/{id}',
+        method: 'DELETE',
+        input: args,
+        pathParamKeys: ['id'],
         queryParamKeys: [],
       });
     },

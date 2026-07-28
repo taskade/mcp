@@ -14,6 +14,13 @@ export const ENABLED_TASKADE_V2_ACTIONS = [
   // Real-time events
   'subscribeWebhook',
   'unsubscribeWebhook',
+  // Signed webhooks (HMAC) — upstream v6.213.0; these ops omit operationId AND
+  // share paths (/webhooks, /webhooks/{id}), so their names come from the
+  // nameOverrides map in scripts/gen-taskade-mcp-tools-v2.ts, not the path.
+  'createWebhook',
+  'listWebhooks',
+  'getWebhook',
+  'deleteWebhook',
 ] as const;
 
 export type TaskadeV2Action = (typeof ENABLED_TASKADE_V2_ACTIONS)[number];
@@ -26,4 +33,18 @@ export const HUMANIZED_TASKADE_V2_ACTIONS: Record<TaskadeV2Action, string> = {
   getConversation: 'Get Agent Conversation',
   subscribeWebhook: 'Subscribe to a Webhook',
   unsubscribeWebhook: 'Unsubscribe from a Webhook',
+  createWebhook: 'Create a Signed Webhook',
+  listWebhooks: 'List Signed Webhooks',
+  getWebhook: 'Get a Signed Webhook',
+  deleteWebhook: 'Delete a Signed Webhook',
+};
+
+// Per-action description overrides (fed to the codegen's ActionConfig.description).
+// Only needed where the spec's summary omits something the model must know.
+export const TASKADE_V2_ACTION_DESCRIPTIONS: Partial<Record<TaskadeV2Action, string>> = {
+  createWebhook:
+    'Register a signed outbound webhook for one or more Taskade events. ' +
+    'The response includes the HMAC signing secret exactly ONCE — it cannot be ' +
+    'retrieved again later, so store it securely (e.g. a secret manager) before ' +
+    'doing anything else.',
 };
