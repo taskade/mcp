@@ -405,7 +405,7 @@ export const setupToolsV2 = (server: McpServer, opts: OpenAPIToolRuntimeConfigOp
   );
   server.tool(
     'getWebhook',
-    'Get one registered outbound webhook by id (its URL-encoded target URL)',
+    'Get a webhook subscription by id. Pass the webhook’s raw target URL as `id` — do NOT URL-encode it; encoding is applied automatically.',
     z.object({ id: z.string().min(1) }).shape,
     {
       readOnlyHint: true,
@@ -427,7 +427,7 @@ export const setupToolsV2 = (server: McpServer, opts: OpenAPIToolRuntimeConfigOp
   );
   server.tool(
     'deleteWebhook',
-    'Delete a registered outbound webhook by id (its URL-encoded target URL)',
+    'Delete a webhook subscription by id. Pass the webhook’s raw target URL as `id` — do NOT URL-encode it; encoding is applied automatically.',
     z.object({ id: z.string().min(1) }).shape,
     {
       readOnlyHint: false,

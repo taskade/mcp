@@ -67,6 +67,27 @@ describe('codegen derived annotations', () => {
     });
   });
 
+  it('lets a per-action config override the LLM-visible description (spec text loses)', async () => {
+    // Pins the mechanism used to fix misleading upstream descriptions (e.g. v2's
+    // getWebhook/deleteWebhook telling callers to pre-URL-encode the id while the
+    // runtime already encodes path params).
+    const output = await codegen({
+      document,
+      actions: {
+        thingDelete: { description: 'Delete a thing by raw id — do NOT URL-encode it.' },
+      },
+    });
+
+    const chunkFor = (toolName: string) =>
+      output.split('server.tool(').find((part) => part.trimStart().startsWith(`"${toolName}"`));
+
+    // Overridden tool carries the override, not the spec description.
+    expect(chunkFor('thingDelete')).toContain('Delete a thing by raw id — do NOT URL-encode it.');
+    expect(chunkFor('thingDelete')).not.toContain('"Delete a thing"');
+    // Tools without an override keep the spec description.
+    expect(chunkFor('thingList')).toContain('"List things"');
+  });
+
   it('lets a per-action config override any derived hint, including to false', async () => {
     const output = await codegen({
       document,
