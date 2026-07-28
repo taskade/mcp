@@ -1,6 +1,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import fetch from 'node-fetch';
 
+import { version } from '../package.json';
 import { setupTools } from './tools.generated';
 import { setupToolsV2 } from './tools.v2.generated';
 
@@ -14,7 +15,7 @@ export class TaskadeMCPServer extends McpServer {
   constructor(opts: TaskadeServerOpts) {
     super({
       name: 'taskade',
-      version: '0.0.3',
+      version,
       capabilities: {
         resources: {},
         tools: {},
