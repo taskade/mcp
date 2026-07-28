@@ -223,6 +223,8 @@ export const setupToolsV2 = (server: McpServer, opts: OpenAPIToolRuntimeConfigOp
     {
       readOnlyHint: false,
       destructiveHint: false,
+      idempotentHint: false,
+      openWorldHint: false,
       title: 'Chat with an AI Agent',
     },
     async (args) => {
@@ -247,6 +249,8 @@ export const setupToolsV2 = (server: McpServer, opts: OpenAPIToolRuntimeConfigOp
     {
       readOnlyHint: false,
       destructiveHint: false,
+      idempotentHint: false,
+      openWorldHint: false,
       title: 'List Agent Conversations',
     },
     async (args) => {
@@ -267,6 +271,8 @@ export const setupToolsV2 = (server: McpServer, opts: OpenAPIToolRuntimeConfigOp
     {
       readOnlyHint: false,
       destructiveHint: false,
+      idempotentHint: false,
+      openWorldHint: false,
       title: 'Get Agent Conversation',
     },
     async (args) => {
@@ -297,6 +303,8 @@ export const setupToolsV2 = (server: McpServer, opts: OpenAPIToolRuntimeConfigOp
     {
       readOnlyHint: false,
       destructiveHint: false,
+      idempotentHint: false,
+      openWorldHint: false,
       title: 'Subscribe to a Webhook',
     },
     async (args) => {
@@ -317,6 +325,8 @@ export const setupToolsV2 = (server: McpServer, opts: OpenAPIToolRuntimeConfigOp
     {
       readOnlyHint: false,
       destructiveHint: false,
+      idempotentHint: false,
+      openWorldHint: false,
       title: 'Unsubscribe from a Webhook',
     },
     async (args) => {
