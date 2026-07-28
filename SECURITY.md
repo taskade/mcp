@@ -48,7 +48,6 @@ credential immediately), then remove it from history and notify a maintainer. Se
 ## Privacy
 
 Taskade's data practices are described in the [Taskade Privacy Policy](https://www.taskade.com/privacy).
-The MCP server sends requests only to the Taskade public API (`https://www.taskade.com/api/v1`
-and `https://www.taskade.com/api/v2`) using the token you provide; it does not send your data
-to other third-party services. (In
+The MCP server sends requests only to the Taskade public API (`https://www.taskade.com/api/v1` and `https://www.taskade.com/api/v2`)
+using the token you provide; it does not send your data to other third-party services. (In
 HTTP/SSE mode the token travels in the request URL and may be logged — prefer stdio.)
