@@ -40,11 +40,21 @@ export const HUMANIZED_TASKADE_V2_ACTIONS: Record<TaskadeV2Action, string> = {
 };
 
 // Per-action description overrides (fed to the codegen's ActionConfig.description).
-// Only needed where the spec's summary omits something the model must know.
+// Only needed where the spec's summary omits something the model must know — or,
+// for getWebhook/deleteWebhook, actively misleads: the upstream spec says the id is
+// the webhook's "URL-encoded target URL", but the generated runtime already applies
+// encodeURIComponent to every path param, so a caller that pre-encodes double-encodes
+// the id and the lookup fails. The override tells the model to pass the RAW URL.
 export const TASKADE_V2_ACTION_DESCRIPTIONS: Partial<Record<TaskadeV2Action, string>> = {
   createWebhook:
     'Register a signed outbound webhook for one or more Taskade events. ' +
     'The response includes the HMAC signing secret exactly ONCE — it cannot be ' +
     'retrieved again later, so store it securely (e.g. a secret manager) before ' +
     'doing anything else.',
+  getWebhook:
+    'Get a webhook subscription by id. Pass the webhook’s raw target URL as `id` ' +
+    '— do NOT URL-encode it; encoding is applied automatically.',
+  deleteWebhook:
+    'Delete a webhook subscription by id. Pass the webhook’s raw target URL as `id` ' +
+    '— do NOT URL-encode it; encoding is applied automatically.',
 };

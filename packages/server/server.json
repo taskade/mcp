@@ -1,7 +1,7 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.taskade/mcp-server",
-  "description": "Connect Taskade to any AI assistant — 68 tools: projects, tasks, agents, agent chat, signed webhooks, space bundles.",
+  "description": "Connect Taskade to any AI assistant — 68 tools: projects, tasks, agents, agent chat, webhooks.",
   "repository": {
     "url": "https://github.com/taskade/mcp.git",
     "source": "github"
