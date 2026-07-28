@@ -520,8 +520,8 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     z.object({
       projectId: z.string(),
       limit: z.number().default(100),
-      after: z.string().uuid().optional(),
-      before: z.string().uuid().optional(),
+      after: z.string().optional(),
+      before: z.string().optional(),
     }).shape,
     {
       readOnlyHint: true,
@@ -546,9 +546,9 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     'Get all tasks for a project',
     z.object({
       projectId: z.string(),
-      limit: z.number().default(100),
-      after: z.string().uuid().optional(),
-      before: z.string().uuid().optional(),
+      limit: z.number().lte(1000).default(100),
+      after: z.string().optional(),
+      before: z.string().optional(),
     }).shape,
     {
       readOnlyHint: true,
@@ -884,26 +884,88 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     z.object({
       start: z
         .object({
-          date: z.string().regex(new RegExp('^\\d{4}-\\d{2}-\\d{2}$')),
+          date: z
+            .string()
+            .regex(new RegExp('^\\d{4}-\\d{2}-\\d{2}$'))
+            .describe('ISO date format (YYYY-MM-DD), e.g. "2021-12-31"'),
           time: z
             .union([
-              z.string().regex(new RegExp('^(?:[0-1][0-9]|[2][0-3]):[0-5][0-9](?::[0-5][0-9])?$')),
-              z.null(),
+              z
+                .string()
+                .regex(new RegExp('^(?:[0-1][0-9]|[2][0-3]):[0-5][0-9](?::[0-5][0-9])?$'))
+                .describe(
+                  'Optional time component in 24-hour format (HH:MM:SS), e.g. "15:30:45". Can be null or omitted for date-only representations',
+                ),
+              z
+                .null()
+                .describe(
+                  'Optional time component in 24-hour format (HH:MM:SS), e.g. "15:30:45". Can be null or omitted for date-only representations',
+                ),
             ])
+            .describe(
+              'Optional time component in 24-hour format (HH:MM:SS), e.g. "15:30:45". Can be null or omitted for date-only representations',
+            )
             .optional(),
-          timezone: z.union([z.string(), z.null()]).optional(),
+          timezone: z
+            .union([
+              z
+                .string()
+                .describe(
+                  'Optional timezone identifier (IANA timezone name), e.g. "America/New_York", "Asia/Singapore". Can be null or omitted for timezone-naive representations',
+                ),
+              z
+                .null()
+                .describe(
+                  'Optional timezone identifier (IANA timezone name), e.g. "America/New_York", "Asia/Singapore". Can be null or omitted for timezone-naive representations',
+                ),
+            ])
+            .describe(
+              'Optional timezone identifier (IANA timezone name), e.g. "America/New_York", "Asia/Singapore". Can be null or omitted for timezone-naive representations',
+            )
+            .optional(),
         })
         .strict(),
       end: z
         .object({
-          date: z.string().regex(new RegExp('^\\d{4}-\\d{2}-\\d{2}$')),
+          date: z
+            .string()
+            .regex(new RegExp('^\\d{4}-\\d{2}-\\d{2}$'))
+            .describe('ISO date format (YYYY-MM-DD), e.g. "2021-12-31"'),
           time: z
             .union([
-              z.string().regex(new RegExp('^(?:[0-1][0-9]|[2][0-3]):[0-5][0-9](?::[0-5][0-9])?$')),
-              z.null(),
+              z
+                .string()
+                .regex(new RegExp('^(?:[0-1][0-9]|[2][0-3]):[0-5][0-9](?::[0-5][0-9])?$'))
+                .describe(
+                  'Optional time component in 24-hour format (HH:MM:SS), e.g. "15:30:45". Can be null or omitted for date-only representations',
+                ),
+              z
+                .null()
+                .describe(
+                  'Optional time component in 24-hour format (HH:MM:SS), e.g. "15:30:45". Can be null or omitted for date-only representations',
+                ),
             ])
+            .describe(
+              'Optional time component in 24-hour format (HH:MM:SS), e.g. "15:30:45". Can be null or omitted for date-only representations',
+            )
             .optional(),
-          timezone: z.union([z.string(), z.null()]).optional(),
+          timezone: z
+            .union([
+              z
+                .string()
+                .describe(
+                  'Optional timezone identifier (IANA timezone name), e.g. "America/New_York", "Asia/Singapore". Can be null or omitted for timezone-naive representations',
+                ),
+              z
+                .null()
+                .describe(
+                  'Optional timezone identifier (IANA timezone name), e.g. "America/New_York", "Asia/Singapore". Can be null or omitted for timezone-naive representations',
+                ),
+            ])
+            .describe(
+              'Optional timezone identifier (IANA timezone name), e.g. "America/New_York", "Asia/Singapore". Can be null or omitted for timezone-naive representations',
+            )
+            .optional(),
         })
         .strict()
         .optional(),
@@ -1156,6 +1218,23 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
                         .describe(
                           'Human-readable name of the command in title case. This should probably be a verb.',
                         ),
+                      description: z
+                        .union([
+                          z
+                            .string()
+                            .describe(
+                              'Short summary for discovery (e.g. progressive disclosure / skill listing). The full instruction stays in `prompt`.',
+                            ),
+                          z
+                            .null()
+                            .describe(
+                              'Short summary for discovery (e.g. progressive disclosure / skill listing). The full instruction stays in `prompt`.',
+                            ),
+                        ])
+                        .describe(
+                          'Short summary for discovery (e.g. progressive disclosure / skill listing). The full instruction stays in `prompt`.',
+                        )
+                        .optional(),
                       prompt: z
                         .string()
                         .min(1)
@@ -1218,7 +1297,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
                   .string()
                   .describe('The language of the agent, e.g. en-US, zh-Hans')
                   .optional(),
-                inputPlaceholder: z.string().optional(),
+                inputPlaceholder: z.union([z.string(), z.null()]).optional(),
               })
               .strict(),
           })
@@ -1297,6 +1376,42 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
                   'ViralAgent',
                   'SOPOnboardingAgent',
                   'PressReleaseAgent',
+                  'Designer',
+                  'Brainstormer',
+                  'Builder',
+                  'ResearchAnalyst',
+                  'OperationsManager',
+                  'CodeReviewer',
+                  'LeadScorer',
+                  'ContactEnricher',
+                  'ContentStrategist',
+                  'DealMover',
+                  'Estimator',
+                  'DigitalTwin',
+                  'WatchFloorBriefer',
+                  'AnomalySpotter',
+                  'RestockAdvisor',
+                  'AppDoctor',
+                  'RenewalChaser',
+                  'WinBackSpecialist',
+                  'NoShowRescuer',
+                  'AbandonedCartRecoverer',
+                  'ReviewResponder',
+                  'TestimonialHarvester',
+                  'SponsorshipManager',
+                  'CourseLaunchStrategist',
+                  'CurriculumAuthor',
+                  'PersonalizedRoadmapGenerator',
+                  'DispatchCoordinator',
+                  'ProviderNetworkBuilder',
+                  'ClaimsClerk',
+                  'ListingMarketer',
+                  'GrantWriter',
+                  'ComplianceKeeper',
+                  'LeadQualifier',
+                  'ClientOnboardingConcierge',
+                  'PipelineReporter',
+                  'LearnerCoach',
                 ]),
                 avatar: z
                   .object({
@@ -1520,6 +1635,23 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
                   .describe(
                     'Human-readable name of the command in title case. This should probably be a verb.',
                   ),
+                description: z
+                  .union([
+                    z
+                      .string()
+                      .describe(
+                        'Short summary for discovery (e.g. progressive disclosure / skill listing). The full instruction stays in `prompt`.',
+                      ),
+                    z
+                      .null()
+                      .describe(
+                        'Short summary for discovery (e.g. progressive disclosure / skill listing). The full instruction stays in `prompt`.',
+                      ),
+                  ])
+                  .describe(
+                    'Short summary for discovery (e.g. progressive disclosure / skill listing). The full instruction stays in `prompt`.',
+                  )
+                  .optional(),
                 prompt: z
                   .string()
                   .min(1)
@@ -1582,7 +1714,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
             .string()
             .describe('The language of the agent, e.g. en-US, zh-Hans')
             .optional(),
-          inputPlaceholder: z.string().optional(),
+          inputPlaceholder: z.union([z.string(), z.null()]).optional(),
         })
         .strict()
         .optional(),
@@ -1643,8 +1775,67 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
             .object({
               title: z.string().optional(),
               description: z.string().optional(),
+              image: z
+                .union([
+                  z
+                    .object({
+                      ownerID: z.string(),
+                      ownerType: z.union([z.string().min(1), z.null()]).optional(),
+                      id: z.string(),
+                      namespace: z.string(),
+                      extension: z.string(),
+                      s3KeyOriginal: z.string(),
+                      userID: z.union([z.number(), z.null()]).optional(),
+                      spaceID: z.union([z.string().min(1), z.null()]).optional(),
+                      documentID: z.union([z.string().min(1), z.null()]).optional(),
+                      nodeID: z.union([z.string().min(1), z.null()]).optional(),
+                      size: z.number(),
+                      mimetype: z.string(),
+                      metadata: z.object({}).catchall(z.any()).optional(),
+                      type: z.string().optional(),
+                      name: z.string().optional(),
+                      description: z.string().optional(),
+                    })
+                    .catchall(z.any()),
+                  z.null(),
+                ])
+                .optional(),
             })
             .strict()
+            .optional(),
+          color: z.string().optional(),
+          launcherIcon: z
+            .union([
+              z.object({ type: z.literal('emoji'), value: z.string().min(1) }).strict(),
+              z
+                .object({
+                  type: z.literal('custom'),
+                  image: z.union([
+                    z
+                      .object({
+                        ownerID: z.string(),
+                        ownerType: z.union([z.string().min(1), z.null()]).optional(),
+                        id: z.string(),
+                        namespace: z.string(),
+                        extension: z.string(),
+                        s3KeyOriginal: z.string(),
+                        userID: z.union([z.number(), z.null()]).optional(),
+                        spaceID: z.union([z.string().min(1), z.null()]).optional(),
+                        documentID: z.union([z.string().min(1), z.null()]).optional(),
+                        nodeID: z.union([z.string().min(1), z.null()]).optional(),
+                        size: z.number(),
+                        mimetype: z.string(),
+                        metadata: z.object({}).catchall(z.any()).optional(),
+                        type: z.string().optional(),
+                        name: z.string().optional(),
+                        description: z.string().optional(),
+                      })
+                      .catchall(z.any()),
+                    z.null(),
+                  ]),
+                })
+                .strict(),
+            ])
             .optional(),
         })
         .strict(),
@@ -1844,6 +2035,63 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
         method: 'DELETE',
         input: args,
         pathParamKeys: ['mediaId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'bundleExport',
+    'Export a space (subspace / app) as a JSON bundle (SpaceBundleData v1). Returns all agents, automations, projects, templates, and apps. Media items are excluded — use the ZIP export or download media separately via the media endpoints.',
+    z.object({ spaceId: z.string() }).shape,
+    {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
+      title: 'Export Space Bundle',
+    },
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'bundleExport',
+        path: '/bundles/{spaceId}/export',
+        method: 'GET',
+        input: args,
+        pathParamKeys: ['spaceId'],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'bundleImport',
+    'Import a JSON bundle (agents, automations, projects, templates, apps) into a workspace. The bundle is validated against the SpaceBundleData v1 schema and all items are installed into the target workspace. Media items are not supported — use the ZIP import or upload media separately via the media endpoints after import.',
+    z.object({
+      bundleData: z
+        .object({
+          version: z.literal('1').describe('Bundle format version.'),
+          items: z
+            .record(z.object({ type: z.string() }).catchall(z.any()))
+            .describe(
+              'Map of bundle items keyed by ID. Each item has a `type` field: space-bundle-flow-item, space-bundle-project-item, space-bundle-agent-item, space-bundle-template-item, space-bundle-media-item, space-bundle-app-item.',
+            ),
+        })
+        .strict()
+        .describe('The Workspace DNA bundle to import (SpaceBundleData v1).'),
+      workspaceId: z.string(),
+    }).shape,
+    {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+      openWorldHint: false,
+      title: 'Import Space Bundle',
+    },
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'bundleImport',
+        path: '/bundles/{workspaceId}/import',
+        method: 'POST',
+        input: args,
+        pathParamKeys: ['workspaceId'],
         queryParamKeys: [],
       });
     },

@@ -13,7 +13,7 @@
 [![Add to Cursor](https://img.shields.io/badge/Add_to-Cursor-0098FF?style=flat-square)](cursor://anysphere.cursor-deeplink/mcp/install?name=taskade&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkB0YXNrYWRlL21jcC1zZXJ2ZXIiXSwiZW52Ijp7IlRBU0tBREVfQVBJX0tFWSI6InlvdXItYXBpLWtleS1oZXJlIn19)
 [![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-007ACC?style=flat-square&logo=visualstudiocode&logoColor=white)](vscode:mcp/install?%7B%22name%22%3A%22taskade%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40taskade%2Fmcp-server%22%5D%2C%22env%22%3A%7B%22TASKADE_API_KEY%22%3A%22%24%7Binput%3Ataskade_api_key%7D%22%7D%7D)
 
-**66 tools** for workspaces, projects, tasks, AI agents, agent chat, webhooks, knowledge bases, templates, media, and sharing — all from your AI client.
+**68 tools** for workspaces, projects, tasks, AI agents, agent chat, webhooks, knowledge bases, templates, media, space bundles, and sharing — all from your AI client.
 
 </div>
 
@@ -26,7 +26,7 @@
 
 - [Demo](#demo)
 - [Quick Start](#quick-start)
-- [Tools (66)](#tools-66)
+- [Tools (68)](#tools-68)
 - [Why Taskade MCP?](#why-taskade-mcp)
 - [Agent Recipes](#agent-recipes)
 - [Use Cases](#use-cases)
@@ -169,7 +169,7 @@ The server starts at `http://localhost:3000` (configure with `PORT` env var). Co
 
 ---
 
-## Tools (66)
+## Tools (68)
 
 ### Workspaces
 
@@ -259,6 +259,17 @@ Create, manage, and publish autonomous AI agents with custom knowledge and tools
 | `mediaGet` | Get media details |
 | `mediaDelete` | Delete a media file |
 
+### Space Bundles
+
+Export and import whole spaces as portable JSON bundles (SpaceBundleData v1 — the "Workspace DNA" format behind Genesis `.tsk` app kits). A bundle carries a space's agents, automations, projects, templates, and apps; media files are excluded from the JSON format.
+
+| Tool | Description |
+|------|-------------|
+| `bundleExport` | Export a space (subspace / app) as a JSON bundle — agents, automations, projects, templates, apps |
+| `bundleImport` | Import a JSON bundle into a workspace — validated against SpaceBundleData v1, all items installed into the target workspace |
+
+> **Note:** imports are subject to your plan's server-side limits — an over-quota import fails with a `4XX` error. The raw ZIP/`.tsk` and media file endpoints (`bundleExportZip`, `bundleImportZip`, `mediaUpload`, `mediaDownload`) exchange binary payloads and are not exposed as tools yet.
+
 ### Personal
 
 | Tool | Description |
@@ -299,7 +310,7 @@ Taskade MCP gives your AI assistant **access to your workspace** — projects, t
                          ↓
   ┌──────────────────────────────────┐
   │     Taskade MCP Server           │
-  │     (66 tools, 8 categories)     │
+  │     (68 tools, 9 categories)     │
   └──────────────────────────────────┘
        ↓              ↓            ↓
   folderCreateAgent  agentKnowledge  agentPublicAccess
@@ -326,7 +337,7 @@ Taskade MCP gives your AI assistant **access to your workspace** — projects, t
 
 ### Why Taskade MCP Over Other MCP Servers?
 
-Taskade is the only MCP server that includes **AI agent management** (create, train, deploy agents), **knowledge base training** (attach docs, projects, media), and **OpenAPI codegen** (generate MCP tools from any API spec). 66 tools across 8 categories.
+Taskade is the only MCP server that includes **AI agent management** (create, train, deploy agents), **knowledge base training** (attach docs, projects, media), and **OpenAPI codegen** (generate MCP tools from any API spec). 68 tools across 9 categories.
 
 ---
 

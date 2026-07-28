@@ -67,6 +67,10 @@ export const ENABLED_TASKADE_ACTIONS = [
   'mediaGet',
   'mediaDelete',
 
+  // Bundles
+  'bundleExport',
+  'bundleImport',
+
   // Me
   'meProjectsGet',
 ];
@@ -140,6 +144,10 @@ export const HUMANIZED_TASKADE_ACTIONS = {
   mediasGet: 'Get Media in Folder',
   mediaGet: 'Get Media Details',
   mediaDelete: 'Delete Media',
+
+  // Bundles
+  bundleExport: 'Export Space Bundle',
+  bundleImport: 'Import Space Bundle',
 
   // Me
   meProjectsGet: 'Get My Projects',
