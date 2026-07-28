@@ -12,7 +12,23 @@ type ActionConfig = Partial<{
   title: string;
   description: string;
   normalizer: (args: any) => any;
+  /**
+   * Explicit MCP annotation overrides. When set, they beat the values derived
+   * from the HTTP method (e.g. a POST action that is actually idempotent can
+   * set `idempotentHint: true`).
+   */
+  readOnlyHint: boolean;
+  destructiveHint: boolean;
+  idempotentHint: boolean;
+  openWorldHint: boolean;
 }>;
+
+const ANNOTATION_HINT_KEYS = [
+  'readOnlyHint',
+  'destructiveHint',
+  'idempotentHint',
+  'openWorldHint',
+] as const;
 
 const isActionsEnabled = (isActionsEnabledOpt: IsActionsEnabledOpt, actionName: string) => {
   if (typeof isActionsEnabledOpt === 'function') {
@@ -81,23 +97,39 @@ export const codegen = async (opts: CodegenOpts) => {
     }
 
     // Derive MCP tool annotations from the HTTP method: GET/HEAD are read-only,
-    // DELETE is destructive. A human-friendly title can be supplied via opts.actions.
+    // DELETE is destructive, GET/HEAD/PUT/DELETE are idempotent per HTTP
+    // semantics (POST is not). openWorldHint is always false: this server only
+    // talks to the Taskade API — a closed world. A human-friendly title and
+    // explicit hint overrides can be supplied via opts.actions.
     const method = tool.method.toUpperCase();
     const annotations: Record<string, any> = {
       readOnlyHint: method === 'GET' || method === 'HEAD',
       destructiveHint: method === 'DELETE',
+      idempotentHint: ['GET', 'HEAD', 'PUT', 'DELETE'].includes(method),
+      openWorldHint: false,
     };
 
-    const actionTitle = opts.actions?.[tool.name]?.title;
+    const actionConfig = opts.actions?.[tool.name];
+
+    // Explicit per-action overrides beat derived values. Undefined-checked so
+    // an explicit `false` override wins too.
+    for (const hint of ANNOTATION_HINT_KEYS) {
+      const override = actionConfig?.[hint];
+      if (override !== undefined) {
+        annotations[hint] = override;
+      }
+    }
+
+    const actionTitle = actionConfig?.title;
     if (actionTitle) {
       annotations.title = actionTitle;
     }
 
-    const description = opts.actions?.[tool.name]?.description ?? tool.description;
+    const description = actionConfig?.description ?? tool.description;
 
     const toolArgs = [`"${tool.name}"`, `"${description}"`, generateToolInputFromParsedTool(tool)];
 
-    // annotations always carry read-only/destructive hints, so always include them
+    // annotations always carry the derived hint set, so always include them
     toolArgs.push(JSON.stringify(annotations));
 
     toolArgs.push(`async (args) => {
