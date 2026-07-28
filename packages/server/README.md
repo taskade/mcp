@@ -1,6 +1,6 @@
 # Taskade MCP Server — Workspace MCP (`@taskade/mcp-server`)
 
-The **Workspace MCP** server connects any MCP-compatible AI client (Claude, Cursor, Claude Code, …) to your Taskade workspace, exposing **68 tools** to read and write your projects, tasks, agents, custom fields, and space bundles.
+The **Workspace MCP** server connects any MCP-compatible AI client (Claude, Cursor, Claude Code, …) to your Taskade workspace, exposing tools to read and write your projects, tasks, agents, custom fields, and space bundles.
 
 > 📖 **Full documentation lives in the canonical sources — this package README is intentionally a stub to avoid drift.**
 
