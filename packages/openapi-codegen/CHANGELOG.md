@@ -1,5 +1,11 @@
 # @taskade/mcp-openapi-codegen
 
+## 0.0.6
+
+### Patch Changes
+
+- [#69](https://github.com/taskade/mcp/pull/69) [`0ea4b4a`](https://github.com/taskade/mcp/commit/0ea4b4a41cd60724e25743b3b9fbd0982bed36dc) Thanks [@johnxie](https://github.com/johnxie)! - Generated tools now carry the full MCP annotation set: derived idempotentHint and openWorldHint:false alongside readOnly/destructive hints; per-action overrides supported.
+
 ## 0.0.5
 
 ### Patch Changes
