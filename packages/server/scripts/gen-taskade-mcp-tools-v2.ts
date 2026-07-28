@@ -1,12 +1,41 @@
 import { dereference } from '@readme/openapi-parser';
-import { codegen } from '@taskade/mcp-openapi-codegen';
+import { codegen, deriveToolName } from '@taskade/mcp-openapi-codegen';
 import fs from 'fs';
 
-import { ENABLED_TASKADE_V2_ACTIONS, HUMANIZED_TASKADE_V2_ACTIONS } from '../src/constants.v2';
+import {
+  ENABLED_TASKADE_V2_ACTIONS,
+  HUMANIZED_TASKADE_V2_ACTIONS,
+  TASKADE_V2_ACTION_DESCRIPTIONS,
+  TaskadeV2Action,
+} from '../src/constants.v2';
 
-// Taskade API v2 is a flat RPC API whose operations omit `operationId`; the codegen
-// derives tool names from the path (e.g. POST /promptAgent -> "promptAgent").
-const deriveName = (p: string) => p.replace(/^\//, '').split('/')[0];
+// Taskade API v2 is mostly a flat RPC API whose operations omit `operationId`; the
+// codegen derives tool names from the path (e.g. POST /promptAgent -> "promptAgent").
+// The signed-webhook CRUD (upstream v6.213.0) is the exception: REST-shaped routes
+// where path-derived naming would collide (POST/GET /webhooks and GET/DELETE
+// /webhooks/{id} all derive to "webhooks"), so those get explicit name overrides,
+// keyed by "<lowercase-method> <path>".
+const NAME_OVERRIDES: Record<string, string> = {
+  'post /webhooks': 'createWebhook',
+  'get /webhooks': 'listWebhooks',
+  'get /webhooks/{id}': 'getWebhook',
+  'delete /webhooks/{id}': 'deleteWebhook',
+};
+
+const HTTP_METHODS = new Set(['get', 'post', 'put', 'patch', 'delete', 'head', 'options', 'trace']);
+
+// Tool names a path item will produce, mirroring the codegen's resolution order
+// (override -> operationId -> derived) so the prune allow-list matcher below cannot
+// drift from the names the codegen actually emits.
+const toolNamesForPath = (p: string, item: object): string[] =>
+  Object.entries(item)
+    .filter(([m]) => HTTP_METHODS.has(m.toLowerCase()))
+    .map(
+      ([m, op]) =>
+        NAME_OVERRIDES[`${m.toLowerCase()} ${p}`] ??
+        (op as { operationId?: string }).operationId ??
+        deriveToolName(m, p),
+    );
 
 // Why prune before dereferencing: the live v2 spec currently has a broken self-$ref
 // inside components.schemas.Field (data.fillerConfig...sourceRef) that makes a full
@@ -19,9 +48,10 @@ const pruneToEnabled = (doc: any) => {
   const paths: Record<string, unknown> = {};
   const matched = new Set<string>();
   for (const [p, ms] of Object.entries(doc.paths ?? {})) {
-    if (enabled.has(deriveName(p))) {
+    const enabledNames = toolNamesForPath(p, ms as object).filter((name) => enabled.has(name));
+    if (enabledNames.length > 0) {
       paths[p] = ms;
-      matched.add(deriveName(p));
+      enabledNames.forEach((name) => matched.add(name));
     }
   }
 
@@ -79,7 +109,10 @@ try {
 }
 
 const actions = Object.fromEntries(
-  Object.entries(HUMANIZED_TASKADE_V2_ACTIONS).map(([name, title]) => [name, { title }]),
+  Object.entries(HUMANIZED_TASKADE_V2_ACTIONS).map(([name, title]) => [
+    name,
+    { title, description: TASKADE_V2_ACTION_DESCRIPTIONS[name as TaskadeV2Action] },
+  ]),
 );
 
 await codegen({
@@ -87,5 +120,6 @@ await codegen({
   document: document as never,
   isActionsEnabled: [...ENABLED_TASKADE_V2_ACTIONS],
   actions,
+  nameOverrides: NAME_OVERRIDES,
   exportName: 'setupToolsV2',
 });

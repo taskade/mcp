@@ -4,7 +4,7 @@ import { OpenAPIV2, OpenAPIV3, OpenAPIV3_1 } from 'openapi-types';
 import path from 'path';
 import prettier from 'prettier';
 
-import { ParsedTool, parseOpenApi } from './parser';
+import { ParsedTool, parseOpenApi, ParseOpenApiOpts } from './parser';
 
 type IsActionsEnabledOpt = Array<string> | ((actionName: string) => boolean);
 
@@ -64,13 +64,20 @@ type CodegenOpts = {
    * the first without an export-name collision.
    */
   exportName?: string;
+  /**
+   * Explicit tool-name overrides keyed by `"<lowercase-method> <path>"` — see
+   * `ParseOpenApiOpts.nameOverrides`. Use for operations without `operationId`
+   * whose path-derived names would collide (REST siblings like `GET /webhooks`
+   * and `GET /webhooks/{id}`).
+   */
+  nameOverrides?: ParseOpenApiOpts['nameOverrides'];
 };
 
 export const codegen = async (opts: CodegenOpts) => {
   const { document, path: outputPath } = opts;
   const exportName = opts.exportName ?? 'setupTools';
 
-  const tools = parseOpenApi(document.paths ?? {});
+  const tools = parseOpenApi(document.paths ?? {}, { nameOverrides: opts.nameOverrides });
 
   const runtime = fs.readFileSync(path.join(import.meta.dirname, 'runtime.ts'), 'utf8');
 

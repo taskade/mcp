@@ -23,6 +23,15 @@ describe('deriveToolName', () => {
     expect(deriveToolName('get', '/')).toBe('get');
     expect(deriveToolName('POST', '/{id}')).toBe('post');
   });
+
+  it('collides for REST siblings: {param} segments dropped, method ignored (the nameOverrides hazard)', () => {
+    // Pins the hazard that motivates nameOverrides: without an override, all four
+    // signed-webhook CRUD ops would emit the same tool name.
+    expect(deriveToolName('post', '/webhooks')).toBe('webhooks');
+    expect(deriveToolName('get', '/webhooks')).toBe('webhooks');
+    expect(deriveToolName('get', '/webhooks/{id}')).toBe('webhooks');
+    expect(deriveToolName('delete', '/webhooks/{id}')).toBe('webhooks');
+  });
 });
 
 describe('parseOpenApi name resolution', () => {
@@ -86,5 +95,61 @@ describe('parseOpenApi name resolution', () => {
       'prompt',
     ]);
     expect(tools[0].inputSchema.required).toEqual(['spaceId', 'agentId', 'prompt']);
+  });
+
+  it('applies nameOverrides keyed by "<lowercase-method> <path>" to disambiguate REST siblings', () => {
+    const tools = parseOpenApi(
+      {
+        '/webhooks': {
+          post: { summary: 'Register a signed webhook', responses: {} },
+          get: { summary: 'List signed webhooks', responses: {} },
+        },
+        '/webhooks/{id}': {
+          get: { summary: 'Get a signed webhook', responses: {} },
+          delete: { summary: 'Delete a signed webhook', responses: {} },
+        },
+      } as never,
+      {
+        nameOverrides: {
+          'post /webhooks': 'createWebhook',
+          'get /webhooks': 'listWebhooks',
+          'get /webhooks/{id}': 'getWebhook',
+          'delete /webhooks/{id}': 'deleteWebhook',
+        },
+      },
+    );
+    expect(tools.map((t) => t.name).sort()).toEqual([
+      'createWebhook',
+      'deleteWebhook',
+      'getWebhook',
+      'listWebhooks',
+    ]);
+  });
+
+  it('without nameOverrides, REST siblings all fall back to the same derived name (collision pinned)', () => {
+    const tools = parseOpenApi({
+      '/webhooks': {
+        post: { responses: {} },
+        get: { responses: {} },
+      },
+      '/webhooks/{id}': {
+        get: { responses: {} },
+        delete: { responses: {} },
+      },
+    } as never);
+    expect(tools.map((t) => t.name)).toEqual(['webhooks', 'webhooks', 'webhooks', 'webhooks']);
+  });
+
+  it('an explicit override beats operationId; unkeyed operations are unaffected', () => {
+    const tools = parseOpenApi(
+      {
+        '/projects': {
+          post: { operationId: 'projectCreate', responses: {} },
+          get: { operationId: 'projectsList', responses: {} },
+        },
+      } as never,
+      { nameOverrides: { 'post /projects': 'createProject' } },
+    );
+    expect(tools.map((t) => t.name).sort()).toEqual(['createProject', 'projectsList']);
   });
 });
