@@ -51,4 +51,8 @@ jobs:
         run: yarn run publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # OIDC trusted publishing was never configured on npmjs.com, so every
+          # tokenless publish fails E404-on-PUT (provenance signs, PUT rejects).
+          # NODE_AUTH_TOKEN feeds the .npmrc written by setup-node's registry-url.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_CONFIG_PROVENANCE: true

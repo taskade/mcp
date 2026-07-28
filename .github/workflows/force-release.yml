@@ -32,4 +32,7 @@ jobs:
         run: yarn run publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # OIDC trusted publishing was never configured on npmjs.com (this
+          # workflow has failed on every dispatch since Feb 2026). Token fallback:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_CONFIG_PROVENANCE: true
