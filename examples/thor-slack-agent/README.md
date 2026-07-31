@@ -73,6 +73,17 @@ You will see `⚡ Thor is listening on Slack.` Invite him to a channel and summo
 
 > Or drop him into any thread: *@Thor capture this thread into a Taskade project* — he'll read the discussion and build it.
 
+## Deploy
+
+Thor uses Slack Socket Mode, so he dials **out** — no public URL or inbound ports. That makes him trivial to host anywhere that runs a container:
+
+```bash
+docker build -t thor-slack-agent examples/thor-slack-agent
+docker run --env-file examples/thor-slack-agent/.env thor-slack-agent
+```
+
+The image pre-installs `@taskade/mcp-server` and points Thor at it via `TASKADE_MCP_COMMAND`, so there's no cold-start download. Supply the same environment variables as local (`.env`) and keep the container running (Fly.io, Railway, Render, a small VM, etc.).
+
 ## Configuration reference
 
 | Variable | Required | Default | Purpose |

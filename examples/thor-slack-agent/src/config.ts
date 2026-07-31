@@ -21,7 +21,10 @@ export const config = {
   },
   mcp: {
     command: process.env.TASKADE_MCP_COMMAND ?? "npx",
-    args: (process.env.TASKADE_MCP_ARGS ?? "-y,@taskade/mcp-server").split(","),
+    args: (process.env.TASKADE_MCP_ARGS ?? "-y,@taskade/mcp-server")
+      .split(",")
+      .map((arg) => arg.trim())
+      .filter(Boolean),
   },
   maxAgentSteps: Number(process.env.THOR_MAX_STEPS ?? 12),
 };
