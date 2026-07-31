@@ -1,6 +1,6 @@
 display_information:
   name: Thor
-  description: A god of thunder who organizes your work — powered by Taskade.
+  description: A god of thunder who turns your Slack threads into organized Taskade work.
   background_color: "#1a1d29"
 features:
   bot_user:
@@ -11,6 +11,8 @@ oauth_config:
     bot:
       - app_mentions:read
       - chat:write
+      - channels:history
+      - groups:history
       - im:read
       - im:history
       - im:write

@@ -6,6 +6,16 @@ Thor is a Slack-native AI agent. Mention `@Thor` in a channel or send him a DM, 
 
 A Slack bot on its own can only talk. Thor is wired to real tools: every one of the 60+ Taskade MCP tools becomes an action he can take. That is the difference between a chatbot and an agent.
 
+## What Thor is best at
+
+Thor shines at *turning conversation into organized action*. Summon him inside a thread and he reads the whole thread, then:
+
+- **Captures action items** — "@Thor turn this thread into a project" → he mines the discussion for decisions, tasks, owners, and deadlines and builds a Taskade project from it.
+- **Kicks off projects from a brief** — "@Thor spin up a launch plan for the new pricing page" → a structured project with sensible tasks.
+- **Runs roundups** — "@Thor what's left on Q3 Launch?" → a crisp status pulled straight from Taskade.
+
+Because he reads the thread he is mentioned in, he works best right where the conversation already lives.
+
 ## Architecture
 
 ```
@@ -60,6 +70,8 @@ npm run build && npm start
 You will see `⚡ Thor is listening on Slack.` Invite him to a channel and summon him:
 
 > @Thor create a project called "Q3 Launch" with tasks for copy, design, and QA
+
+> Or drop him into any thread: *@Thor capture this thread into a Taskade project* — he'll read the discussion and build it.
 
 ## Configuration reference
 

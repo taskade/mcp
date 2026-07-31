@@ -12,6 +12,7 @@ interface HandleOptions {
   text: string;
   threadKey: string;
   threadTs?: string;
+  inThread: boolean;
   say: SayFn;
   client: WebClient;
   channel: string;
@@ -21,6 +22,17 @@ async function main() {
   const toolBelt = await connectTaskade();
   const agent = new ThorAgent(toolBelt);
   console.log(`⚡ Thor connected to ${toolBelt.tools.length} Taskade tools.`);
+
+  const app = new App({
+    token: config.slack.botToken,
+    appToken: config.slack.appToken,
+    signingSecret: config.slack.signingSecret,
+    socketMode: true,
+  });
+
+  // Thor's own user id, so he skips his own messages when reading a thread.
+  const auth = await app.client.auth.test();
+  const botUserId = auth.user_id as string | undefined;
 
   // One running transcript per Slack thread.
   const conversations = new Map<string, MessageParam[]>();
@@ -33,21 +45,39 @@ async function main() {
     return history;
   };
 
-  const app = new App({
-    token: config.slack.botToken,
-    appToken: config.slack.appToken,
-    signingSecret: config.slack.signingSecret,
-    socketMode: true,
-  });
+  // Pull the existing thread transcript so Thor can turn a real conversation
+  // into organized Taskade work — his sharpest use case.
+  async function readThread(
+    client: WebClient,
+    channel: string,
+    threadTs: string,
+  ): Promise<string> {
+    try {
+      const res = await client.conversations.replies({ channel, ts: threadTs, limit: 50 });
+      const lines = (res.messages ?? [])
+        .filter((m) => m.text && m.user && m.user !== botUserId)
+        .map((m) => `<@${m.user}>: ${m.text}`);
+      return lines.join("\n");
+    } catch {
+      return "";
+    }
+  }
 
   async function handle(opts: HandleOptions): Promise<void> {
-    const prompt = stripMention(opts.text).trim();
+    let prompt = stripMention(opts.text).trim();
     if (!prompt) return;
 
-    const status = await opts.say({
-      text: "⚡ _Thor is on it…_",
-      thread_ts: opts.threadTs,
-    });
+    const history = historyFor(opts.threadKey);
+
+    // On first engagement inside a thread, hand Thor the conversation as context.
+    if (history.length === 0 && opts.inThread && opts.threadTs) {
+      const transcript = await readThread(opts.client, opts.channel, opts.threadTs);
+      if (transcript) {
+        prompt = `Slack thread so far:\n${transcript}\n\nMy request: ${prompt}`;
+      }
+    }
+
+    const status = await opts.say({ text: "⚡ _Thor is on it…_", thread_ts: opts.threadTs });
 
     const post = async (text: string) => {
       if (status.ts) {
@@ -58,11 +88,7 @@ async function main() {
     };
 
     try {
-      const reply = await agent.respond(
-        historyFor(opts.threadKey),
-        prompt,
-        (update) => post(update),
-      );
+      const reply = await agent.respond(history, prompt, (update) => post(update));
       await post(reply);
     } catch (error) {
       await post(`The forge went cold: ${(error as Error).message}`);
@@ -76,6 +102,7 @@ async function main() {
       text: event.text ?? "",
       threadKey: `${event.channel}:${threadTs}`,
       threadTs,
+      inThread: Boolean(event.thread_ts),
       say,
       client,
       channel: event.channel,
@@ -91,6 +118,7 @@ async function main() {
       text: message.text ?? "",
       threadKey: `${message.channel}:${threadTs}`,
       threadTs,
+      inThread: Boolean(message.thread_ts),
       say,
       client,
       channel: message.channel,
