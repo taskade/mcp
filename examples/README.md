@@ -39,6 +39,12 @@ PORT=3001 npx @taskade/mcp-server --http --token YOUR_TASKADE_API_KEY
 
 Then configure the n8n MCP node to use **HTTP Streamable** transport with URL `http://localhost:3001/mcp`.
 
+## Thor — Slack AI agent
+
+[Thor](./thor-slack-agent) is a Slack AI agent powered by the Taskade MCP server. Mention `@Thor` in a channel or DM him, and he reasons with Claude and acts on your Taskade workspace — creating projects, capturing tasks, and organizing work without leaving Slack.
+
+See [`./thor-slack-agent`](./thor-slack-agent) for setup and the Slack app manifest.
+
 ## More examples coming soon
 
 - CrewAI integration
