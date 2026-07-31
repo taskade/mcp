@@ -25,7 +25,7 @@ Make scenario ─────────▶ Notion: Inventory + Tasks (FlipRese
      ▲                         │
      │                         │ (Status = Sold)
  Todoist ◀── list task         ▼
-                         Notion: Sales Log ──▶ Slack #sales 🎉
+                         Notion: Sales Log ──▶ Slack #sales-agent 🎉
 ```
 
 ## Build order
@@ -35,6 +35,8 @@ Make scenario ─────────▶ Notion: Inventory + Tasks (FlipRese
 3. **Make.com** — connect Slack, Notion, Todoist, then build the scenarios → [`make-scenarios.md`](./make-scenarios.md).
 4. **Zapier** — optional single-step backups → [`zapier-recipes.md`](./zapier-recipes.md).
 5. **GitHub** — repo notifications into Slack → [`github-setup.md`](./github-setup.md).
+
+> Channel mapping in use: sourcing → #flipreseller-operations, sold → #sales-agent, digest → #flipreseller, GitHub → #flipreseller-dev.
 
 ## Free-tier budget (keep it $0)
 

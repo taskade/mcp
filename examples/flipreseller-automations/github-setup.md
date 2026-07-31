@@ -1,7 +1,7 @@
 # FlipReseller — GitHub → Slack
 
 ## 1. Native notifications (no code)
-In your Slack channel (e.g. #dev):
+In your Slack channel (e.g. #flipreseller-dev):
 ```
 /github subscribe samuelfreemanjobs-hash/mcp
 ```

@@ -10,7 +10,7 @@ Use this INSTEAD of Make Scenario A if you'd rather save Make ops.
 
 ## Zap 2 — Notion sold item → Slack
 - **Trigger:** Notion ▸ Updated Database Item (*Inventory*, Status = Sold)
-- **Action:** Slack ▸ Send Channel Message (#sales): "🎉 Sold {{Item}} for ${{Sale Price}}".
+- **Action:** Slack ▸ Send Channel Message (#sales-agent): "🎉 Sold {{Item}} for ${{Sale Price}}".
 
 Single-step alternative to Make Scenario C's Slack step.
 
