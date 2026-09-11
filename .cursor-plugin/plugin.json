@@ -1,0 +1,15 @@
+{
+  "name": "taskade-mcp",
+  "version": "0.1.2",
+  "description": "Official Taskade MCP: hosted OAuth at https://www.taskade.com/mcp, or connect Taskade to Cursor.",
+  "author": {
+    "name": "Taskade",
+    "email": "hello@taskade.com"
+  },
+  "homepage": "https://www.taskade.com/mcp",
+  "repository": "https://github.com/taskade/mcp",
+  "license": "MIT",
+  "keywords": ["taskade", "mcp", "oauth", "genesis", "agents"],
+  "logo": "https://www.taskade.com/favicon.ico",
+  "mcpServers": "./mcp.json"
+}
