@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.taskade/mcp-server",
   "title": "Taskade MCP",
-  "description": "Official Taskade MCP: hosted OAuth at https://www.taskade.com/mcp, or local npx -y @taskade/mcp-server. Connect agents to a Taskade workspace and Genesis apps.",
+  "description": "Hosted OAuth MCP at https://www.taskade.com/mcp, or local @taskade/mcp-server.",
   "repository": {
     "url": "https://github.com/taskade/mcp.git",
     "source": "github"
