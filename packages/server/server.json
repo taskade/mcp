@@ -1,12 +1,19 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.taskade/mcp-server",
-  "description": "Connect Taskade to any AI assistant — 62 tools: projects, tasks, agents, agent chat, webhooks.",
+  "title": "Taskade MCP",
+  "description": "Official Taskade MCP: hosted OAuth at https://www.taskade.com/mcp, or local npx -y @taskade/mcp-server. Connect agents to a Taskade workspace and Genesis apps.",
   "repository": {
     "url": "https://github.com/taskade/mcp.git",
     "source": "github"
   },
   "version": "0.1.1",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://www.taskade.com/mcp"
+    }
+  ],
   "packages": [
     {
       "registryType": "npm",
