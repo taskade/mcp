@@ -26,6 +26,7 @@
 
 - [Demo](#demo)
 - [Quick Start](#quick-start)
+- [Hosted remote MCP](#8-hosted-remote-mcp-httpswwwtaskadecommcp)
 - [Tools (62)](#tools-62)
 - [Why Taskade MCP?](#why-taskade-mcp)
 - [Agent Recipes](#agent-recipes)
@@ -53,7 +54,7 @@ MCP-powered Taskade agent running inside Claude Desktop by Anthropic:
 
 ## Quick Start
 
-> ⚡ **Prefer a hosted option?** `https://www.taskade.com/mcp` is the OAuth-protected **[Genesis App MCP](https://github.com/taskade/docs/blob/main/apis-living-system-development/genesis-app-mcp.md)** — a *separate hosted surface* from this Workspace MCP server. See its guide to learn what it does and whether it fits your use case. To read and write your workspace **content** (projects, tasks, agents) as described below, use the Workspace MCP server (this package).
+> ⚡ **Prefer a hosted option?** Open [`https://www.taskade.com/mcp`](https://www.taskade.com/mcp) in a browser — that's the official OAuth install page (Claude, Cursor, Claude Code, Windsurf, Zed). An unauthenticated `initialize` returns **401 by design**; clients complete OAuth 2.0 (PKCE) once. Full task-level writes still live in this local Workspace MCP package. Guide: **[Hosted Taskade MCP](https://github.com/taskade/docs/blob/main/apis-living-system-development/genesis-app-mcp.md)**.
 
 ## Which Taskade MCP do I want?
 
@@ -61,8 +62,8 @@ Taskade speaks MCP through three surfaces — this repo is the first one:
 
 | I want to… | Use | Where / auth |
 |---|---|---|
-| Have my AI client **read & write my projects, tasks, agents** | **Workspace MCP** — this repo (`@taskade/mcp-server`) | Local stdio · personal token · most plans |
-| **Edit my published app's code** from my IDE | **[Genesis App MCP](https://github.com/taskade/docs/blob/main/apis-living-system-development/genesis-app-mcp.md)** | Hosted · OAuth 2.0 (`https://www.taskade.com/mcp`) · Business+ |
+| Have my AI client **read & write tasks** (complete, assignees, dates) plus projects and agents | **Workspace MCP** — this repo (`@taskade/mcp-server`) | Local stdio · personal token · any plan |
+| **Connect remotely** — browse the workspace, create projects, prompt agents, edit Genesis `app/` source | **[Hosted Taskade MCP](https://github.com/taskade/docs/blob/main/apis-living-system-development/genesis-app-mcp.md)** | `https://www.taskade.com/mcp` · OAuth 2.0 (PKCE) · every paid plan |
 | Let my agents **reach Slack / Shopify / Gmail** | **[MCP Connectors](https://github.com/taskade/docs/blob/main/genesis-living-system-builder/genesis/mcp-connectors.md)** | Hosted, in-product |
 
 ### 1. Get Your API Key
@@ -166,6 +167,31 @@ TASKADE_API_KEY=your-api-key npx @taskade/mcp-server --http
 ```
 
 The server starts at `http://localhost:3000` (configure with `PORT` env var). Connect via SSE at `http://localhost:3000/sse?access_token=your-api-key`.
+
+### 8. Hosted remote MCP (`https://www.taskade.com/mcp`)
+
+Official **remote** Taskade MCP. Nothing to install locally. Paste the URL into any MCP client that supports Streamable HTTP + OAuth.
+
+| | |
+|---|---|
+| **Endpoint** | `https://www.taskade.com/mcp` |
+| **Auth** | OAuth 2.0 with PKCE. Discovery: `https://www.taskade.com/.well-known/oauth-protected-resource/mcp` |
+| **Unauthenticated `initialize`** | Returns **401** on purpose. The browser GET is a user-facing install page; MCP clients must complete the OAuth sign-in. |
+| **Plan** | Every paid plan. Free can start the connect flow; workspace access is gated. |
+| **Guide** | [Hosted Taskade MCP](https://github.com/taskade/docs/blob/main/apis-living-system-development/genesis-app-mcp.md) |
+
+```json
+{
+  "mcpServers": {
+    "taskade": {
+      "type": "http",
+      "url": "https://www.taskade.com/mcp"
+    }
+  }
+}
+```
+
+Hosted tools cover workspace browse (`list_spaces`, `inspect_space`), project/agent create, and Genesis `app/` file edits via `write_file`. Task-level writes (complete, assignees, dates) are still this package.
 
 ---
 
@@ -492,21 +518,21 @@ Works with any OpenAPI 3.0+ spec. Generate MCP tools for your own APIs in minute
 [Taskade](https://www.taskade.com) ([Y Combinator S19](https://www.ycombinator.com/companies/taskade)) is the AI-native workspace for building apps, deploying agents, and automating workflows — from a single prompt. **150,000+ apps generated. Trusted by 3M, Nike, Tesla, Netflix, Airbnb, Disney, Adobe.** Rated 4.8/5 across 9,300+ reviews.
 
 - **Genesis Apps** — Build complete apps from prompts. Dashboards, CRMs, portals, forms — deployed instantly. [Try it →](https://www.taskade.com/create)
-- **AI Agents** — Custom agents with 22+ tools, persistent memory, multi-agent teams, public embedding
+- **AI Agents** — Custom agents with built-in tools, persistent memory, multi-agent teams, public embedding
 - **Automations** — No-code workflow automation with 100+ integrations, branching, looping, filtering
-- **Real-time Collaboration** — Multiplayer workspace with chat, video, 7 project views
+- **Real-time Collaboration** — Multiplayer workspace with chat, video, and multiple project views
 - **Templates** — 700+ templates for project management, engineering, marketing, and more
 - **API & MCP** — REST API v2, this MCP Server, Agent API, webhooks, OAuth 2.0
 
 **Links:**
 - App: [taskade.com](https://www.taskade.com)
 - Create: [taskade.com/create](https://www.taskade.com/create)
+- Apps gallery: [taskade.com/apps](https://www.taskade.com/apps)
 - Agents: [taskade.com/agents](https://www.taskade.com/agents)
 - Templates: [taskade.com/templates](https://www.taskade.com/templates)
-- Community: [taskade.com/community](https://www.taskade.com/community)
-- Developer Docs: [docs.taskade.com](https://docs.taskade.com)
+- Docs: [taskade.com/docs](https://www.taskade.com/docs) · [docs.taskade.com](https://docs.taskade.com)
 - **Workspace MCP guide:** https://github.com/taskade/docs/blob/main/apis-living-system-development/workspace-mcp.md
-- **Genesis App MCP guide** (a different, hosted surface): https://github.com/taskade/docs/blob/main/apis-living-system-development/genesis-app-mcp.md
+- **Hosted MCP guide:** https://github.com/taskade/docs/blob/main/apis-living-system-development/genesis-app-mcp.md
 - Blog: [taskade.com/blog](https://www.taskade.com/blog)
 
 ---
@@ -539,7 +565,7 @@ Help us improve MCP tools, OpenAPI workflows, and agent capabilities.
 
 - [Issues](https://github.com/taskade/mcp/issues) — Report bugs or request features
 - [Pull Requests](https://github.com/taskade/mcp/pulls) — Contributions welcome
-- [Community](https://www.taskade.com/community) — Join the Taskade community
+- [Apps](https://www.taskade.com/apps) — Browse and clone community apps
 - [Contact](mailto:hello@taskade.com) — hello@taskade.com
 
 ---
