@@ -83,7 +83,7 @@ Taskade speaks MCP through three surfaces - the hosted server is the primary one
 | I want to... | Use | Where / auth |
 |---|---|---|
 | **Read & write my workspace** (projects, tasks, agents, app files) | **Hosted MCP** at `https://www.taskade.com/mcp` | Hosted HTTP · personal token · Starter+ |
-| Run MCP **locally / offline** (v1 surface, no app file editing) | **Stdio npm** `@taskade/mcp-server` (this repo) | Local stdio · personal token · most plans |
+| Run MCP **locally via stdio** (v1 surface, no app file editing) | **Stdio npm** `@taskade/mcp-server` (this repo) | Local stdio · personal token · most plans |
 | Let my agents reach Slack / Shopify / Gmail | **[MCP Connectors](https://github.com/taskade/docs/blob/main/genesis-living-system-builder/genesis/mcp-connectors.md)** | Hosted, in-product |
 
 ### 1. Get Your API Key
