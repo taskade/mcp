@@ -217,7 +217,7 @@ Hosted tools cover workspace browse (`list_spaces`, `inspect_space`), project/ag
 
 ## Tools (62)
 
-> **Tool count tracks the hosted server.** The hosted MCP at `/mcp` currently exposes 32 tools (28 Public API v2 ops + 4 MCP-native: `inspect_space`, `write_file`, `read_project`, `list_automations`). The stdio npm package in this repo wraps the v1 API and exposes 14 ops. For the full workspace surface including app-file editing, use the hosted URL above.
+> **Tool count tracks the hosted server.** The hosted MCP at `/mcp` currently exposes 48 tools (44 Phase A Public API v2 ops + 4 MCP-native: `inspect_space`, `write_file`, `read_project`, `list_automations`). The stdio npm package in this repo wraps the v1 API and exposes 14 ops. For the full workspace surface including app-file editing, use the hosted URL above.
 
 ### Workspaces
 
