@@ -31,6 +31,12 @@ Ask the AI agent natural language questions like:
 
 > **Note:** The published `@taskade/mcp-server` CLI runs over **stdio** only — configure the n8n MCP Client node with the command `npx -y @taskade/mcp-server` and a `TASKADE_API_KEY` environment variable. The `--http`/`--token` flags are **not** supported by the published CLI. A standalone HTTP/SSE transport is not yet exposed; track the hosted remote endpoint at [#6](https://github.com/taskade/mcp/issues/6).
 
+## Thor — Slack AI agent
+
+[Thor](./thor-slack-agent) is a Slack AI agent powered by the Taskade MCP server. Mention `@Thor` in a channel or DM him, and he reasons with Claude and acts on your Taskade workspace — creating projects, capturing tasks, and organizing work without leaving Slack.
+
+See [`./thor-slack-agent`](./thor-slack-agent) for setup and the Slack app manifest.
+
 ## More examples coming soon
 
 - CrewAI integration
