@@ -9,9 +9,10 @@
 
 We are a small team and do not guarantee a response time. Reports go to a monitored
 mailbox and are routed to engineering, and complex reports take longer to triage. We
-aim for 90-day coordinated disclosure where feasible, so please give us a reasonable
-window to ship a fix before going public. On request we credit you by name once a fix
-ships. We do not run a bug bounty program and do not pay for vulnerability reports.
+aim for 90-day coordinated disclosure when feasible, subject to investigation
+requirements, so please give us a reasonable window to ship a fix before going public.
+On request we credit you by name once a fix ships. We do not run a bug bounty program
+and do not pay for vulnerability reports.
 
 The full policy is published at [taskade.com/security](https://www.taskade.com/security),
 and it is the one that applies if it and this file ever disagree.
