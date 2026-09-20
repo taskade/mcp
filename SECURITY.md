@@ -5,11 +5,16 @@
 **Please report security issues privately — do not open a public issue or PR.**
 
 - Preferred: open a [GitHub private security advisory](https://github.com/taskade/mcp/security/advisories/new) (Security → Report a vulnerability).
-- Or email [hello@taskade.com](mailto:hello@taskade.com) with details and reproduction steps.
+- Or email [support@taskade.com](mailto:support@taskade.com) with details and reproduction steps.
 
-We aim to acknowledge reports within **3 business days** and to provide a remediation
-timeline after triage. Please give us a reasonable window to ship a fix before any
-public disclosure. We're happy to credit reporters who request it.
+We are a small team and do not guarantee a response time. Reports go to a monitored
+mailbox and are routed to engineering, and complex reports take longer to triage. We
+aim for 90-day coordinated disclosure where feasible, so please give us a reasonable
+window to ship a fix before going public. On request we credit you by name once a fix
+ships. We do not run a bug bounty program and do not pay for vulnerability reports.
+
+The full policy is published at [taskade.com/security](https://www.taskade.com/security),
+and it is the one that applies if it and this file ever disagree.
 
 ## Token Handling
 
