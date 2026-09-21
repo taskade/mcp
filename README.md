@@ -22,6 +22,26 @@
 
 ---
 
+## Quick Start (Hosted MCP)
+
+Get your token at [taskade.com/settings/api](https://www.taskade.com/settings/api), then paste this into your client's MCP config:
+
+```json
+{
+  "mcpServers": {
+    "taskade": {
+      "type": "http",
+      "url": "https://www.taskade.com/mcp",
+      "headers": {
+        "Authorization": "Bearer <paste-your-token-here>"
+      }
+    }
+  }
+}
+```
+
+---
+
 ## Contents
 
 - [Demo](#demo)
@@ -58,13 +78,13 @@ MCP-powered Taskade agent running inside Claude Desktop by Anthropic:
 
 ## Which Taskade MCP do I want?
 
-Taskade speaks MCP through three surfaces — this repo is the first one:
+Taskade speaks MCP through three surfaces - the hosted server is the primary one:
 
-| I want to… | Use | Where / auth |
+| I want to... | Use | Where / auth |
 |---|---|---|
-| Have my AI client **read & write tasks** (complete, assignees, dates) plus projects and agents | **Workspace MCP** — this repo (`@taskade/mcp-server`) | Local stdio · personal token · any plan |
-| **Connect remotely** — browse the workspace, create projects, prompt agents, edit Genesis `app/` source | **[Hosted Taskade MCP](https://github.com/taskade/docs/blob/main/apis-living-system-development/genesis-app-mcp.md)** | `https://www.taskade.com/mcp` · OAuth 2.0 (PKCE) · every paid plan |
-| Let my agents **reach Slack / Shopify / Gmail** | **[MCP Connectors](https://github.com/taskade/docs/blob/main/genesis-living-system-builder/genesis/mcp-connectors.md)** | Hosted, in-product |
+| **Read & write my workspace** (projects, tasks, agents, app files) | **Hosted MCP** at `https://www.taskade.com/mcp` | Hosted HTTP · personal token · Starter+ |
+| Run MCP **locally via stdio** (v1 surface, no app file editing) | **Stdio npm** `@taskade/mcp-server` (this repo) | Local stdio · personal token · most plans |
+| Let my agents reach Slack / Shopify / Gmail | **[MCP Connectors](https://github.com/taskade/docs/blob/main/genesis-living-system-builder/genesis/mcp-connectors.md)** | Hosted, in-product |
 
 ### 1. Get Your API Key
 
@@ -196,6 +216,8 @@ Hosted tools cover workspace browse (`list_spaces`, `inspect_space`), project/ag
 ---
 
 ## Tools (62)
+
+> **Tool count tracks the hosted server.** The hosted MCP at `/mcp` currently exposes 48 tools (44 Phase A Public API v2 ops + 4 MCP-native: `inspect_space`, `write_file`, `read_project`, `list_automations`). The stdio npm package in this repo wraps the v1 API and exposes 14 ops. For the full workspace surface including app-file editing, use the hosted URL above.
 
 ### Workspaces
 
@@ -551,7 +573,7 @@ See [open issues](https://github.com/taskade/mcp/issues) for planned features an
 
 ## Privacy & Security
 
-Your Taskade API token authorizes the MCP server to call the Taskade public API on your behalf. The server talks **only** to the Taskade public API — `https://www.taskade.com/api/v1` and `https://www.taskade.com/api/v2` — and does not send your data to other third-party services.
+Your Taskade API token authorizes the MCP server to call the Taskade public API on your behalf. The server talks **only** to the Taskade public API — `https://www.taskade.com/api/v2` (primary) and `https://www.taskade.com/api/v1` (legacy task CRUD) — and does not send your data to other third-party services.
 
 - **Privacy** — see the [Taskade Privacy Policy](https://www.taskade.com/privacy).
 - **Security & vulnerability reporting** — see [SECURITY.md](./SECURITY.md).
