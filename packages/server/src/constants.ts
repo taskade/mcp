@@ -159,6 +159,6 @@ export const TASKADE_ACTION_HINTS: Partial<Record<string, ActionHints>> = {
   taskPutDate: { destructiveHint: true },
   taskNotePut: { destructiveHint: true },
   taskFieldValuePut: { destructiveHint: true },
-  agentUpdate: { destructiveHint: true },
-  agentPublicUpdate: { destructiveHint: true },
+  agentUpdate: { destructiveHint: true, idempotentHint: true },
+  agentPublicUpdate: { destructiveHint: true, idempotentHint: true },
 };

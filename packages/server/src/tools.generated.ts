@@ -1591,7 +1591,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     {
       readOnlyHint: false,
       destructiveHint: true,
-      idempotentHint: false,
+      idempotentHint: true,
       openWorldHint: false,
       title: 'Update Agent',
     },
@@ -1653,7 +1653,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     {
       readOnlyHint: false,
       destructiveHint: true,
-      idempotentHint: false,
+      idempotentHint: true,
       openWorldHint: false,
       title: 'Update Public Agent',
     },
