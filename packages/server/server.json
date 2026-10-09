@@ -2,7 +2,24 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.taskade/mcp-server",
   "title": "Taskade MCP",
-  "description": "Hosted OAuth MCP at https://www.taskade.com/mcp, or local @taskade/mcp-server.",
+  "description": "Taskade projects, tasks and AI agents. Hosted OAuth server or local stdio package.",
+  "websiteUrl": "https://www.taskade.com/mcp",
+  "icons": [
+    {
+      "src": "https://www.taskade.com/images/taskade-icon-512.png",
+      "mimeType": "image/png",
+      "sizes": [
+        "512x512"
+      ]
+    },
+    {
+      "src": "https://www.taskade.com/favicon.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ]
+    }
+  ],
   "repository": {
     "url": "https://github.com/taskade/mcp.git",
     "source": "github"
