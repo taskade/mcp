@@ -1,5 +1,11 @@
 # @taskade/mcp-server
 
+## 0.1.3
+
+### Patch Changes
+
+- [#93](https://github.com/taskade/mcp/pull/93) [`f57337c`](https://github.com/taskade/mcp/commit/f57337c6caa08f9b60215a86339eefd2c3c8a888) Thanks [@johnxie](https://github.com/johnxie)! - Correct the MCP tool hints: the v2 conversation reads are read-only, `unsubscribeWebhook` and the PUT/PATCH tools that replace a value are destructive, and `promptAgent` is destructive and open-world. Claude now runs the reads without a confirmation and asks before the overwrites.
+
 ## 0.1.2
 
 ### Patch Changes
