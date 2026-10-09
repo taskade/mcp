@@ -10,6 +10,6 @@
   "repository": "https://github.com/taskade/mcp",
   "license": "MIT",
   "keywords": ["taskade", "mcp", "oauth", "genesis", "agents"],
-  "logo": "https://www.taskade.com/favicon.ico",
+  "logo": "https://www.taskade.com/images/taskade-icon-512.png",
   "mcpServers": "./mcp.json"
 }
