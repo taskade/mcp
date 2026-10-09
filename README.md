@@ -186,12 +186,12 @@ If the problem continues, open an [issue](https://github.com/taskade/mcp/issues)
 
 ## Local package (stdio)
 
-Use the local package only when your client cannot connect to a remote server. It runs on your machine with `npx` and calls the Taskade public API with a personal access token.
+Use the local package when your client supports only stdio servers, or when you need a tool that only the local package has, for example the webhook tools (`subscribeWebhook`, `unsubscribeWebhook`). It runs on your machine with `npx` and calls the Taskade public API over the network with a personal access token.
 
 | I want to... | Use | Where / auth |
 |---|---|---|
 | Use Taskade from Claude, Cursor, VS Code or another client that supports remote servers | **Hosted server** | `https://www.taskade.com/mcp` · OAuth 2.0 or API token · paid plans |
-| Run Taskade tools in a client that supports only stdio, or offline in CI | **Local package** (`@taskade/mcp-server`) | `npx` · personal access token |
+| Run Taskade tools in a client that supports only stdio, or use the webhook tools | **Local package** (`@taskade/mcp-server`) | `npx` · personal access token · needs network access to taskade.com |
 | Let my Taskade agents reach Slack, Shopify or Gmail | **[MCP Connectors](https://github.com/taskade/docs/blob/main/genesis-living-system-builder/genesis/mcp-connectors.md)** | Hosted, in the Taskade app |
 
 ### 1. Get Your API Key
