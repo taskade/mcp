@@ -6,6 +6,8 @@
 // chat, webhooks). We start with the highest-value gaps and grow this list as v2
 // stabilizes. Names are derived from the path by the codegen (v2 omits operationId).
 
+import type { ActionHints } from './constants';
+
 export const ENABLED_TASKADE_V2_ACTIONS = [
   // Agent chat — the capability v1 cannot do at all
   'promptAgent',
@@ -26,4 +28,17 @@ export const HUMANIZED_TASKADE_V2_ACTIONS: Record<TaskadeV2Action, string> = {
   getConversation: 'Get Agent Conversation',
   subscribeWebhook: 'Subscribe to a Webhook',
   unsubscribeWebhook: 'Unsubscribe from a Webhook',
+};
+
+// v2 sends every operation as POST, so the codegen marks each tool as a
+// non-destructive write. These overrides state the real behavior:
+// - the conversation reads change nothing
+// - unsubscribeWebhook deletes the subscription
+// - promptAgent runs an agent that can call its own tools (web search, and its
+//   project tool, which can edit or delete tasks)
+export const TASKADE_V2_ACTION_HINTS: Partial<Record<TaskadeV2Action, ActionHints>> = {
+  listConversations: { readOnlyHint: true, idempotentHint: true },
+  getConversation: { readOnlyHint: true, idempotentHint: true },
+  unsubscribeWebhook: { destructiveHint: true, idempotentHint: true },
+  promptAgent: { destructiveHint: true, openWorldHint: true },
 };

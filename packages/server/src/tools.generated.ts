@@ -623,7 +623,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     }).shape,
     {
       readOnlyHint: false,
-      destructiveHint: false,
+      destructiveHint: true,
       idempotentHint: true,
       openWorldHint: false,
       title: 'Update Task',
@@ -792,7 +792,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     }).shape,
     {
       readOnlyHint: false,
-      destructiveHint: false,
+      destructiveHint: true,
       idempotentHint: true,
       openWorldHint: false,
       title: 'Update Task Assignees',
@@ -912,7 +912,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     }).shape,
     {
       readOnlyHint: false,
-      destructiveHint: false,
+      destructiveHint: true,
       idempotentHint: true,
       openWorldHint: false,
       title: 'Set Task Date',
@@ -961,7 +961,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     }).shape,
     {
       readOnlyHint: false,
-      destructiveHint: false,
+      destructiveHint: true,
       idempotentHint: true,
       openWorldHint: false,
       title: 'Update Task Note',
@@ -1076,7 +1076,7 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     }).shape,
     {
       readOnlyHint: false,
-      destructiveHint: false,
+      destructiveHint: true,
       idempotentHint: true,
       openWorldHint: false,
       title: 'Set Task Field Value',
@@ -1590,8 +1590,8 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     }).shape,
     {
       readOnlyHint: false,
-      destructiveHint: false,
-      idempotentHint: false,
+      destructiveHint: true,
+      idempotentHint: true,
       openWorldHint: false,
       title: 'Update Agent',
     },
@@ -1652,8 +1652,8 @@ export const setupTools = (server: McpServer, opts: OpenAPIToolRuntimeConfigOpts
     }).shape,
     {
       readOnlyHint: false,
-      destructiveHint: false,
-      idempotentHint: false,
+      destructiveHint: true,
+      idempotentHint: true,
       openWorldHint: false,
       title: 'Update Public Agent',
     },

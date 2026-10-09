@@ -222,9 +222,9 @@ export const setupToolsV2 = (server: McpServer, opts: OpenAPIToolRuntimeConfigOp
     }).shape,
     {
       readOnlyHint: false,
-      destructiveHint: false,
+      destructiveHint: true,
       idempotentHint: false,
-      openWorldHint: false,
+      openWorldHint: true,
       title: 'Chat with an AI Agent',
     },
     async (args) => {
@@ -247,9 +247,9 @@ export const setupToolsV2 = (server: McpServer, opts: OpenAPIToolRuntimeConfigOp
       page: z.number().default(1),
     }).shape,
     {
-      readOnlyHint: false,
+      readOnlyHint: true,
       destructiveHint: false,
-      idempotentHint: false,
+      idempotentHint: true,
       openWorldHint: false,
       title: 'List Agent Conversations',
     },
@@ -269,9 +269,9 @@ export const setupToolsV2 = (server: McpServer, opts: OpenAPIToolRuntimeConfigOp
     'Get agent conversation by ID',
     z.object({ agentId: z.string().min(1), convoId: z.string().min(1) }).shape,
     {
-      readOnlyHint: false,
+      readOnlyHint: true,
       destructiveHint: false,
-      idempotentHint: false,
+      idempotentHint: true,
       openWorldHint: false,
       title: 'Get Agent Conversation',
     },
@@ -324,8 +324,8 @@ export const setupToolsV2 = (server: McpServer, opts: OpenAPIToolRuntimeConfigOp
     z.object({ hookId: z.string().min(1) }).shape,
     {
       readOnlyHint: false,
-      destructiveHint: false,
-      idempotentHint: false,
+      destructiveHint: true,
+      idempotentHint: true,
       openWorldHint: false,
       title: 'Unsubscribe from a Webhook',
     },
