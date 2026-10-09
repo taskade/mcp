@@ -2,38 +2,41 @@
 
 # Taskade MCP Server
 
-> The **Workspace MCP** (`@taskade/mcp-server`) — run your Taskade workspace from any AI client.
+**Connect [Taskade](https://www.taskade.com) to Claude, Cursor, VS Code, Windsurf and any other client of the [Model Context Protocol](https://modelcontextprotocol.io/).**
 
-**Connect [Taskade](https://www.taskade.com) to any AI assistant — Claude, Cursor, Windsurf, VS Code, and more — via the [Model Context Protocol](https://modelcontextprotocol.io/).**
+[![Add to Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=taskade&config=eyJ1cmwiOiJodHRwczovL3d3dy50YXNrYWRlLmNvbS9tY3AifQ%3D%3D)
+[![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-007ACC?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=taskade&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fwww.taskade.com%2Fmcp%22%7D)
+[![Connect in Claude](https://img.shields.io/badge/Connect_in-Claude-D97757?style=flat-square)](#claude-web-desktop-and-mobile)
 
 [![npm](https://img.shields.io/npm/v/@taskade/mcp-server?style=flat-square&color=FF2D60)](https://www.npmjs.com/package/@taskade/mcp-server)
 [![GitHub stars](https://img.shields.io/github/stars/taskade/mcp?style=flat-square)](https://github.com/taskade/mcp)
 [![License](https://img.shields.io/github/license/taskade/mcp?style=flat-square)](https://github.com/taskade/mcp/blob/main/LICENSE)
 
-[![Add to Cursor](https://img.shields.io/badge/Add_to-Cursor-0098FF?style=flat-square)](cursor://anysphere.cursor-deeplink/mcp/install?name=taskade&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkB0YXNrYWRlL21jcC1zZXJ2ZXIiXSwiZW52Ijp7IlRBU0tBREVfQVBJX0tFWSI6InlvdXItYXBpLWtleS1oZXJlIn19)
-[![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-007ACC?style=flat-square&logo=visualstudiocode&logoColor=white)](vscode:mcp/install?%7B%22name%22%3A%22taskade%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40taskade%2Fmcp-server%22%5D%2C%22env%22%3A%7B%22TASKADE_API_KEY%22%3A%22%24%7Binput%3Ataskade_api_key%7D%22%7D%7D)
-
-**62 tools** for workspaces, projects, tasks, AI agents, agent chat, webhooks, knowledge bases, templates, media, and sharing — all from your AI client.
+**Hosted server:** `https://www.taskade.com/mcp` (Streamable HTTP, OAuth). Nothing to install.
 
 </div>
 
-- [MCP Server](https://github.com/taskade/mcp/tree/main/packages/server) — Connect Taskade to Claude Desktop, Cursor, Windsurf, or any MCP client.
-- [OpenAPI Codegen](https://github.com/taskade/mcp/tree/main/packages/openapi-codegen) — Generate MCP tools from any OpenAPI spec — not just Taskade.
+This repo holds two packages:
+
+- [MCP Server](https://github.com/taskade/mcp/tree/main/packages/server) (`@taskade/mcp-server`): the local stdio server, for clients that cannot connect to a remote server.
+- [OpenAPI Codegen](https://github.com/taskade/mcp/tree/main/packages/openapi-codegen): generate MCP tools from any OpenAPI spec, not only Taskade.
 
 ---
 
 ## Contents
 
-- [Demo](#demo)
-- [Quick Start](#quick-start)
-- [Hosted remote MCP](#8-hosted-remote-mcp-httpswwwtaskadecommcp)
-- [Tools (62)](#tools-62)
+- [Quick Start: hosted server](#quick-start-hosted-server)
+- [Hosted tools (48)](#hosted-tools-48)
+- [Example prompts](#example-prompts)
+- [Troubleshooting](#troubleshooting)
+- [Local package (stdio)](#local-package-stdio)
+- [Local package tools (62)](#local-package-tools-62)
 - [Why Taskade MCP?](#why-taskade-mcp)
 - [Agent Recipes](#agent-recipes)
-- [Use Cases](#use-cases)
 - [OpenAPI Codegen](#openapi-codegen)
 - [What is Taskade?](#what-is-taskade)
-- [Roadmap](#roadmap)
+- [Privacy & Security](#privacy--security)
+- [Support](#support)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -43,28 +46,153 @@
 
 MCP-powered Taskade agent running inside Claude Desktop by Anthropic:
 
-![Taskade MCP Demo — AI agent managing tasks and projects in Claude Desktop](https://github.com/user-attachments/assets/0cee987b-b0d4-4d10-bb7f-da49a080d731)
+![Taskade MCP Demo: AI agent managing tasks and projects in Claude Desktop](https://github.com/user-attachments/assets/0cee987b-b0d4-4d10-bb7f-da49a080d731)
 
 | Build Agents via MCP | Automate Workflows | Manage Projects |
 |:---:|:---:|:---:|
 | <img src="https://raw.githubusercontent.com/taskade/taskade/main/media/agents/agent-generator.gif" width="280" alt="Create AI agents from your IDE via Taskade MCP"> | <img src="https://raw.githubusercontent.com/taskade/taskade/main/media/automations/automation-flows.gif" width="280" alt="Automate workflows via Taskade MCP"> | <img src="https://raw.githubusercontent.com/taskade/taskade/main/media/genesis/create-app.gif" width="280" alt="Manage projects and apps via Taskade MCP"> |
-| Create, train, deploy AI agents from Claude/Cursor | Build multi-step automations across 100+ services | Full workspace management from your AI assistant *(paid plans; some endpoints gated on free)* |
+| Create, train, deploy AI agents from Claude/Cursor | Build multi-step automations across 100+ services | Full workspace management from your AI assistant *(paid plans)* |
 
 ---
 
-## Quick Start
+## Quick Start: hosted server
 
-> ⚡ **Prefer a hosted option?** Open [`https://www.taskade.com/mcp`](https://www.taskade.com/mcp) in a browser — that's the official OAuth install page (Claude, Cursor, Claude Code, Windsurf, Zed). An unauthenticated `initialize` returns **401 by design**; clients complete OAuth 2.0 (PKCE) once. Full task-level writes still live in this local Workspace MCP package. Guide: **[Hosted Taskade MCP](https://github.com/taskade/docs/blob/main/apis-living-system-development/genesis-app-mcp.md)**.
+| | |
+|---|---|
+| **URL** | `https://www.taskade.com/mcp` |
+| **Transport** | Streamable HTTP |
+| **Auth** | OAuth 2.0 with PKCE and dynamic client registration. Your client opens a Taskade sign-in page once. |
+| **Plan** | MCP access is part of every paid Taskade plan (Starter and up). On the Free plan, `list_spaces` returns no workspaces. |
+| **Discovery** | `https://www.taskade.com/.well-known/oauth-protected-resource/mcp` |
 
-## Which Taskade MCP do I want?
+An `initialize` request without a token returns `401` on purpose. The `401` tells your client where to start the OAuth sign-in.
 
-Taskade speaks MCP through three surfaces — this repo is the first one:
+### Claude (web, Desktop and mobile)
 
-| I want to… | Use | Where / auth |
+1. In Claude, go to [**Customize > Connectors**](https://claude.ai/customize/connectors) and select **Add custom connector**. On a Team or Enterprise plan, an Owner first adds the connector in **Organization settings > Connectors** (**Add**, then **Custom**).
+2. Enter the name `Taskade` and the URL `https://www.taskade.com/mcp`, then select **Add**.
+3. Select **Connect**, sign in to Taskade, and approve access.
+4. In a chat, select **+ > Connectors** and turn on Taskade.
+
+If the dialog asks for an **OAuth client**, select **Register automatically**. The connector also works in Claude Desktop and the Claude mobile apps on the same account.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http taskade https://www.taskade.com/mcp
+```
+
+Then run `/mcp` in Claude Code and select **taskade** to sign in.
+
+### Cursor
+
+Select **Add to Cursor** at the top of this page, or add this to `~/.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "taskade": {
+      "url": "https://www.taskade.com/mcp"
+    }
+  }
+}
+```
+
+### VS Code
+
+Select **Install in VS Code** at the top of this page, or run:
+
+```bash
+code --add-mcp '{"name":"taskade","type":"http","url":"https://www.taskade.com/mcp"}'
+```
+
+### Windsurf
+
+Add this to `~/.codeium/windsurf/mcp_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "taskade": {
+      "serverUrl": "https://www.taskade.com/mcp"
+    }
+  }
+}
+```
+
+### Other clients and servers (API token)
+
+A client that cannot do OAuth can send a Taskade personal access token as a Bearer token. Create the token in [Taskade Settings > API](https://www.taskade.com/settings/api).
+
+```json
+{
+  "mcpServers": {
+    "taskade": {
+      "type": "http",
+      "url": "https://www.taskade.com/mcp",
+      "headers": { "Authorization": "Bearer YOUR_TASKADE_API_TOKEN" }
+    }
+  }
+}
+```
+
+Full guide: [Hosted Taskade MCP](https://github.com/taskade/docs/blob/main/apis-living-system-development/genesis-app-mcp.md).
+
+---
+
+## Hosted tools (48)
+
+Every hosted tool declares MCP tool annotations. Claude can run a read-only tool without a confirmation, and it asks before a tool that deletes or replaces data.
+
+| Area | Read-only tools | Write tools |
 |---|---|---|
-| Have my AI client **read & write tasks** (complete, assignees, dates) plus projects and agents | **Workspace MCP** — this repo (`@taskade/mcp-server`) | Local stdio · personal token · any plan |
-| **Connect remotely** — browse the workspace, create projects, prompt agents, edit Genesis `app/` source | **[Hosted Taskade MCP](https://github.com/taskade/docs/blob/main/apis-living-system-development/genesis-app-mcp.md)** | `https://www.taskade.com/mcp` · OAuth 2.0 (PKCE) · every paid plan |
-| Let my agents **reach Slack / Shopify / Gmail** | **[MCP Connectors](https://github.com/taskade/docs/blob/main/genesis-living-system-builder/genesis/mcp-connectors.md)** | Hosted, in-product |
+| Workspaces | `list_spaces`, `list_folders`, `list_media`, `list_templates`, `inspect_space`, `list_automations` | `write_file` (Genesis app source in `app/`) |
+| Projects | `list_projects`, `list_my_projects`, `get_project`, `read_project`, `list_fields`, `list_blocks`, `list_project_members`, `get_share_link` | `create_project`, `create_project_from_template`, `copy_project`, `complete_project`, `restore_project`, `enable_share_link` |
+| Tasks | `list_tasks` | `create_task`, `update_task`, `complete_task`, `uncomplete_task`, `delete_task`, `move_task`, `set_task_note`, `delete_task_note`, `set_task_date`, `delete_task_date`, `assign_task`, `unassign_task`, `set_task_field_value`, `delete_task_field_value` |
+| AI agents | `list_agents`, `get_agent`, `list_conversations`, `get_conversation` | `create_agent`, `update_agent`, `delete_agent`, `prompt_agent`, `add_knowledge_project`, `remove_knowledge_project`, `add_knowledge_media`, `remove_knowledge_media` |
+
+The server also serves the resource `taskade://getting-started`, a short guide for the model.
+
+---
+
+## Example prompts
+
+1. **Weekly review.** "List my Taskade workspaces, read the Q4 Roadmap project, and give me the open tasks grouped by assignee."
+   Tools: `list_spaces`, `list_projects`, `read_project`.
+2. **Plan a launch.** "Create a project called Website Launch in my Marketing workspace with tasks for copy, design, QA and launch day, and set the launch task to November 3."
+   Tools: `list_spaces`, `create_project`, `create_task`, `set_task_date`.
+3. **Build a support agent.** "Create an agent called Help Bot in my Support workspace, add the FAQ project as its knowledge, then ask it how a customer resets a password."
+   Tools: `create_agent`, `add_knowledge_project`, `prompt_agent`.
+4. **Close out a sprint.** "In the Sprint 42 project, mark every task that mentions 'shipped' as complete, then mark the project as completed."
+   Tools: `list_tasks`, `complete_task`, `complete_project`.
+5. **Edit a Genesis app.** "In my CRM app, read `app/src/App.tsx` and change the page title to Acme CRM."
+   Tools: `inspect_space`, `write_file`.
+
+---
+
+## Troubleshooting
+
+| Symptom | Cause and fix |
+|---|---|
+| `401 Unauthorized` on the first request | Expected. Your client must start the OAuth sign-in. If it does not, update the client or use an API token (see above). |
+| `list_spaces` returns no workspaces | MCP access needs a paid plan on that workspace. Upgrade at [taskade.com/pricing](https://www.taskade.com/pricing). |
+| A tool returns "permission denied" | Your role in that workspace or project does not allow the action. Ask a workspace owner for access. |
+| Claude shows "Authorization with the MCP server failed" | Remove the connector, add it again, and sign in to the correct Taskade account. |
+| A local `npx` server fails with "TASKADE_API_KEY appears to be invalid" | Create a new token in [Settings > API](https://www.taskade.com/settings/api). |
+
+If the problem continues, open an [issue](https://github.com/taskade/mcp/issues) or email [support@taskade.com](mailto:support@taskade.com).
+
+---
+
+## Local package (stdio)
+
+Use the local package only when your client cannot connect to a remote server. It runs on your machine with `npx` and calls the Taskade public API with a personal access token.
+
+| I want to... | Use | Where / auth |
+|---|---|---|
+| Use Taskade from Claude, Cursor, VS Code or another client that supports remote servers | **Hosted server** | `https://www.taskade.com/mcp` · OAuth 2.0 or API token · paid plans |
+| Run Taskade tools in a client that supports only stdio, or offline in CI | **Local package** (`@taskade/mcp-server`) | `npx` · personal access token |
+| Let my Taskade agents reach Slack, Shopify or Gmail | **[MCP Connectors](https://github.com/taskade/docs/blob/main/genesis-living-system-builder/genesis/mcp-connectors.md)** | Hosted, in the Taskade app |
 
 ### 1. Get Your API Key
 
@@ -168,34 +296,11 @@ TASKADE_API_KEY=your-api-key npx @taskade/mcp-server --http
 
 The server starts at `http://localhost:3000` (configure with `PORT` env var). Connect via SSE at `http://localhost:3000/sse?access_token=your-api-key`.
 
-### 8. Hosted remote MCP (`https://www.taskade.com/mcp`)
-
-Official **remote** Taskade MCP. Nothing to install locally. Paste the URL into any MCP client that supports Streamable HTTP + OAuth.
-
-| | |
-|---|---|
-| **Endpoint** | `https://www.taskade.com/mcp` |
-| **Auth** | OAuth 2.0 with PKCE. Discovery: `https://www.taskade.com/.well-known/oauth-protected-resource/mcp` |
-| **Unauthenticated `initialize`** | Returns **401** on purpose. The browser GET is a user-facing install page; MCP clients must complete the OAuth sign-in. |
-| **Plan** | Every paid plan. Free can start the connect flow; workspace access is gated. |
-| **Guide** | [Hosted Taskade MCP](https://github.com/taskade/docs/blob/main/apis-living-system-development/genesis-app-mcp.md) |
-
-```json
-{
-  "mcpServers": {
-    "taskade": {
-      "type": "http",
-      "url": "https://www.taskade.com/mcp"
-    }
-  }
-}
-```
-
-Hosted tools cover workspace browse (`list_spaces`, `inspect_space`), project/agent create, and Genesis `app/` file edits via `write_file`. Task-level writes (complete, assignees, dates) are still this package.
-
 ---
 
-## Tools (62)
+## Local package tools (62)
+
+The local package has its own tool names. They map to the Taskade public API v1 and v2.
 
 ### Workspaces
 
@@ -551,11 +656,18 @@ See [open issues](https://github.com/taskade/mcp/issues) for planned features an
 
 ## Privacy & Security
 
-Your Taskade API token authorizes the MCP server to call the Taskade public API on your behalf. The server talks **only** to the Taskade public API — `https://www.taskade.com/api/v1` and `https://www.taskade.com/api/v2` — and does not send your data to other third-party services.
+- **Hosted server.** Taskade runs it on `www.taskade.com`. It reads and writes only the workspaces that your Taskade account can access and that are on a paid plan. The server does not read your chat history with the AI client. `prompt_agent` runs a Taskade agent, which can use its own tools, for example web search.
+- **Local package.** Your API token authorizes the server to call the Taskade public API (`https://www.taskade.com/api/v1` and `https://www.taskade.com/api/v2`) on your behalf. The package sends your data to no other service. Keep the token in an environment variable, and never commit it.
+- **Privacy policy:** [taskade.com/privacy](https://www.taskade.com/privacy). **Terms:** [taskade.com/terms](https://www.taskade.com/terms).
+- **Security and vulnerability reports:** see [SECURITY.md](./SECURITY.md).
 
-- **Privacy** — see the [Taskade Privacy Policy](https://www.taskade.com/privacy).
-- **Security & vulnerability reporting** — see [SECURITY.md](./SECURITY.md).
-- Store your token in an environment variable; never commit it.
+---
+
+## Support
+
+- Help center: [help.taskade.com](https://help.taskade.com)
+- Email: [support@taskade.com](mailto:support@taskade.com)
+- Bugs and feature requests: [GitHub issues](https://github.com/taskade/mcp/issues)
 
 ---
 
@@ -566,7 +678,6 @@ Help us improve MCP tools, OpenAPI workflows, and agent capabilities.
 - [Issues](https://github.com/taskade/mcp/issues) — Report bugs or request features
 - [Pull Requests](https://github.com/taskade/mcp/pulls) — Contributions welcome
 - [Apps](https://www.taskade.com/apps) — Browse and clone community apps
-- [Contact](mailto:hello@taskade.com) — hello@taskade.com
 
 ---
 
@@ -581,3 +692,4 @@ Help us improve MCP tools, OpenAPI workflows, and agent capabilities.
 ## License
 
 MIT
+
