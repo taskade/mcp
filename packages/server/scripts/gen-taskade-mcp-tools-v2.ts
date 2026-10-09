@@ -2,7 +2,11 @@ import { dereference } from '@readme/openapi-parser';
 import { codegen } from '@taskade/mcp-openapi-codegen';
 import fs from 'fs';
 
-import { ENABLED_TASKADE_V2_ACTIONS, HUMANIZED_TASKADE_V2_ACTIONS } from '../src/constants.v2';
+import {
+  ENABLED_TASKADE_V2_ACTIONS,
+  HUMANIZED_TASKADE_V2_ACTIONS,
+  TASKADE_V2_ACTION_HINTS,
+} from '../src/constants.v2';
 
 // Taskade API v2 is a flat RPC API whose operations omit `operationId`; the codegen
 // derives tool names from the path (e.g. POST /promptAgent -> "promptAgent").
@@ -79,7 +83,10 @@ try {
 }
 
 const actions = Object.fromEntries(
-  Object.entries(HUMANIZED_TASKADE_V2_ACTIONS).map(([name, title]) => [name, { title }]),
+  Object.entries(HUMANIZED_TASKADE_V2_ACTIONS).map(([name, title]) => [
+    name,
+    { title, ...TASKADE_V2_ACTION_HINTS[name as keyof typeof HUMANIZED_TASKADE_V2_ACTIONS] },
+  ]),
 );
 
 await codegen({

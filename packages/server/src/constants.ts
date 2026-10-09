@@ -144,3 +144,21 @@ export const HUMANIZED_TASKADE_ACTIONS = {
   // Me
   meProjectsGet: 'Get My Projects',
 };
+
+export type ActionHints = Partial<
+  Record<'readOnlyHint' | 'destructiveHint' | 'idempotentHint' | 'openWorldHint', boolean>
+>;
+
+// The codegen derives hints from the HTTP method: GET is read-only, DELETE is
+// destructive. A PUT or PATCH here replaces a stored value (task text, note,
+// date, field value, assignees, agent settings), so it is destructive too.
+// Claude asks for a confirmation before it runs a destructive tool.
+export const TASKADE_ACTION_HINTS: Partial<Record<string, ActionHints>> = {
+  taskPut: { destructiveHint: true },
+  taskPutAssignees: { destructiveHint: true },
+  taskPutDate: { destructiveHint: true },
+  taskNotePut: { destructiveHint: true },
+  taskFieldValuePut: { destructiveHint: true },
+  agentUpdate: { destructiveHint: true },
+  agentPublicUpdate: { destructiveHint: true },
+};
