@@ -31,7 +31,7 @@ Ask the AI agent natural language questions like:
 
 > **Note:** The published `@taskade/mcp-server` CLI runs over **stdio** only. Configure the n8n MCP Client node with the command `npx -y @taskade/mcp-server` and a `TASKADE_API_KEY` environment variable. The published CLI does **not** support the `--http` and `--token` flags.
 >
-> To connect over HTTP, use the hosted server at `https://www.taskade.com/mcp` (Streamable HTTP, OAuth 2.0). A client that cannot do OAuth can send a Taskade API token as a Bearer token. See [Quick Start: hosted server](../README.md#quick-start-hosted-server).
+> To connect over HTTP, use the hosted server at `https://www.taskade.com/mcp` (Streamable HTTP, OAuth 2.0). It needs a paid plan on the workspace. A client that cannot do OAuth can send a Taskade API token as a Bearer token. See [Quick Start: hosted server](../README.md#quick-start-hosted-server).
 
 ## More examples coming soon
 
