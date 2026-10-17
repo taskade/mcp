@@ -8,7 +8,7 @@ import {
   isParameterObject,
   isRequestBodyObject,
   normalizeAllOf,
-} from './openapi';
+} from './openapi.js';
 
 export type ParsedTool = {
   name: string;

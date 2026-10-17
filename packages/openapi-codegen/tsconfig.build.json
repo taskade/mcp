@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": false,
+    "emitDeclarationOnly": false,
+    "declarationMap": false,
+    "sourceMap": false,
+    "inlineSources": false,
+    "outDir": "./dist"
+  },
+  "include": ["src/index.ts"]
+}

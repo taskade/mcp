@@ -4,7 +4,7 @@ import { OpenAPIV2, OpenAPIV3, OpenAPIV3_1 } from 'openapi-types';
 import path from 'path';
 import prettier from 'prettier';
 
-import { ParsedTool, parseOpenApi } from './parser';
+import { ParsedTool, parseOpenApi } from './parser.js';
 
 type IsActionsEnabledOpt = Array<string> | ((actionName: string) => boolean);
 
@@ -72,7 +72,12 @@ export const codegen = async (opts: CodegenOpts) => {
 
   const tools = parseOpenApi(document.paths ?? {});
 
-  const runtime = fs.readFileSync(path.join(import.meta.dirname, 'runtime.ts'), 'utf8');
+  // The generated file inlines the runtime as TypeScript source. This module runs from
+  // src/ in the repo and from dist/ in the published package. Both read src/runtime.ts.
+  const runtime = fs.readFileSync(
+    path.join(import.meta.dirname, '..', 'src', 'runtime.ts'),
+    'utf8',
+  );
 
   let output: string = `
     /**
