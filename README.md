@@ -288,13 +288,9 @@ Add a `.vscode/mcp.json` to your workspace (VS Code uses the `servers` key; `${i
 }
 ```
 
-### 7. HTTP / SSE Mode (remote & custom clients)
+### 7. Remote and HTTP clients
 
-```bash
-TASKADE_API_KEY=your-api-key npx @taskade/mcp-server --http
-```
-
-The server starts at `http://localhost:3000` (configure with `PORT` env var). Connect via SSE at `http://localhost:3000/sse?access_token=your-api-key`.
+The local package runs over stdio only. It has no HTTP or SSE mode. For a client that connects over HTTP, use the hosted server at `https://www.taskade.com/mcp` (see [Quick Start: hosted server](#quick-start-hosted-server)).
 
 ---
 

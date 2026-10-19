@@ -15,10 +15,27 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+      # Optional release GitHub App. When the repository has the variable
+      # RELEASE_APP_ID, the App token opens the version PR and pushes the
+      # release tags. Events from an App token start other workflows (CI on the
+      # version PR, the MCP Registry publish on the tag). Events from GITHUB_TOKEN
+      # do not. Without the variable, this step does not run and the job uses GITHUB_TOKEN.
+      - name: Create release App token
+        id: app-token
+        if: vars.RELEASE_APP_ID != ''
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ vars.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          # git push uses this token. github.token is the checkout default.
+          token: ${{ steps.app-token.outputs.token || github.token }}
 
       - name: Install Node.js
         uses: actions/setup-node@v4
@@ -27,8 +44,10 @@ jobs:
           registry-url: "https://registry.npmjs.org"
 
       # npm OIDC trusted publishing requires npm >= 11.5.1; Node 22 bundles npm 10.x.
+      # Do not use npm 12. npm 12 returns `npm info --json` as an array. `changeset publish`
+      # then finds no published versions and tries to publish the current version again.
       - name: Upgrade npm for trusted publishing
-        run: npm install -g npm@latest && npm --version
+        run: npm install -g npm@^11.5.1 && npm --version
 
       # setup-node's registry-url writes `_authToken=${NODE_AUTH_TOKEN}`. An empty
       # token makes npm skip OIDC and fail E404. Strip it so publish uses GitHub OIDC.
@@ -50,7 +69,7 @@ jobs:
           title: 'chore: release'
           commit: 'chore: release'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
 
       - name: Publish
         if: steps.changesets.outputs.hasChangesets == 'false'
@@ -58,3 +77,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_CONFIG_PROVENANCE: true
+
+      # `changeset publish` creates a tag for each new version but does not push it.
+      # The tag push starts publish-mcp-registry.yml. A tag push with GITHUB_TOKEN
+      # does not start it, so this step runs only with the App token.
+      - name: Push release tags
+        if: steps.changesets.outputs.hasChangesets == 'false' && steps.app-token.outputs.token != ''
+        run: git push origin --tags

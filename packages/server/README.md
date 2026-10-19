@@ -16,4 +16,6 @@ npx -y @taskade/mcp-server
 
 You'll need a Taskade personal access token — generate one at [https://www.taskade.com/settings/api](https://www.taskade.com/settings/api).
 
-See the [root README](https://github.com/taskade/mcp#readme) for client configuration (Claude Desktop, Cursor, Claude Code), HTTP/SSE mode, and the complete tool list.
+See the [root README](https://github.com/taskade/mcp#readme) for client configuration (Claude Desktop, Cursor, Claude Code) and the complete tool list.
+
+This package runs over stdio only. For a client that connects over HTTP, use the hosted server at `https://www.taskade.com/mcp`.
