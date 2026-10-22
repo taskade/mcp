@@ -62,4 +62,9 @@ describe('TaskadeMCPServer API requests', () => {
     expect(init.headers['User-Agent']).toBe(`taskade-mcp-server/${packageVersion}`);
     expect(init.headers.Authorization).toBe('Bearer test-access-token');
   });
+
+  it('advertises tools and no resources, and sends only the name and version as serverInfo', () => {
+    expect(client.getServerCapabilities()).toEqual({ tools: { listChanged: true } });
+    expect(client.getServerVersion()).toEqual({ name: 'taskade', version: packageVersion });
+  });
 });
