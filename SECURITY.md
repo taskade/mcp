@@ -29,7 +29,7 @@ and it is the one that applies if it and this file ever disagree.
 - The published `@taskade/mcp-server` package runs over **stdio** only. It reads the token from the `TASKADE_API_KEY` environment variable and does not expose the token over the network.
 - The HTTP/SSE mode exists only in the source dev script (`yarn start:server` in `packages/server`). It is for local development, and the npm package does not contain it.
 - The dev script reads the token from the `access_token` URL query parameter. A proxy or server can log that URL, and the script serves plain HTTP, so a network observer can read the token. The script listens on every network interface, on port 3000 by default (set `PORT` to change the port). Run it only on a machine and network that you trust. If other machines can reach it, put it behind HTTPS/TLS.
-- For remote use, connect to the hosted server at `https://www.taskade.com/mcp`. It uses OAuth 2.0, so you do not put a token in a URL. See [Quick Start: hosted server](https://github.com/taskade/mcp#quick-start-hosted-server).
+- For remote use, connect to the hosted server at `https://www.taskade.com/mcp`. It uses OAuth 2.0, so you do not put a token in a URL. See [Taskade MCP server: quick start](https://github.com/taskade/mcp#taskade-mcp-server-quick-start).
 
 ## Never Commit Secrets
 
