@@ -18,14 +18,9 @@ export class TaskadeMCPServer extends McpServer {
   readonly config: TaskadeServerOpts;
 
   constructor(opts: TaskadeServerOpts) {
-    super({
-      name: 'taskade',
-      version,
-      capabilities: {
-        resources: {},
-        tools: {},
-      },
-    });
+    // McpServer advertises the tools capability when a tool is registered. The server has no
+    // resources, so it does not advertise the resources capability.
+    super({ name: 'taskade', version });
 
     this.config = opts;
 
