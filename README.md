@@ -1,8 +1,10 @@
 <div align="center">
 
-# Taskade MCP Server
+# Taskade MCP Server and Agent Plugin
 
-**Connect [Taskade](https://www.taskade.com) to Claude, Cursor, VS Code, Windsurf and any other client of the [Model Context Protocol](https://modelcontextprotocol.io/).**
+**[Taskade](https://www.taskade.com) is the AI-native workspace for projects, AI agents and automations. [Taskade Genesis](https://www.taskade.com/create) builds a running app from one prompt.**
+
+**Connect Taskade to Claude, Claude Code, ChatGPT, Codex, Cursor, VS Code, GitHub Copilot, Gemini CLI, Windsurf and any other client of the [Model Context Protocol](https://modelcontextprotocol.io/).**
 
 [![Add to Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=taskade&config=eyJ1cmwiOiJodHRwczovL3d3dy50YXNrYWRlLmNvbS9tY3AifQ%3D%3D)
 [![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-007ACC?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=taskade&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fwww.taskade.com%2Fmcp%22%7D)
@@ -16,14 +18,14 @@
 
 </div>
 
-This repo holds the Taskade [agent plugin](#agent-plugin) and two packages:
+This repo holds the Taskade [agent plugin](#agent-plugin-for-claude-code-codex-copilot-gemini-cli-and-cursor) and two packages:
 
 - [MCP Server](https://github.com/taskade/mcp/tree/main/packages/server) (`@taskade/mcp-server`): the local stdio server, for clients that cannot connect to a remote server.
 - [OpenAPI Codegen](https://github.com/taskade/mcp/tree/main/packages/openapi-codegen): generate MCP tools from any OpenAPI spec, not only Taskade.
 
 ---
 
-## Agent plugin
+## Agent plugin for Claude Code, Codex, Copilot, Gemini CLI and Cursor
 
 The `taskade` plugin connects your AI tool to your Taskade workspace through the hosted server, and adds 7 skills: a front door (`taskade`) and six jobs (`getting-started`, `import-spreadsheet`, `fix-my-app`, `app-report`, `backup-my-app`, `plan-new-app`). The skills tell the agent which tools to call, in which order, and what to check before it reports back.
 
@@ -39,6 +41,20 @@ claude plugin install taskade@taskade
 ```
 
 Then run `/mcp` in Claude Code and select **taskade** to sign in.
+
+### Any other agent
+
+Add the skills from this repository:
+
+```bash
+npx skills add https://github.com/taskade/mcp
+```
+
+After the Taskade release that serves it, an agent can also read the front door at `https://www.taskade.com/SKILL.md`:
+
+```bash
+npx skills add https://www.taskade.com/SKILL.md
+```
 
 ### Codex plugin
 
@@ -69,26 +85,12 @@ gemini extensions install https://github.com/taskade/mcp
 
 The Cursor plugin `taskade` (`.cursor-plugin/`) in this repository adds the same hosted server and skills.
 
-### Any other agent
-
-Add the skills from this repository:
-
-```bash
-npx skills add https://github.com/taskade/mcp
-```
-
-After the Taskade release that serves it, an agent can also read the front door at `https://www.taskade.com/SKILL.md`:
-
-```bash
-npx skills add https://www.taskade.com/SKILL.md
-```
-
 ---
 
 ## Contents
 
-- [Agent plugin](#agent-plugin)
-- [Quick Start: hosted server](#quick-start-hosted-server)
+- [Agent plugin](#agent-plugin-for-claude-code-codex-copilot-gemini-cli-and-cursor)
+- [Taskade MCP server: quick start](#taskade-mcp-server-quick-start) (Claude, Claude Code, ChatGPT, Cursor, VS Code, Windsurf)
 - [Hosted tools (50)](#hosted-tools-50)
 - [Example prompts](#example-prompts)
 - [Troubleshooting](#troubleshooting)
@@ -118,7 +120,7 @@ MCP-powered Taskade agent running inside Claude Desktop by Anthropic:
 
 ---
 
-## Quick Start: hosted server
+## Taskade MCP server: quick start
 
 | | |
 |---|---|
@@ -146,6 +148,16 @@ claude mcp add --transport http taskade https://www.taskade.com/mcp
 ```
 
 Then run `/mcp` in Claude Code and select **taskade** to sign in.
+
+### ChatGPT
+
+ChatGPT connects to a remote MCP server as a custom connector in developer mode. It uses OAuth only.
+
+1. In ChatGPT settings, turn on developer mode for apps and connectors.
+2. Create a connector. Enter `Taskade` as the name and `https://www.taskade.com/mcp` as the server URL.
+3. Select OAuth as the authentication. Sign in to Taskade and allow access.
+
+Developer mode is available only on some ChatGPT plans, and its labels change often.
 
 ### Cursor
 
@@ -357,7 +369,7 @@ Add a `.vscode/mcp.json` to your workspace (VS Code uses the `servers` key; `${i
 
 ### 7. Remote and HTTP clients
 
-The local package runs over stdio only. It has no HTTP or SSE mode. For a client that connects over HTTP, use the hosted server at `https://www.taskade.com/mcp` (see [Quick Start: hosted server](#quick-start-hosted-server)).
+The local package runs over stdio only. It has no HTTP or SSE mode. For a client that connects over HTTP, use the hosted server at `https://www.taskade.com/mcp` (see [Taskade MCP server: quick start](#taskade-mcp-server-quick-start)).
 
 ---
 
@@ -475,7 +487,7 @@ Capabilities the v1 API doesn't have: hold a live conversation with an AI agent,
 
 ## Why Taskade MCP?
 
-Taskade MCP gives your AI assistant **access to your workspace** — projects, tasks, agents, knowledge bases, templates, and automations (on paid plans; some endpoints such as workspace listing are gated for free accounts). Instead of writing API code, describe what you need in natural language.
+Taskade MCP gives your AI assistant **access to your workspace**: projects, tasks, agents, knowledge bases, templates, and automations (on paid plans; some endpoints such as workspace listing are gated for free accounts). Instead of writing API code, describe what you need in natural language.
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -501,20 +513,20 @@ Taskade MCP gives your AI assistant **access to your workspace** — projects, t
 | "Show me all overdue tasks" | Reads projects → filters tasks → formats report |
 | "Create a support agent trained on our docs" | Creates agent → attaches knowledge → publishes |
 | "Set up next week's sprint from our template" | Copies template → populates tasks → assigns team |
-| "Summarize yesterday's completed work" | Reads task history → generates standup summary |
+| "Summarize the completed work in my Sprint project" | Reads completed tasks → generates a standup summary |
 
 ### Why MCP Instead of REST API?
 
 | | REST API | MCP Server |
 |-|----------|-----------|
-| **Setup** | Write HTTP client, handle auth, parse JSON | `npx @taskade/mcp-server` — one command |
-| **Interface** | Code against endpoints | Natural language — describe what you need |
+| **Setup** | Write HTTP client, handle auth, parse JSON | `npx @taskade/mcp-server`, one command |
+| **Interface** | Code against endpoints | Natural language: describe what you need |
 | **Chaining** | Manual orchestration | AI chains tools intelligently |
 | **Error handling** | Write error handling code | AI interprets errors and retries |
 
 ### Why Taskade MCP Over Other MCP Servers?
 
-Taskade is the only MCP server that includes **AI agent management** (create, train, deploy agents), **knowledge base training** (attach docs, projects, media), and **OpenAPI codegen** (generate MCP tools from any API spec). 62 tools across 8 categories.
+Taskade MCP includes **AI agent management** (create, train, deploy agents), **knowledge base training** (attach docs, projects, media), and **OpenAPI codegen** (generate MCP tools from any API spec). 62 tools across 8 categories.
 
 ---
 
@@ -659,7 +671,7 @@ Automate project creation from templates:
 
 ## OpenAPI Codegen
 
-Use our generator to build MCP tools from any OpenAPI spec — not just Taskade.
+Use our generator to build MCP tools from any OpenAPI spec, not only Taskade.
 
 ```bash
 npm install --save-dev @taskade/mcp-openapi-codegen @readme/openapi-parser
@@ -683,14 +695,14 @@ Works with any OpenAPI 3.0+ spec. Generate MCP tools for your own APIs in minute
 
 ## What is Taskade?
 
-[Taskade](https://www.taskade.com) ([Y Combinator S19](https://www.ycombinator.com/companies/taskade)) is the AI-native workspace for building apps, deploying agents, and automating workflows — from a single prompt. **150,000+ apps generated. Trusted by 3M, Nike, Tesla, Netflix, Airbnb, Disney, Adobe.** Rated 4.8/5 across 9,300+ reviews.
+[Taskade](https://www.taskade.com) ([Y Combinator S19](https://www.ycombinator.com/companies/taskade)) is the AI-native workspace for building apps, deploying agents, and automating workflows from a single prompt. **150,000+ apps built.**
 
-- **Genesis Apps** — Build complete apps from prompts. Dashboards, CRMs, portals, forms — deployed instantly. [Try it →](https://www.taskade.com/create)
-- **AI Agents** — Custom agents with built-in tools, persistent memory, multi-agent teams, public embedding
-- **Automations** — No-code workflow automation with 100+ integrations, branching, looping, filtering
-- **Real-time Collaboration** — Multiplayer workspace with chat, video, and multiple project views
-- **Templates** — 700+ templates for project management, engineering, marketing, and more
-- **API & MCP** — REST API v2, this MCP Server, Agent API, webhooks, OAuth 2.0
+- **Genesis Apps**: build complete apps from prompts. Dashboards, CRMs, portals and forms, deployed at once. [Try it →](https://www.taskade.com/create)
+- **AI Agents**: custom agents with built-in tools, persistent memory, multi-agent teams, public embedding
+- **Automations**: no-code workflow automation with 100+ integrations, branching, looping, filtering
+- **Real-time Collaboration**: multiplayer workspace with chat, video, and multiple project views
+- **Templates**: templates for project management, engineering, marketing, and more
+- **API & MCP**: REST API v2, this MCP server, the agent plugin, Agent API, webhooks, OAuth 2.0
 
 **Links:**
 - App: [taskade.com](https://www.taskade.com)
@@ -711,15 +723,16 @@ See [open issues](https://github.com/taskade/mcp/issues) for planned features an
 
 **Recently shipped (v0.1.0):** Agent chat (`promptAgent`) and webhook triggers, live now via the [Taskade API v2 tool layer](#agent-chat--webhooks-api-v2-beta).
 
-- **Automation & Flow Tools** — Create, enable, and manage workflow automations via MCP
-- **`agent.js`** — Open-source autonomous agent toolkit (coming soon)
-- **TaskOS** — Agent platform at [docs.taskade.com](https://docs.taskade.com)
+- **Automation tools**: the hosted server lists automations, reads their runs and runs a "When asked" automation (`list_automations`, `get_flow_runs`, `run_flow`). Create, enable and manage automations through MCP are on the roadmap.
+- **`agent.js`**: open-source autonomous agent toolkit (coming soon)
+- **TaskOS**: agent platform at [docs.taskade.com](https://docs.taskade.com)
 
 ---
 
 ## Privacy & Security
 
 - **Hosted server.** Taskade runs it on `www.taskade.com`. It reads and writes only the workspaces that your Taskade account can access and that are on a paid plan. The server does not read your chat history with the AI client. `prompt_agent` runs a Taskade agent, which can use its own tools, for example web search.
+- **Agent plugin.** The plugin holds skills (text files) and the address of the hosted server. It runs no code of its own. The backup skill writes workspace files to a local folder that you pick.
 - **Local package.** Your API token authorizes the server to call the Taskade public API (`https://www.taskade.com/api/v1` and `https://www.taskade.com/api/v2`) on your behalf. The package sends your data to no other service. Keep the token in an environment variable, and never commit it.
 - **Privacy policy:** [taskade.com/privacy](https://www.taskade.com/privacy). **Terms:** [taskade.com/terms](https://www.taskade.com/terms).
 - **Security and vulnerability reports:** see [SECURITY.md](./SECURITY.md).
@@ -738,17 +751,17 @@ See [open issues](https://github.com/taskade/mcp/issues) for planned features an
 
 Help us improve MCP tools, OpenAPI workflows, and agent capabilities.
 
-- [Issues](https://github.com/taskade/mcp/issues) — Report bugs or request features
-- [Pull Requests](https://github.com/taskade/mcp/pulls) — Contributions welcome
-- [Apps](https://www.taskade.com/apps) — Browse and clone community apps
+- [Issues](https://github.com/taskade/mcp/issues): report bugs or request features
+- [Pull Requests](https://github.com/taskade/mcp/pulls): contributions welcome
+- [Apps](https://www.taskade.com/apps): browse and clone community apps
 
 ---
 
 ## More from Taskade
 
-- [Taskade Docs](https://docs.taskade.com) ([source](https://github.com/taskade/docs)) — developer documentation and API reference
-- [Integration Kit](https://github.com/taskade/integrations) — open-source Zapier/n8n actions & triggers
-- [Taskade](https://github.com/taskade/taskade) — platform home, including Genesis, the AI app builder
+- [Taskade Docs](https://docs.taskade.com) ([source](https://github.com/taskade/docs)): developer documentation and API reference
+- [Integration Kit](https://github.com/taskade/integrations): open-source Zapier/n8n actions & triggers
+- [Taskade](https://github.com/taskade/taskade): platform home, including Genesis, the AI app builder
 
 ---
 

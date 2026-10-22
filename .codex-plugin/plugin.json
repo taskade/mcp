@@ -1,7 +1,7 @@
 {
   "name": "taskade",
   "version": "0.2.0",
-  "description": "Run your Taskade workspace and Genesis apps from Codex and ChatGPT.",
+  "description": "Use Taskade from Codex and ChatGPT: import a spreadsheet into a project, fix a Taskade Genesis app, report on your projects and automations, back up an app, and plan a new app for Taskade EVE to build. Needs a paid Taskade plan.",
   "author": { "name": "Taskade" },
   "homepage": "https://www.taskade.com/mcp",
   "repository": "https://github.com/taskade/mcp",
@@ -12,7 +12,7 @@
   "interface": {
     "displayName": "Taskade",
     "shortDescription": "Projects, agents and apps",
-    "longDescription": "Import a spreadsheet into a Taskade project, fix a Genesis app with a checked change, get a status report from your projects and automations, back up an app, or plan a new app. Sign in with your Taskade account.",
+    "longDescription": "Import a spreadsheet into a Taskade project, fix a Genesis app with a checked change, get a status report from your projects and automations, back up an app, or plan a new app. Sign in with your Taskade account. Needs a paid Taskade plan. The plugin cannot create or edit an automation or publish an app. Taskade EVE does those jobs inside Taskade.",
     "developerName": "Taskade",
     "category": "Productivity",
     "capabilities": ["Read", "Write"],
