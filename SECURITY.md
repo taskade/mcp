@@ -26,9 +26,10 @@ and it is the one that applies if it and this file ever disagree.
 
 ## Transport Security
 
-- The stdio transport (default for Claude Desktop / Cursor / VS Code) does not expose tokens over the network.
-- Use HTTPS/TLS for any HTTP-based transport in production.
-- The HTTP/SSE transport currently passes the token as an `access_token` URL query parameter, which proxies and servers may log. Until a header-based transport is available, prefer **stdio** (token via the `TASKADE_API_KEY` environment variable), especially in production.
+- The published `@taskade/mcp-server` package runs over **stdio** only. It reads the token from the `TASKADE_API_KEY` environment variable and does not expose the token over the network.
+- The HTTP/SSE mode exists only in the source dev script (`yarn start:server` in `packages/server`). It is for local development, and the npm package does not contain it.
+- The dev script reads the token from the `access_token` URL query parameter. A proxy or server can log that URL, and the script serves plain HTTP, so a network observer can read the token. The script listens on every network interface, on port 3000 by default (set `PORT` to change the port). Run it only on a machine and network that you trust. If other machines can reach it, put it behind HTTPS/TLS.
+- For remote use, connect to the hosted server at `https://www.taskade.com/mcp`. It uses OAuth 2.0, so you do not put a token in a URL. See [Taskade MCP server: quick start](https://github.com/taskade/mcp#taskade-mcp-server-quick-start).
 
 ## Never Commit Secrets
 
@@ -56,4 +57,5 @@ credential immediately), then remove it from history and notify a maintainer. Se
 Taskade's data practices are described in the [Taskade Privacy Policy](https://www.taskade.com/privacy).
 The MCP server sends requests only to the Taskade public API (`https://www.taskade.com/api/v1` and `https://www.taskade.com/api/v2`)
 using the token you provide; it does not send your data to other third-party services. (In
-HTTP/SSE mode the token travels in the request URL and may be logged — prefer stdio.)
+HTTP/SSE mode the token travels in the request URL, where a proxy or server can log it and a
+network observer can read it. Only the source dev script has that mode. The published package uses stdio.)

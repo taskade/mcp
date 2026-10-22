@@ -29,7 +29,9 @@ Ask the AI agent natural language questions like:
 - "What tasks are overdue?"
 - "Create an AI agent that monitors project deadlines"
 
-> **Note:** The published `@taskade/mcp-server` CLI runs over **stdio** only — configure the n8n MCP Client node with the command `npx -y @taskade/mcp-server` and a `TASKADE_API_KEY` environment variable. The `--http`/`--token` flags are **not** supported by the published CLI. A standalone HTTP/SSE transport is not yet exposed; track the hosted remote endpoint at [#6](https://github.com/taskade/mcp/issues/6).
+> **Note:** The published `@taskade/mcp-server` CLI runs over **stdio** only. Configure the n8n MCP Client node with the command `npx -y @taskade/mcp-server` and a `TASKADE_API_KEY` environment variable. The published CLI does **not** support the `--http` and `--token` flags.
+>
+> To connect over HTTP, use the hosted server at `https://www.taskade.com/mcp` (Streamable HTTP, OAuth 2.0). It needs a paid plan on the workspace. A client that cannot do OAuth can send a Taskade API token as a Bearer token. See [Taskade MCP server: quick start](../README.md#taskade-mcp-server-quick-start).
 
 ## More examples coming soon
 
