@@ -42,17 +42,4 @@ Offer the jobs this plugin does well, in plain words:
 
 Ask which one they want. Do one job at a time.
 
-## Limits to state honestly
-
-- Building a whole new app from a prompt runs in Taskade (Taskade EVE), not here. The plan-new-app skill prepares the data and the prompt, then hands off.
-- Automations can be listed, their run history read, and an automation that starts "When asked" can be run. They cannot be created or edited here.
-- A run of an automation and a question to a Taskade agent (`prompt_agent`) are real: they count toward the plan and can use AI credits. Say so before the first call.
-
-## Links
-
-Give the user real links on https://www.taskade.com and never invent a URL shape:
-
-- App: `/spaces/{spaceId}`
-- Project: `/d/{projectId}`
-- Automation: `/flows/{flowId}`
-- Agent: `/agent/{agentId}`
+Links on https://www.taskade.com: app `/spaces/{spaceId}`, project `/d/{projectId}`, automation `/flows/{flowId}`, agent `/agent/{agentId}`. Never invent another URL shape.

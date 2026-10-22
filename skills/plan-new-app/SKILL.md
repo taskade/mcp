@@ -53,11 +53,4 @@ Automation: every morning at 7am, email today's jobs to the team.
 
 Give the user the workspace link (`https://www.taskade.com/spaces/{spaceId}`) and tell them to paste the prompt into Taskade EVE there. Taskade EVE builds the automations and the interface, checks each part, and records the plan in the workspace memory (`projects/memory/TASKS.md`), which the other skills read later.
 
-## Links
-
-Give the user real links on https://www.taskade.com and never invent a URL shape:
-
-- App: `/spaces/{spaceId}`
-- Project: `/d/{projectId}`
-- Automation: `/flows/{flowId}`
-- Agent: `/agent/{agentId}`
+Links on https://www.taskade.com: app `/spaces/{spaceId}`, project `/d/{projectId}`, automation `/flows/{flowId}`, agent `/agent/{agentId}`. Never invent another URL shape.

@@ -69,11 +69,4 @@ Ask for a "yes" before the write. Always write the first 50 rows only, then ask 
 - Read 3 random new rows and compare them with the file.
 - Report what was added, skipped and failed, and where the log file is.
 
-## Links
-
-Give the user real links on https://www.taskade.com and never invent a URL shape:
-
-- App: `/spaces/{spaceId}`
-- Project: `/d/{projectId}`
-- Automation: `/flows/{flowId}`
-- Agent: `/agent/{agentId}`
+Links on https://www.taskade.com: app `/spaces/{spaceId}`, project `/d/{projectId}`, automation `/flows/{flowId}`, agent `/agent/{agentId}`. Never invent another URL shape.

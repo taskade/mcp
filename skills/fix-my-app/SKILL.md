@@ -64,11 +64,4 @@ Never report a part as Built from intent alone. Remind the user that Version His
 
 If `projects/memory/TASKS.md` exists, add one entry at the top of its Done section so Taskade EVE knows what changed. Read the file with `inspect_space`: its header holds the `projectId`, and each row holds its task id. Read the example entry first, and copy its shape (`YYYY-MM-DD HH:mm UTC - title`, then a `What changed:` line). Use `create_task` with that `projectId`, the Done section id as `taskId`, and `placement: "afterbegin"`.
 
-## Links
-
-Give the user real links on https://www.taskade.com and never invent a URL shape:
-
-- App: `/spaces/{spaceId}`
-- Project: `/d/{projectId}`
-- Automation: `/flows/{flowId}`
-- Agent: `/agent/{agentId}`
+Links on https://www.taskade.com: app `/spaces/{spaceId}`, project `/d/{projectId}`, automation `/flows/{flowId}`, agent `/agent/{agentId}`. Never invent another URL shape.

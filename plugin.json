@@ -7,5 +7,28 @@
   "homepage": "https://www.taskade.com/mcp",
   "repository": "https://github.com/taskade/mcp",
   "license": "MIT",
-  "keywords": ["taskade", "genesis", "mcp", "projects", "agents", "automations", "no-code"]
+  "keywords": ["taskade", "genesis", "mcp", "projects", "agents", "automations", "no-code"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Taskade",
+        "shortDescription": "Projects, agents and apps",
+        "longDescription": "Import a spreadsheet into a Taskade project, fix a Genesis app with a checked change, get a status report from your projects and automations, back up an app, or plan a new app. Sign in with your Taskade account. Needs a paid Taskade plan. The plugin cannot create or edit an automation or publish an app. Taskade EVE does those jobs inside Taskade.",
+        "developerName": "Taskade",
+        "category": "Productivity",
+        "capabilities": ["Read", "Write"],
+        "composerIcon": "./assets/logo.png",
+        "logo": "./assets/logo.png",
+        "websiteURL": "https://www.taskade.com/mcp",
+        "supportURL": "https://help.taskade.com/en/",
+        "privacyPolicyURL": "https://www.taskade.com/privacy",
+        "termsOfServiceURL": "https://www.taskade.com/terms",
+        "defaultPrompt": [
+          "Import this spreadsheet of leads into my Taskade CRM and skip duplicates",
+          "Give me a status report of my Taskade workspace for this week",
+          "My Taskade app shows a blank page after login. Fix it and show me what changed"
+        ]
+      }
+    }
+  }
 }

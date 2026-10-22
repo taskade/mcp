@@ -54,11 +54,4 @@ Needs a decision:
 - Offer to save the report as a new project (`create_project` with the report as markdown).
 - If the user wants this every week, say that a weekly email report is a Taskade automation. They can ask Taskade EVE: "Every Monday at 8am, email me a summary of my Jobs and Invoices projects." This plugin cannot create automations.
 
-## Links
-
-Give the user real links on https://www.taskade.com and never invent a URL shape:
-
-- App: `/spaces/{spaceId}`
-- Project: `/d/{projectId}`
-- Automation: `/flows/{flowId}`
-- Agent: `/agent/{agentId}`
+Links on https://www.taskade.com: app `/spaces/{spaceId}`, project `/d/{projectId}`, automation `/flows/{flowId}`, agent `/agent/{agentId}`. Never invent another URL shape.
