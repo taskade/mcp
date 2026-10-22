@@ -1,5 +1,13 @@
 # @taskade/mcp-server
 
+## 0.1.4
+
+### Patch Changes
+
+- [#107](https://github.com/taskade/mcp/pull/107) [`e52857e`](https://github.com/taskade/mcp/commit/e52857e64f132dd84f86b9f00a4a9c769a8bf58e) Thanks [@johnxie](https://github.com/johnxie)! - Bundle `@modelcontextprotocol/sdk` 1.32.1 (was 1.12.1) with one copy of zod (3.25.28). The server accepts MCP protocol versions up to `2025-11-25`. A tool call with invalid arguments, or with an unknown tool name, now returns a tool result with `isError: true` instead of a JSON-RPC error, so the model can read the message and correct the call. The tool names and their order do not change. The `initialize` response no longer echoes an unused `capabilities` object inside `serverInfo`.
+
+- [#101](https://github.com/taskade/mcp/pull/101) [`2b38849`](https://github.com/taskade/mcp/commit/2b38849ed52ead83c8fffd296f257d60847c4da7) Thanks [@johnxie](https://github.com/johnxie)! - Send `User-Agent: taskade-mcp-server/<version>` on every Taskade API request, v1 and v2. The server identifies itself, so the Taskade team can measure the usage of this package and debug its requests. The header holds no user data. Requests used the generic `node-fetch` value before.
+
 ## 0.1.3
 
 ### Patch Changes

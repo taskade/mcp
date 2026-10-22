@@ -1,5 +1,11 @@
 # @taskade/mcp-openapi-codegen
 
+## 0.0.7
+
+### Patch Changes
+
+- [#97](https://github.com/taskade/mcp/pull/97) [`b3e161f`](https://github.com/taskade/mcp/commit/b3e161f104bc761634b7c209bcb29326ff542006) Thanks [@johnxie](https://github.com/johnxie)! - Publish built JavaScript and type declarations from `dist/`, and list the runtime imports (`json-schema-to-zod`, `prettier`, `openapi-types`) in `dependencies`. `import { codegen } from '@taskade/mcp-openapi-codegen'` now works after `npm install`. The package no longer ships its test files or `tsconfig.json`.
+
 ## 0.0.6
 
 ### Patch Changes
