@@ -20,7 +20,7 @@ Call `list_spaces`. Keep paging while `hasNextPage` is true.
 
 ## 2. Show a short picture of the workspace
 
-For each space (at most 5), call `list_projects`, `list_agents` and `list_automations` for the counts, and `inspect_space` on `app/` to see if an app exists. These lists return 100 rows a page, so page with `after` while `hasNextPage` is true. Show one table:
+For each space (at most 5), call `list_projects`, `list_agents` and `list_automations` for the counts, and `inspect_space` on `app/` to see if an app exists. These lists return 100 rows a page, so page with `after` while `hasNextPage` is true. If a call is refused because of the user's role, write `n/a` in that cell and say why (see `references/workspace-model.md`). Show one table:
 
 ```
 | Workspace       | App | Projects | Agents | Automations |

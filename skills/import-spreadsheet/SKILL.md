@@ -38,7 +38,7 @@ Propose a mapping in one table and ask the user to confirm it:
 
 - Use one column as the duplicate key. Prefer email, then phone, then the title.
 - A Select field takes the option id, not its label. Map each label to an id. List the labels that have no option, and ask if they go to a default option or are left empty.
-- Only text, number and Select fields can be set here. For any other field type, give the user a choice: leave the column empty, put the value in the task note, or ask Taskade EVE to fill it. For field types, read `references/custom-fields.md`.
+- Only text, number and Select fields, and the task's own date, can be set here. For each other field type, follow `references/custom-fields.md`. Never import a password column.
 - Do not create new fields or options. If a needed field does not exist, tell the user to add it in Taskade (or ask Taskade EVE to add it), then continue.
 
 ## 4. Dry run

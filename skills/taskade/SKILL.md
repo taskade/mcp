@@ -1,6 +1,6 @@
 ---
 name: taskade
-description: Use Taskade from any AI agent. Read and change a user's Taskade workspace (projects, tasks, AI agents, automations and Taskade Genesis apps) through the hosted Taskade MCP server. Use when the user mentions Taskade, a Taskade Genesis app, or asks to build an app, deploy an AI agent, automate a workflow, import data into Taskade, fix or back up a Taskade app, or report on Taskade projects.
+description: Use Taskade from any AI agent. Read and change a user's Taskade workspace (projects, tasks, AI agents and Taskade Genesis app files), and read and run automations, through the hosted Taskade MCP server. Use when the user mentions Taskade, a Taskade Genesis app, or asks to build an app, deploy an AI agent, automate a workflow, import data into Taskade, fix or back up a Taskade app, or report on Taskade projects.
 ---
 
 # Taskade
@@ -12,7 +12,7 @@ Taskade turns one prompt into a running app. Each workspace holds four connected
 - **Automations** (execution): flows with triggers and 100+ integrations.
 - **App** (interface): a Taskade Genesis app (React) on top of the other three.
 
-Taskade EVE builds new apps inside Taskade. Outside agents connect through the hosted MCP server to read and change what exists.
+Taskade EVE builds new apps inside Taskade. Outside agents connect through the hosted MCP server to read and change what exists. MCP cannot create or edit an automation, build or publish an app, or set who can use an app: write the request for the user to paste into Taskade EVE.
 
 ## Connect
 
@@ -29,7 +29,7 @@ Taskade EVE builds new apps inside Taskade. Outside agents connect through the h
 |---|---|
 | See what is in the workspace | `list_spaces`, `list_projects`, `list_agents`, `list_automations`, `inspect_space` |
 | Import rows (leads, contacts, jobs) | `list_fields`, `read_project`, `create_task` (20 per call), `set_task_field_value`, `set_task_note`, `set_task_date` |
-| Fix or change a Genesis app | `inspect_space` (read `app/AGENTS.md` first), `write_file` |
+| Fix or change a Genesis app | `inspect_space` (read `app/AGENTS.md` first, when it exists), `write_file` |
 | Report on projects and automations | `read_project`, `list_fields`, `list_automations`, `get_flow_runs` |
 | Run an automation that is On and starts "When asked" | `list_automations`, `run_flow`, then `get_flow_runs` |
 | Ask a Taskade agent | `list_agents`, `prompt_agent` |

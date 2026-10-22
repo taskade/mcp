@@ -1,7 +1,7 @@
 {
-  "name": "taskade-mcp",
-  "version": "0.1.3",
-  "description": "Official Taskade MCP: hosted OAuth at https://www.taskade.com/mcp, or connect Taskade to Cursor.",
+  "name": "taskade",
+  "version": "0.2.0",
+  "description": "Connect Cursor to your Taskade workspace: projects, tasks, AI agents, automations and Taskade Genesis app files. Sign in with OAuth. Needs a paid Taskade plan.",
   "author": {
     "name": "Taskade",
     "email": "hello@taskade.com"
@@ -10,6 +10,5 @@
   "repository": "https://github.com/taskade/mcp",
   "license": "MIT",
   "keywords": ["taskade", "mcp", "oauth", "genesis", "agents"],
-  "logo": "https://www.taskade.com/images/taskade-icon-512.png",
-  "mcpServers": "./mcp.json"
+  "logo": "./assets/logo.png"
 }

@@ -13,7 +13,7 @@ Read this when the user asks what a part of Taskade is, or when you must pick th
 | Automation | A trigger and a chain of steps that run without a click: a schedule, a form, an email, a new task, or "When asked". Steps can write to projects, ask an agent, or act in one of 100+ connected apps. | `list_automations`, `get_flow_runs`, `run_flow` |
 | App | A Taskade Genesis app: a web app (React) on top of the projects, agents and automations of the workspace. | `inspect_space` on `app/`, `write_file` |
 
-Taskade calls the first four layers together "Workspace DNA": projects are the memory, agents are the intelligence, automations are the execution, and the app is the interface.
+Taskade calls projects, agents, automations and the app together "Workspace DNA": projects are the memory, agents are the intelligence, automations are the execution, and the app is the interface.
 
 ## One copy of the data
 
@@ -64,7 +64,7 @@ MCP access is part of every paid Taskade plan. A workspace on the Free plan does
 
 | Through MCP (here) | In Taskade only |
 |---|---|
-| Read and change projects, rows, fields, notes, dates and assignees | Add or change custom fields and their options |
+| Read and change projects, rows, fields, dates and assignees. Write notes (a read does not show notes). | Add or change custom fields and their options |
 | Create agents, edit their instructions, link knowledge, ask an agent | Build a new app from a prompt (Taskade EVE) |
 | List automations, read their run history, run one that starts "When asked" | Create or edit an automation, turn it On or Off |
 | Read and edit app source files | Publish the app, set who can use it, connect a domain |

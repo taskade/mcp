@@ -25,11 +25,11 @@ Ask for the symptom in the user's words: which page, what they did, what they ex
 ## 2. Look before you touch
 
 - `list_spaces`, then `inspect_space` with path `.` to find the app.
-- Read `app/AGENTS.md`. Every Genesis app ships this contract, and Taskade EVE follows it too. Obey it: edit only `src/` and `public/`, use the data helpers it names, and never touch the protected files it lists (the platform refuses those writes).
+- Read `app/AGENTS.md` if it exists. It is the platform contract for app code, and Taskade EVE follows it too. Follow its code rules: edit only `src/` and `public/`, and use the data helpers it names. Never touch the protected files it lists. The platform refuses those writes.
 - Read the build memory at `projects/memory/TASKS.md` if it exists. Its Destination, Requirements and Knowledge sections tell you what the app is for and why it is shaped this way. Do not undo a decision recorded there without asking.
 - `inspect_space` on `app/` to see the file tree. Read the files on the path of the symptom (page, component, data hook).
 - If the symptom is about data, also read `projects/` to compare the app's field names with the real project fields. A field name in the app that does not exist in the project is a common cause of an empty page.
-- If the symptom is about an automation (a form that should send an email, a sync that stopped), call `list_automations` and `get_flow_runs` to read its recent runs. A failed run names the failed step and a short error. `get_flow_runs` needs edit rights on automations.
+- If the symptom is about an automation (a form that does not send its email, a sync that stopped), call `list_automations` and `get_flow_runs` to read its recent runs. A failed run names the failed step and a short error. `get_flow_runs` needs edit rights on automations.
 
 ## 3. Explain the cause and the fix
 
@@ -58,7 +58,7 @@ List each file changed and one line per change. Report each part of the request 
 
 - Built: you changed it and you hold the proof (the lines you read back, or the user's confirmation that it works).
 - Defaulted: you chose a reasonable default, built it, and say the default in one line.
-- Declared: you could not do it, and you say the one thing the user must supply.
+- Declared: you cannot do it, and you say the one thing the user must supply.
 
 Never report a part as Built from intent alone. Remind the user that Version History in Taskade can undo any change.
 

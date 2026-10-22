@@ -40,16 +40,16 @@ These are not custom fields. Each has its own tool:
 
 | Field (in Taskade) | What it holds | What to do with the column |
 |---|---|---|
-| Date | A day, with an optional time | Ask Taskade EVE to fill it, or put the value in the note |
-| Event | A start and an end date | Same as Date |
-| Relationship | A link to a row in another project | Ask Taskade EVE to link the rows after the import |
-| Rating | A star score | Ask Taskade EVE, or put it in the note |
+| Date | A day, with an optional time | Map one date column to the task's own date (`set_task_date`), ask Taskade EVE to fill the field after the import, or put the value in the note |
+| Event | A start and an end date | Set it in Taskade, or put the value in the note |
+| Relationship | A link to a row in another project | Link the rows in Taskade after the import, or put the linked name in the note |
+| Rating | A star score | Set it in Taskade, or put the value in the note |
 | Media | Files and images | Upload in Taskade. A file URL can go in the note. |
 | Password | A hashed secret | Never import passwords. Leave the column out. |
 | Time Tracking | Timers and time entries | Leave it out |
 | Yes or no (`boolean`), person (`Assign`), and system fields (`Timestamp`, `TimestampAt`, `TimestampAuthor`) | A flag, a person, or a time that Taskade records | Leave it out, or put the value in the note |
 
-For each column of this kind, give the user three choices: leave it empty, put the value in the note, or ask Taskade EVE in that workspace to fill the field from the note after the import.
+For each column of this kind, except Password and Time Tracking, show the user the choices in the table and let them pick one. Leaving the column empty is always a choice.
 
 ## Pick the right type (for advice to the user)
 

@@ -16,10 +16,72 @@
 
 </div>
 
-This repo holds two packages:
+This repo holds the Taskade [agent plugin](#agent-plugin) and two packages:
 
 - [MCP Server](https://github.com/taskade/mcp/tree/main/packages/server) (`@taskade/mcp-server`): the local stdio server, for clients that cannot connect to a remote server.
 - [OpenAPI Codegen](https://github.com/taskade/mcp/tree/main/packages/openapi-codegen): generate MCP tools from any OpenAPI spec, not only Taskade.
+
+---
+
+## Agent plugin
+
+The `taskade` plugin connects your AI tool to your Taskade workspace through the hosted server, and adds 7 skills: a front door (`taskade`) and six jobs (`getting-started`, `import-spreadsheet`, `fix-my-app`, `app-report`, `backup-my-app`, `plan-new-app`). The skills tell the agent which tools to call, in which order, and what to check before it reports back.
+
+- **Plan:** MCP access is part of every paid Taskade plan (Starter and up). Sign in once with your Taskade account.
+- **What it does:** imports a spreadsheet into a project, fixes a Taskade Genesis app one checked change at a time, reports on your projects and automations, backs up an app to a folder, and plans a new app.
+- **What stays in Taskade:** the plugin cannot create or edit an automation, build or publish an app, or set who can use an app. For those jobs, it writes the request for you to paste into Taskade EVE.
+
+### Claude Code plugin
+
+```bash
+claude plugin marketplace add taskade/mcp
+claude plugin install taskade@taskade
+```
+
+Then run `/mcp` in Claude Code and select **taskade** to sign in.
+
+### Codex plugin
+
+```bash
+codex plugin marketplace add taskade/mcp
+codex plugin add taskade@taskade
+```
+
+To add only the hosted server, run `codex mcp add taskade --url https://www.taskade.com/mcp`, then `codex mcp login taskade`.
+
+### GitHub Copilot CLI plugin
+
+```bash
+copilot plugin install taskade/mcp
+```
+
+### VS Code agent plugin
+
+Turn on the `chat.plugins.enabled` setting. Then run **Chat: Install Plugin From Source** from the Command Palette and enter `https://github.com/taskade/mcp`.
+
+### Gemini CLI extension
+
+```bash
+gemini extensions install https://github.com/taskade/mcp
+```
+
+### Cursor plugin
+
+The Cursor plugin `taskade` (`.cursor-plugin/`) in this repository adds the same hosted server and skills.
+
+### Any other agent
+
+Add the skills from this repository:
+
+```bash
+npx skills add https://github.com/taskade/mcp
+```
+
+After the Taskade release that serves it, an agent can also read the front door at `https://www.taskade.com/SKILL.md`:
+
+```bash
+npx skills add https://www.taskade.com/SKILL.md
+```
 
 ---
 
@@ -53,64 +115,6 @@ MCP-powered Taskade agent running inside Claude Desktop by Anthropic:
 |:---:|:---:|:---:|
 | <img src="https://raw.githubusercontent.com/taskade/taskade/main/media/agents/agent-generator.gif" width="280" alt="Create AI agents from your IDE via Taskade MCP"> | <img src="https://raw.githubusercontent.com/taskade/taskade/main/media/automations/automation-flows.gif" width="280" alt="Automate workflows via Taskade MCP"> | <img src="https://raw.githubusercontent.com/taskade/taskade/main/media/genesis/create-app.gif" width="280" alt="Manage projects and apps via Taskade MCP"> |
 | Create, train, deploy AI agents from Claude/Cursor | Build multi-step automations across 100+ services | Full workspace management from your AI assistant *(paid plans)* |
-
----
-
-## Agent plugin
-
-The `taskade` plugin connects your AI tool to the hosted server and adds 7 skills: a front door (`taskade`) and six jobs (`getting-started`, `import-spreadsheet`, `fix-my-app`, `app-report`, `backup-my-app`, `plan-new-app`). The skills tell the agent which tools to call, in which order, and what to check before it reports back. Sign in once with your Taskade account.
-
-### Claude Code
-
-```bash
-claude plugin marketplace add taskade/mcp
-claude plugin install taskade@taskade
-```
-
-Then run `/mcp` in Claude Code and select **taskade** to sign in.
-
-### Codex
-
-```bash
-codex plugin marketplace add taskade/mcp
-codex plugin add taskade@taskade
-```
-
-To add only the hosted server, run `codex mcp add taskade --url https://www.taskade.com/mcp`, then `codex mcp login taskade`.
-
-### GitHub Copilot CLI
-
-```bash
-copilot plugin install taskade/mcp
-```
-
-### VS Code (Copilot agent plugins)
-
-Turn on the `chat.plugins.enabled` setting. Then run **Chat: Install Plugin From Source** from the Command Palette and enter `https://github.com/taskade/mcp`.
-
-### Gemini CLI
-
-```bash
-gemini extensions install https://github.com/taskade/mcp
-```
-
-### Cursor
-
-The Cursor plugin `taskade-mcp` in this repository adds the same hosted server and skills.
-
-### Any other agent
-
-Point the agent at `https://www.taskade.com/SKILL.md`, or add it as a skill:
-
-```bash
-npx skills add https://www.taskade.com/SKILL.md
-```
-
-This URL goes live with the Taskade release that serves it. Until then, install the skills from this repository:
-
-```bash
-npx skills add https://github.com/taskade/mcp
-```
 
 ---
 
@@ -211,7 +215,7 @@ Every hosted tool declares MCP tool annotations. Claude can run a read-only tool
 | Tasks | `list_tasks` | `create_task`, `update_task`, `complete_task`, `uncomplete_task`, `delete_task`, `move_task`, `set_task_note`, `delete_task_note`, `set_task_date`, `delete_task_date`, `assign_task`, `unassign_task`, `set_task_field_value`, `delete_task_field_value` |
 | AI agents | `list_agents`, `get_agent`, `list_conversations`, `get_conversation` | `create_agent`, `update_agent`, `delete_agent`, `prompt_agent`, `add_knowledge_project`, `remove_knowledge_project`, `add_knowledge_media`, `remove_knowledge_media` |
 
-- `get_flow_runs`: reads the recent runs of one automation, newest first, with the status, the start and end time, and the failed step and a short error for a failed run. It needs edit rights on automations.
+- `get_flow_runs`: reads the recent runs of one automation, newest first. Each run has its status and times. A failed run also names the failed step and a short error. It needs edit rights on automations.
 - `run_flow`: starts one run of an automation that is On and starts "When asked". Every run is real: it counts toward the monthly automation runs of the plan, and AI steps use credits.
 
 The server also serves the resource `taskade://getting-started`, a short guide for the model.

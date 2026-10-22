@@ -11,19 +11,21 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Taskade",
-    "shortDescription": "Your Taskade projects, agents, automations and Genesis apps, from chat.",
+    "shortDescription": "Projects, agents and apps",
     "longDescription": "Import a spreadsheet into a Taskade project, fix a Genesis app with a checked change, get a status report from your projects and automations, back up an app, or plan a new app. Sign in with your Taskade account.",
     "developerName": "Taskade",
     "category": "Productivity",
     "capabilities": ["Read", "Write"],
     "composerIcon": "./assets/logo.png",
     "logo": "./assets/logo.png",
-    "websiteURL": "https://www.taskade.com",
+    "websiteURL": "https://www.taskade.com/mcp",
+    "supportURL": "https://help.taskade.com/en/",
+    "privacyPolicyURL": "https://www.taskade.com/privacy",
+    "termsOfServiceURL": "https://www.taskade.com/terms",
     "defaultPrompt": [
       "Import this spreadsheet of leads into my Taskade CRM and skip duplicates",
       "Give me a status report of my Taskade workspace for this week",
-      "My Taskade app shows a blank page after login. Fix it and show me what changed",
-      "Back up my Taskade app to this folder"
+      "My Taskade app shows a blank page after login. Fix it and show me what changed"
     ]
   }
 }
