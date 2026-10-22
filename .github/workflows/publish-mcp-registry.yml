@@ -4,9 +4,11 @@ name: Publish to MCP Registry
 # (https://registry.modelcontextprotocol.io) using GitHub OIDC — no secrets.
 #
 # Trigger:
-#   - automatically when a release tags the server package (changesets pushes a
-#     `@taskade/mcp-server@<version>` tag right after the npm publish succeeds), so
-#     the npm version always exists before we register it.
+#   - automatically when a `@taskade/mcp-server@<version>` tag is pushed. The
+#     "Push release tags" step in release.yml pushes it after the npm publish, so
+#     the npm version always exists before we register it. That step runs only
+#     with the release App token, because a tag pushed with GITHUB_TOKEN does not
+#     start this workflow.
 #   - manually via "Run workflow" to (re)publish the current npm version.
 #
 # Note: the server.json version is auto-synced from packages/server/package.json

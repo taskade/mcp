@@ -1,0 +1,21 @@
+{
+  "name": "taskade",
+  "interface": {
+    "displayName": "Taskade"
+  },
+  "plugins": [
+    {
+      "name": "taskade",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/taskade/mcp.git",
+        "ref": "main"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

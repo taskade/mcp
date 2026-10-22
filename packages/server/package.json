@@ -1,6 +1,6 @@
 {
   "name": "@taskade/mcp-server",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "mcpName": "io.github.taskade/mcp-server",
   "author": "Prev Wong",
   "license": "MIT",
@@ -26,10 +26,8 @@
     "start:server": "tsx src/http.ts --watch"
   },
   "devDependencies": {
-    "@taskade/mcp-openapi-codegen": "*"
-  },
-  "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0",
+    "@taskade/mcp-openapi-codegen": "*",
     "mcp-proxy": "^3.2.0",
     "node-fetch": "^3.3.2",
     "zod": "^3.25.28"

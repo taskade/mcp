@@ -1,5 +1,13 @@
 # @taskade/mcp-server
 
+## 0.1.3
+
+### Patch Changes
+
+- [#96](https://github.com/taskade/mcp/pull/96) [`de335b7`](https://github.com/taskade/mcp/commit/de335b76df3e110f30827196aea7fb4441edf893) Thanks [@johnxie](https://github.com/johnxie)! - Install no runtime dependencies. `bin/cli.mjs` already bundles the MCP SDK, `node-fetch` and `zod`, so these packages and `mcp-proxy` move to `devDependencies`. `npx @taskade/mcp-server` now installs 1 package instead of 120. The README no longer documents a `--http` mode, because the package runs over stdio only.
+
+- [#93](https://github.com/taskade/mcp/pull/93) [`f57337c`](https://github.com/taskade/mcp/commit/f57337c6caa08f9b60215a86339eefd2c3c8a888) Thanks [@johnxie](https://github.com/johnxie)! - Correct the MCP tool hints: the v2 conversation reads are read-only, `unsubscribeWebhook` and the PUT/PATCH tools that replace a value are destructive, and `promptAgent` is destructive and open-world. Claude now runs the reads without a confirmation and asks before the overwrites.
+
 ## 0.1.2
 
 ### Patch Changes
