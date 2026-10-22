@@ -21,7 +21,7 @@ Taskade EVE builds new apps inside Taskade. Outside agents connect through the h
 - Full plugin (this file plus 6 job skills): `claude plugin marketplace add taskade/mcp`, then `claude plugin install taskade@taskade`.
 - Other agents: add the URL as a remote MCP server or connector. OAuth metadata: `https://www.taskade.com/.well-known/oauth-protected-resource/mcp`.
 - No OAuth: create a personal access token at `https://www.taskade.com/settings/api` and send it as `Authorization: Bearer <token>`. Never write a token into a file that is committed.
-- MCP access is part of every paid Taskade plan. If `list_spaces` returns `hiddenForPlan` and a `hint`, show the hint to the user.
+- MCP access is part of every paid Taskade plan. A workspace on the Free plan does not appear in `list_spaces`. If the response has `hiddenForPlan` and a `hint`, show the hint to the user.
 
 ## Jobs and tools
 

@@ -58,7 +58,7 @@ If a folder or a tool is refused, say which role the user has and that a workspa
 
 ## The plan
 
-MCP access is part of every paid Taskade plan. A workspace on the Free plan does not show in `list_spaces`. The response then carries `hiddenForPlan` and a `hint` with the upgrade link. Show that hint to the user.
+MCP access is part of every paid Taskade plan. A workspace on the Free plan does not appear in `list_spaces`. If the response has `hiddenForPlan` and a `hint`, show the hint to the user. The hint holds the upgrade link.
 
 ## What MCP can do, and what stays in Taskade
 
