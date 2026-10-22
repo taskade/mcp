@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
   "mcpServers": {
     "taskade": {
-      "type": "http",
+      "type": "streamable-http",
       "url": "https://www.taskade.com/mcp"
     }
   }

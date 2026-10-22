@@ -1,6 +1,6 @@
 {
   "name": "taskade-mcp",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Official Taskade MCP: hosted OAuth at https://www.taskade.com/mcp, or connect Taskade to Cursor.",
   "author": {
     "name": "Taskade",

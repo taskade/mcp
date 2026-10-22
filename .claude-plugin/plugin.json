@@ -1,0 +1,10 @@
+{
+  "name": "taskade",
+  "version": "0.2.0",
+  "description": "Run your Taskade workspace and Genesis apps from Claude: import spreadsheets, fix an app, get a status report, back up an app, and plan a new one. Connects to the hosted Taskade MCP with your Taskade login.",
+  "author": { "name": "Taskade", "email": "hello@taskade.com", "url": "https://www.taskade.com" },
+  "homepage": "https://www.taskade.com/mcp",
+  "repository": "https://github.com/taskade/mcp",
+  "license": "MIT",
+  "keywords": ["taskade", "genesis", "mcp", "projects", "agents", "automations", "no-code"]
+}

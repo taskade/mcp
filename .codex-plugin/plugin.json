@@ -1,0 +1,29 @@
+{
+  "name": "taskade",
+  "version": "0.2.0",
+  "description": "Run your Taskade workspace and Genesis apps from Codex and ChatGPT.",
+  "author": { "name": "Taskade" },
+  "homepage": "https://www.taskade.com/mcp",
+  "repository": "https://github.com/taskade/mcp",
+  "license": "MIT",
+  "keywords": ["taskade", "genesis", "mcp"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Taskade",
+    "shortDescription": "Your Taskade projects, agents, automations and Genesis apps, from chat.",
+    "longDescription": "Import a spreadsheet into a Taskade project, fix a Genesis app with a checked change, get a status report from your projects and automations, back up an app, or plan a new app. Sign in with your Taskade account.",
+    "developerName": "Taskade",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "composerIcon": "./assets/logo.png",
+    "logo": "./assets/logo.png",
+    "websiteURL": "https://www.taskade.com",
+    "defaultPrompt": [
+      "Import this spreadsheet of leads into my Taskade CRM and skip duplicates",
+      "Give me a status report of my Taskade workspace for this week",
+      "My Taskade app shows a blank page after login. Fix it and show me what changed",
+      "Back up my Taskade app to this folder"
+    ]
+  }
+}

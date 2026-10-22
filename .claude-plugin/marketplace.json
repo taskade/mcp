@@ -1,0 +1,18 @@
+{
+  "name": "taskade",
+  "owner": { "name": "Taskade", "email": "hello@taskade.com" },
+  "metadata": { "description": "Taskade for Claude Code and Cowork" },
+  "plugins": [
+    {
+      "name": "taskade",
+      "source": "./",
+      "description": "Run your Taskade workspace and Genesis apps from Claude.",
+      "version": "0.2.0",
+      "author": { "name": "Taskade", "url": "https://www.taskade.com" },
+      "license": "MIT",
+      "homepage": "https://www.taskade.com/mcp",
+      "category": "productivity",
+      "keywords": ["taskade", "genesis", "mcp"]
+    }
+  ]
+}

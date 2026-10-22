@@ -25,8 +25,9 @@ This repo holds two packages:
 
 ## Contents
 
+- [Agent plugin](#agent-plugin)
 - [Quick Start: hosted server](#quick-start-hosted-server)
-- [Hosted tools (48)](#hosted-tools-48)
+- [Hosted tools (50)](#hosted-tools-50)
 - [Example prompts](#example-prompts)
 - [Troubleshooting](#troubleshooting)
 - [Local package (stdio)](#local-package-stdio)
@@ -52,6 +53,64 @@ MCP-powered Taskade agent running inside Claude Desktop by Anthropic:
 |:---:|:---:|:---:|
 | <img src="https://raw.githubusercontent.com/taskade/taskade/main/media/agents/agent-generator.gif" width="280" alt="Create AI agents from your IDE via Taskade MCP"> | <img src="https://raw.githubusercontent.com/taskade/taskade/main/media/automations/automation-flows.gif" width="280" alt="Automate workflows via Taskade MCP"> | <img src="https://raw.githubusercontent.com/taskade/taskade/main/media/genesis/create-app.gif" width="280" alt="Manage projects and apps via Taskade MCP"> |
 | Create, train, deploy AI agents from Claude/Cursor | Build multi-step automations across 100+ services | Full workspace management from your AI assistant *(paid plans)* |
+
+---
+
+## Agent plugin
+
+The `taskade` plugin connects your AI tool to the hosted server and adds 7 skills: a front door (`taskade`) and six jobs (`getting-started`, `import-spreadsheet`, `fix-my-app`, `app-report`, `backup-my-app`, `plan-new-app`). The skills tell the agent which tools to call, in which order, and what to check before it reports back. Sign in once with your Taskade account.
+
+### Claude Code
+
+```bash
+claude plugin marketplace add taskade/mcp
+claude plugin install taskade@taskade
+```
+
+Then run `/mcp` in Claude Code and select **taskade** to sign in.
+
+### Codex
+
+```bash
+codex plugin marketplace add taskade/mcp
+codex plugin add taskade@taskade
+```
+
+To add only the hosted server, run `codex mcp add taskade --url https://www.taskade.com/mcp`, then `codex mcp login taskade`.
+
+### GitHub Copilot CLI
+
+```bash
+copilot plugin install taskade/mcp
+```
+
+### VS Code (Copilot agent plugins)
+
+Turn on the `chat.plugins.enabled` setting. Then run **Chat: Install Plugin From Source** from the Command Palette and enter `https://github.com/taskade/mcp`.
+
+### Gemini CLI
+
+```bash
+gemini extensions install https://github.com/taskade/mcp
+```
+
+### Cursor
+
+The Cursor plugin `taskade-mcp` in this repository adds the same hosted server and skills.
+
+### Any other agent
+
+Point the agent at `https://www.taskade.com/SKILL.md`, or add it as a skill:
+
+```bash
+npx skills add https://www.taskade.com/SKILL.md
+```
+
+This URL goes live with the Taskade release that serves it. Until then, install the skills from this repository:
+
+```bash
+npx skills add https://github.com/taskade/mcp
+```
 
 ---
 
@@ -140,16 +199,20 @@ Full guide: [Hosted Taskade MCP](https://github.com/taskade/docs/blob/main/apis-
 
 ---
 
-## Hosted tools (48)
+## Hosted tools (50)
 
 Every hosted tool declares MCP tool annotations. Claude can run a read-only tool without a confirmation, and it asks before a tool that deletes or replaces data.
 
 | Area | Read-only tools | Write tools |
 |---|---|---|
-| Workspaces | `list_spaces`, `list_folders`, `list_media`, `list_templates`, `inspect_space`, `list_automations` | `write_file` (Genesis app source in `app/`) |
+| Workspaces | `list_spaces`, `list_folders`, `list_media`, `list_templates`, `inspect_space` | `write_file` (Genesis app source in `app/`) |
+| Automations | `list_automations`, `get_flow_runs` | `run_flow` |
 | Projects | `list_projects`, `list_my_projects`, `get_project`, `read_project`, `list_fields`, `list_blocks`, `list_project_members`, `get_share_link` | `create_project`, `create_project_from_template`, `copy_project`, `complete_project`, `restore_project`, `enable_share_link` |
 | Tasks | `list_tasks` | `create_task`, `update_task`, `complete_task`, `uncomplete_task`, `delete_task`, `move_task`, `set_task_note`, `delete_task_note`, `set_task_date`, `delete_task_date`, `assign_task`, `unassign_task`, `set_task_field_value`, `delete_task_field_value` |
 | AI agents | `list_agents`, `get_agent`, `list_conversations`, `get_conversation` | `create_agent`, `update_agent`, `delete_agent`, `prompt_agent`, `add_knowledge_project`, `remove_knowledge_project`, `add_knowledge_media`, `remove_knowledge_media` |
+
+- `get_flow_runs`: reads the recent runs of one automation, newest first, with the status, the start and end time, and the failed step and a short error for a failed run. It needs edit rights on automations.
+- `run_flow`: starts one run of an automation that is On and starts "When asked". Every run is real: it counts toward the monthly automation runs of the plan, and AI steps use credits.
 
 The server also serves the resource `taskade://getting-started`, a short guide for the model.
 
