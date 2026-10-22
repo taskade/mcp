@@ -41,7 +41,7 @@ The `taskade` plugin connects your AI tool to your Taskade workspace through the
 | Gemini CLI | `gemini extensions install https://github.com/taskade/mcp` |
 | VS Code | See below |
 | Cursor | See below |
-| Any other agent | `npx skills add https://github.com/taskade/mcp` |
+| Any other agent | `npx skills add https://github.com/taskade/mcp` installs the skills only. Then add the hosted server `https://www.taskade.com/mcp` to the agent and sign in (see the [quick start](#taskade-mcp-server-quick-start)). |
 
 **VS Code:** turn on the `chat.plugins.enabled` setting. Then run **Chat: Install Plugin From Source** from the Command Palette and enter `https://github.com/taskade/mcp`.
 
