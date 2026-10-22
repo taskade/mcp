@@ -732,7 +732,7 @@ See [open issues](https://github.com/taskade/mcp/issues) for planned features an
 ## Privacy & Security
 
 - **Hosted server.** Taskade runs it on `www.taskade.com`. It reads and writes only the workspaces that your Taskade account can access and that are on a paid plan. The server does not read your chat history with the AI client. `prompt_agent` runs a Taskade agent, which can use its own tools, for example web search.
-- **Agent plugin.** The plugin holds skills (text files) and the address of the hosted server. It runs no code of its own. The backup skill writes workspace files to a local folder that you pick.
+- **Agent plugin.** The plugin holds skills (text files) and the address of the hosted server. It runs no code of its own. The backup skill writes workspace files to a local folder (`./taskade-backup/` unless you name another one).
 - **Local package.** Your API token authorizes the server to call the Taskade public API (`https://www.taskade.com/api/v1` and `https://www.taskade.com/api/v2`) on your behalf. The package sends your data to no other service. Keep the token in an environment variable, and never commit it.
 - **Privacy policy:** [taskade.com/privacy](https://www.taskade.com/privacy). **Terms:** [taskade.com/terms](https://www.taskade.com/terms).
 - **Security and vulnerability reports:** see [SECURITY.md](./SECURITY.md).
