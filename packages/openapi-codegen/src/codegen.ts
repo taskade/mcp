@@ -1,10 +1,10 @@
 import fs from 'fs';
 import { jsonSchemaToZod } from 'json-schema-to-zod';
 import { OpenAPIV2, OpenAPIV3, OpenAPIV3_1 } from 'openapi-types';
-import path from 'path';
 import prettier from 'prettier';
+import { fileURLToPath } from 'url';
 
-import { ParsedTool, parseOpenApi } from './parser';
+import { ParsedTool, parseOpenApi } from './parser.js';
 
 type IsActionsEnabledOpt = Array<string> | ((actionName: string) => boolean);
 
@@ -72,7 +72,12 @@ export const codegen = async (opts: CodegenOpts) => {
 
   const tools = parseOpenApi(document.paths ?? {});
 
-  const runtime = fs.readFileSync(path.join(import.meta.dirname, 'runtime.ts'), 'utf8');
+  // The generated file inlines the runtime as TypeScript source. This module runs from
+  // src/ in the tests and from dist/ after a build. Both resolve ../src/runtime.ts.
+  const runtime = fs.readFileSync(
+    fileURLToPath(new URL('../src/runtime.ts', import.meta.url)),
+    'utf8',
+  );
 
   let output: string = `
     /**

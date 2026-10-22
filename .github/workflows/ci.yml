@@ -36,3 +36,29 @@ jobs:
 
       - name: Test
         run: yarn test
+
+      - name: Smoke test the packed codegen package
+        # Install the codegen tarball in an empty project outside the workspace and run it
+        # with plain Node. This step fails if the tarball has no build output or if a
+        # runtime import is missing from `dependencies`.
+        working-directory: packages/openapi-codegen
+        run: |
+          set -euo pipefail
+          SMOKE_DIR="$(mktemp -d)"
+          npm pack --pack-destination "$SMOKE_DIR"
+          cd "$SMOKE_DIR"
+          echo '{ "name": "codegen-smoke", "private": true }' > package.json
+          npm install --no-audit --no-fund ./taskade-mcp-openapi-codegen-*.tgz
+          node --input-type=module <<'EOF'
+          import { codegen } from '@taskade/mcp-openapi-codegen';
+          const document = {
+            openapi: '3.0.0',
+            info: { title: 'Smoke', version: '1.0.0' },
+            paths: { '/ping': { get: { operationId: 'ping', description: 'Ping', responses: {} } } },
+          };
+          const output = await codegen({ document });
+          if (!output.includes('"ping"')) {
+            throw new Error('The generated output has no ping tool');
+          }
+          console.log('codegen smoke test passed');
+          EOF
