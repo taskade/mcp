@@ -8,8 +8,14 @@ on:
 
 jobs:
   verify:
-    name: Verify
+    name: Verify (Node ${{ matrix.node }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 24 is the Node line of the Docker image. 20 is end of life, but it stays
+        # until the package states an engines floor above it.
+        node: [20, 24]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -17,7 +23,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ matrix.node }}
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
