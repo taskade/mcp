@@ -1,4 +1,4 @@
-FROM node:20-slim
+FROM node:24.22.1-slim
 
 LABEL maintainer="Taskade <support@taskade.com>"
 LABEL description="Taskade MCP Server — AI tools for projects, tasks, agents, and webhooks via Model Context Protocol"
