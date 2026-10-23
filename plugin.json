@@ -13,7 +13,7 @@
       "interface": {
         "displayName": "Taskade",
         "shortDescription": "Projects, agents and apps",
-        "longDescription": "Import a spreadsheet into a Taskade project, fix a Genesis app with a checked change, get a status report from your projects and automations, back up an app, or plan a new app. Sign in with your Taskade account. Needs a paid Taskade plan. The plugin cannot create or edit an automation or publish an app. Taskade EVE does those jobs inside Taskade.",
+        "longDescription": "Import a spreadsheet into a Taskade project, fix a Genesis app with a checked change, get a status report from your projects and automations, back up an app, or plan a new app. Sign in with your Taskade account. The plugin cannot create or edit an automation or publish an app. Taskade EVE does those jobs inside Taskade.",
         "developerName": "Taskade",
         "category": "Productivity",
         "capabilities": ["Read", "Write"],
@@ -28,6 +28,60 @@
           "Give me a status report of my Taskade workspace for this week",
           "My Taskade app shows a blank page after login. Fix it and show me what changed"
         ]
+      },
+      "review": {
+        "commerce": false,
+        "test_cases": {
+          "positive": [
+            {
+              "description": "List workspaces and projects",
+              "prompt": "List my Taskade workspaces and the projects in Reviewer Demo.",
+              "tools_triggered": "list_spaces, list_projects",
+              "expected_behavior": "Names of the workspace and its projects"
+            },
+            {
+              "description": "Add a dated task",
+              "prompt": "Add a task \"Call Dana\" to Sales Pipeline, due this Friday.",
+              "tools_triggered": "list_projects, create_task, set_task_date",
+              "expected_behavior": "The task shows in the project with the date"
+            },
+            {
+              "description": "Find overdue tasks",
+              "prompt": "What is overdue in Sales Pipeline?",
+              "tools_triggered": "read_project",
+              "expected_behavior": "Tasks with a past due date, with owners"
+            },
+            {
+              "description": "Prompt an agent",
+              "prompt": "Ask the Support Agent to summarize the open tickets.",
+              "tools_triggered": "list_agents, prompt_agent",
+              "expected_behavior": "A summary from the agent"
+            },
+            {
+              "description": "Run an automation",
+              "prompt": "Run Weekly Digest and tell me if the run succeeded.",
+              "tools_triggered": "list_automations, run_flow, get_flow_runs",
+              "expected_behavior": "A new task in Support Tickets, and the run status"
+            }
+          ],
+          "negative": [
+            {
+              "description": "Weather question, not a Taskade task",
+              "prompt": "What is the weather in Paris today?"
+            },
+            {
+              "description": "Creative writing, not a Taskade task",
+              "prompt": "Write a short poem about autumn."
+            },
+            {
+              "description": "Currency conversion, not a Taskade task",
+              "prompt": "Convert 50 US dollars to euros."
+            }
+          ]
+        }
+      },
+      "publication": {
+        "release_notes": "First release: Taskade tools and 7 skills."
       }
     }
   }
