@@ -671,7 +671,7 @@ Works with any OpenAPI 3.0+ spec. Generate MCP tools for your own APIs in minute
 **Links:**
 - App: [taskade.com](https://www.taskade.com)
 - Create: [taskade.com/create](https://www.taskade.com/create)
-- Apps gallery: [taskade.com/apps](https://www.taskade.com/apps)
+- Apps gallery: [taskade.com/apps](https://www.taskade.com/apps) · [all categories](https://www.taskade.com/apps/categories)
 - Agents: [taskade.com/agents](https://www.taskade.com/agents)
 - Templates: [taskade.com/templates](https://www.taskade.com/templates)
 - Docs: [taskade.com/docs](https://www.taskade.com/docs) · [docs.taskade.com](https://docs.taskade.com)
@@ -717,7 +717,7 @@ Help us improve MCP tools, OpenAPI workflows, and agent capabilities.
 
 - [Issues](https://github.com/taskade/mcp/issues) — Report bugs or request features
 - [Pull Requests](https://github.com/taskade/mcp/pulls) — Contributions welcome
-- [Apps](https://www.taskade.com/apps) — Browse and clone community apps
+- [Apps](https://www.taskade.com/apps) — Browse and clone community apps · [categories](https://www.taskade.com/apps/categories)
 
 ---
 
