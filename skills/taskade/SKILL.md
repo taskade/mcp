@@ -18,6 +18,8 @@ Taskade EVE builds new apps inside Taskade. Outside agents connect through the h
 
 - MCP server: `https://www.taskade.com/mcp` (Streamable HTTP, OAuth 2.0 with PKCE, client registration is automatic).
 - Claude Code: `claude mcp add --transport http taskade https://www.taskade.com/mcp`, then run `/mcp` and sign in.
+- After you add the server, restart the client once. Then call `list_spaces`. A list of workspaces means the connection works.
+- A `HEAD` request or `curl -I` to `https://www.taskade.com/mcp` returns 401 JSON. That is expected: the client completes OAuth. Do not change the URL.
 - Full plugin (this file plus 6 job skills): `claude plugin marketplace add taskade/mcp`, then `claude plugin install taskade@taskade`.
 - Other agents: add the URL as a remote MCP server or connector. OAuth metadata: `https://www.taskade.com/.well-known/oauth-protected-resource/mcp`.
 - No OAuth: create a personal access token at `https://www.taskade.com/settings/api` and send it as `Authorization: Bearer <token>`. Never write a token into a file that is committed.
