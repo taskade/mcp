@@ -723,8 +723,11 @@ Help us improve MCP tools, OpenAPI workflows, and agent capabilities.
 
 ## More from Taskade
 
+- [Agent skill (`SKILL.md`)](https://www.taskade.com/SKILL.md) · [llms.txt index](https://www.taskade.com/llms.txt) · [Developer docs](https://github.com/taskade/docs)
+- [Awesome Vibe Coding](https://github.com/taskade/awesome-vibe-coding) — curated vibe-coding tools, MCP servers, and agent skills
 - [Taskade Docs](https://docs.taskade.com) ([source](https://github.com/taskade/docs)) — developer documentation and API reference
 - [Integration Kit](https://github.com/taskade/integrations) — open-source Zapier/n8n actions & triggers
+- [Taskade on GitHub](https://github.com/taskade) — org home and open-source repos
 - [Taskade](https://github.com/taskade/taskade) — platform home, including Genesis, the AI app builder
 
 ---
