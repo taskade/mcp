@@ -22,6 +22,8 @@ Taskade EVE builds new apps inside Taskade. Outside agents connect through the h
 - Other agents: add the URL as a remote MCP server or connector. OAuth metadata: `https://www.taskade.com/.well-known/oauth-protected-resource/mcp`.
 - No OAuth: create a personal access token at `https://www.taskade.com/settings/api` and send it as `Authorization: Bearer <token>`. Never write a token into a file that is committed.
 - MCP access is part of every paid Taskade plan. A workspace on the Free plan does not appear in `list_spaces`. If the response has `hiddenForPlan` and a `hint`, show the hint to the user.
+- After you add the server, ask the user to restart the client. Then sign in (in Claude Code, run `/mcp`) and call `list_spaces`. Any `list_spaces` response means the connection works, also an empty list or a list with `hiddenForPlan`. Send `pageInfo.endCursor` as `after` until `pageInfo.hasNextPage` is false.
+- A `HEAD` request or `curl -I` to `https://www.taskade.com/mcp` returns `401` with `WWW-Authenticate: Bearer`, because the probe sends no token. That is expected. Do not change the URL.
 
 ## Jobs and tools
 

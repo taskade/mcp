@@ -2,6 +2,12 @@
 
 # Taskade MCP Server and Agent Plugin
 
+Paste this to your agent:
+
+```text
+Set up Taskade for me: https://www.taskade.com/SKILL.md
+```
+
 **[Taskade](https://www.taskade.com) is the AI-native workspace for projects, AI agents and automations. [Taskade Genesis](https://www.taskade.com/create) builds a running app from one prompt.**
 
 **Connect Taskade to Claude, Claude Code, ChatGPT, Codex, Cursor, VS Code, GitHub Copilot, Gemini CLI, Windsurf and any other client of the [Model Context Protocol](https://modelcontextprotocol.io/).**
