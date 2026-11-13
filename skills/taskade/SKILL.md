@@ -66,5 +66,6 @@ On `https://www.taskade.com`: app `/spaces/{spaceId}`, project `/d/{projectId}`,
 ## Learn more
 
 - Docs for agents: `https://www.taskade.com/llms.txt`
+- Any page as Markdown: send `Accept: text/markdown` to the normal page URL, for example `curl -H 'Accept: text/markdown' https://www.taskade.com/pricing`.
 - Public API: `https://www.taskade.com/api/documentation/v2`
 - Source and other installs: `https://github.com/taskade/mcp`
