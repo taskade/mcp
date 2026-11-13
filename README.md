@@ -12,9 +12,11 @@ Set up Taskade for me: https://www.taskade.com/SKILL.md
 
 **Connect Taskade to Claude, Claude Code, ChatGPT, Codex, Cursor, VS Code, GitHub Copilot, Gemini CLI, Windsurf and any other client of the [Model Context Protocol](https://modelcontextprotocol.io/).**
 
-[![Add to Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=taskade&config=eyJ1cmwiOiJodHRwczovL3d3dy50YXNrYWRlLmNvbS9tY3AifQ%3D%3D)
+[![Add to Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/link/mcp/install?name=taskade&config=eyJ1cmwiOiJodHRwczovL3d3dy50YXNrYWRlLmNvbS9tY3AifQ%3D%3D)
 [![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-007ACC?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=taskade&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fwww.taskade.com%2Fmcp%22%7D)
-[![Connect in Claude](https://img.shields.io/badge/Connect_in-Claude-D97757?style=flat-square)](#claude-web-desktop-and-mobile)
+[![Connect in Claude](https://img.shields.io/badge/Connect_in-Claude-D97757?style=flat-square)](https://claude.ai/directory/taskade-ai)
+
+**Claude Code:** `claude mcp add --transport http taskade https://www.taskade.com/mcp`
 
 [![npm](https://img.shields.io/npm/v/@taskade/mcp-server?style=flat-square&color=FF2D60)](https://www.npmjs.com/package/@taskade/mcp-server)
 [![GitHub stars](https://img.shields.io/github/stars/taskade/mcp?style=flat-square)](https://github.com/taskade/mcp)
@@ -47,7 +49,7 @@ The `taskade` plugin connects your AI tool to your Taskade workspace through the
 | Gemini CLI | `gemini extensions install https://github.com/taskade/mcp` |
 | VS Code | See below |
 | Cursor | See below |
-| Any other agent | `npx skills add https://github.com/taskade/mcp` installs the skills only. Then add the hosted server `https://www.taskade.com/mcp` to the agent and sign in (see the [quick start](#taskade-mcp-server-quick-start)). |
+| Any other agent | `npx skills add taskade/mcp` installs the skills only. Then add the hosted server `https://www.taskade.com/mcp` to the agent and sign in (see the [quick start](#taskade-mcp-server-quick-start)). |
 
 **VS Code:** turn on the `chat.plugins.enabled` setting. Then run **Chat: Install Plugin From Source** from the Command Palette and enter `https://github.com/taskade/mcp`.
 
@@ -103,6 +105,8 @@ MCP-powered Taskade agent running inside Claude Desktop by Anthropic:
 An `initialize` request without a token returns `401` on purpose. The `401` tells your client where to start the OAuth sign-in.
 
 ### Claude (web, Desktop and mobile)
+
+Select **Connect in Claude** at the top of this page to open **Taskade AI** in the [Claude directory](https://claude.ai/directory/taskade-ai). To add the server as a custom connector instead:
 
 1. In Claude, go to [**Customize > Connectors**](https://claude.ai/customize/connectors) and select **Add custom connector**. On a Team or Enterprise plan, an Owner first adds the connector in **Organization settings > Connectors** (**Add**, then **Custom**).
 2. Enter the name `Taskade` and the URL `https://www.taskade.com/mcp`, then select **Add**.

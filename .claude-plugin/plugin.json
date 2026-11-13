@@ -6,5 +6,9 @@
   "homepage": "https://www.taskade.com/mcp",
   "repository": "https://github.com/taskade/mcp",
   "license": "MIT",
-  "keywords": ["taskade", "genesis", "mcp", "projects", "agents", "automations", "no-code"]
+  "keywords": ["taskade", "genesis", "mcp", "projects", "agents", "automations", "no-code"],
+  "documentationUrl": "https://www.taskade.com/docs/mcp",
+  "supportUrl": "https://help.taskade.com/en/",
+  "privacyPolicyUrl": "https://www.taskade.com/privacy",
+  "termsOfServiceUrl": "https://www.taskade.com/terms"
 }
