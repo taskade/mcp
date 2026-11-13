@@ -81,7 +81,7 @@
         }
       },
       "publication": {
-        "release_notes": "First release: Taskade tools and 7 skills."
+        "release_notes": "Updates the Taskade skill: a connection check after setup, an App kits section, and how to read any page as Markdown."
       }
     }
   }
