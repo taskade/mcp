@@ -81,7 +81,7 @@
         }
       },
       "publication": {
-        "release_notes": "Adds one-click install links for Claude, Cursor and VS Code, and explicit links for documentation, support, privacy and terms."
+        "release_notes": "Updates the Cursor and Claude install links in the README, and adds documentation, support, privacy and terms links to the Claude manifest. The skills do not change."
       }
     }
   }
