@@ -81,7 +81,7 @@
         }
       },
       "publication": {
-        "release_notes": "Updates the Cursor and Claude install links in the README, and adds documentation, support, privacy and terms links to the Claude manifest. The skills do not change."
+        "release_notes": "Updates the Claude install link in the README, and adds documentation, support, privacy and terms links to the Claude manifest. The skills do not change."
       }
     }
   }
