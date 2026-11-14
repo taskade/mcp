@@ -1,5 +1,11 @@
 # @taskade/mcp-server
 
+## 0.2.0
+
+### Minor Changes
+
+- [#130](https://github.com/taskade/mcp/pull/130) [`fae1a6d`](https://github.com/taskade/mcp/commit/fae1a6d1ce9b674e9a1fb4ce1e2ba7e8e08a5be4) Thanks [@johnxie](https://github.com/johnxie)! - Add four tools from the Taskade API v2: `listTasks`, `createTask`, `setTaskFieldValue` and `renameProject`. The package now serves 66 tools (57 v1 and 9 v2). `setTaskFieldValue` writes text, number, Select and date fields. The v1 `taskFieldValuePut` takes no date. `renameProject` has no v1 tool. Every v1 tool name stays. The v2 snapshot comes from the live spec of 2026-11-13. With it, `getConversation` takes an optional `includeTranscript`, and the descriptions of `subscribeWebhook` and `unsubscribeWebhook` carry the deprecation note of the API.
+
 ## 0.1.4
 
 ### Patch Changes
