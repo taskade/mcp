@@ -54,7 +54,7 @@ If the setup fails, say which step failed. Then take the next path:
 - `list_spaces` has `hiddenForPlan`: show the hint. The workspace needs a paid plan for MCP.
 - The client cannot add a server: answer from `https://www.taskade.com/llms.txt`. For a build, the Taskade EVE link below needs no MCP.
 
-After the setup, tell the user in two lines what you set up and how you checked it. If the user gave you a task, continue with it. If not, offer two or three tasks that fit the workspace (for example a report on open tasks, an import of a spreadsheet, a fix in an app) and let the user pick. Do not start one yourself.
+After the setup, tell the user in two lines what you set up and how you checked it. If the user gave you a task, continue with it. If not, offer two or three tasks that fit the workspace (for example a report on open tasks, an import of a spreadsheet, a fix in an app) and let the user pick. Do not start one yourself. If `list_spaces` returns no workspace and no `hiddenForPlan`, the account has no workspace yet. Ask the user to create one in Taskade, or offer a new build with the Taskade EVE link below.
 
 ## Words
 
