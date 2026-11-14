@@ -8,7 +8,7 @@ import {
   TASKADE_V2_ACTION_DESCRIPTIONS,
   TASKADE_V2_ACTION_HINTS,
 } from '../src/constants.v2';
-import { inlineSchemaRelativeRefs } from './inlineSchemaRelativeRefs';
+import { inlineSchemaRelativeRefs, nullEnumToNull } from './fixV2SpecSchemas';
 
 // Taskade API v2 is a flat RPC API whose operations omit `operationId`; the codegen
 // derives tool names from the path (e.g. POST /promptAgent -> "promptAgent").
@@ -70,7 +70,9 @@ const pruneToEnabled = (doc: any) => {
 const raw = JSON.parse(fs.readFileSync('taskade-public.v2.json', 'utf8'));
 let document;
 try {
-  document = await dereference(inlineSchemaRelativeRefs(pruneToEnabled(raw)) as never);
+  document = await dereference(
+    nullEnumToNull(inlineSchemaRelativeRefs(pruneToEnabled(raw))) as never,
+  );
 } catch (error) {
   // inlineSchemaRelativeRefs resolves a ref that points inside its own schema. A ref that
   // it cannot resolve stays, and the dereference fails on it here.

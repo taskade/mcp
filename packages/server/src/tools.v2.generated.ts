@@ -371,7 +371,7 @@ export const setupToolsV2 = (server: McpServer, opts: OpenAPIToolRuntimeConfigOp
               .object({
                 contentType: z.enum(['text/markdown', 'text/plain']),
                 content: z.string().max(2000),
-                taskId: z.literal('null').optional(),
+                taskId: z.null().optional(),
                 placement: z.enum(['afterbegin', 'beforeend']),
               })
               .strict(),
@@ -409,7 +409,7 @@ export const setupToolsV2 = (server: McpServer, opts: OpenAPIToolRuntimeConfigOp
   );
   server.tool(
     'setTaskFieldValue',
-    'Set the value of one custom field on a task. It replaces the value that the field has now. It works for number, Select, text and date fields. Read the field ids and the Select option ids with projectFieldsGet. For a Select field, send the option id, not its label. For a date field, send YYYY-MM-DD or an ISO 8601 date-time. Use this tool, not taskFieldValuePut, for a date field.',
+    'Set the value of one custom field on a task. It replaces the value that the field has now. It works for number, Select, text and date fields. Read the field ids and the Select option ids with projectFieldsGet (the input notes call it listFields). For a Select field, send the option id, not its label. For a date field, send YYYY-MM-DD or an ISO 8601 date-time. Use this tool, not taskFieldValuePut, for a date field.',
     z.object({
       projectId: z.string().min(1).describe('The project the task lives in'),
       taskId: z.string().min(1).describe('The task ID (from `listTasks`)'),

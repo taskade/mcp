@@ -61,6 +61,18 @@ describe('TaskadeMCPServer API requests', () => {
       method: 'POST',
       url: 'https://www.taskade.com/api/v2/setTaskFieldValue',
     },
+    {
+      api: 'v2',
+      name: 'createTask',
+      args: {
+        projectId: 'p1',
+        tasks: [
+          { contentType: 'text/plain', content: 'Alpha', taskId: null, placement: 'beforeend' },
+        ],
+      },
+      method: 'POST',
+      url: 'https://www.taskade.com/api/v2/createTask',
+    },
   ])(
     'names the package and its version on a $api tool call',
     async ({ name, args, method, url }) => {

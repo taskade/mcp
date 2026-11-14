@@ -68,7 +68,7 @@ export const TASKADE_V2_ACTION_DESCRIPTIONS: Partial<Record<TaskadeV2Action, str
   createTask:
     'Create 1 to 20 tasks in a project. Give each task its text as content, a contentType (text/markdown or text/plain) and a placement. To add a task at the top or bottom of the project, leave out taskId and use afterbegin or beforeend. To add it next to or inside a task, give that taskId with beforebegin, afterend, afterbegin or beforeend. Returns the id of each new task.',
   setTaskFieldValue:
-    'Set the value of one custom field on a task. It replaces the value that the field has now. It works for number, Select, text and date fields. Read the field ids and the Select option ids with projectFieldsGet. For a Select field, send the option id, not its label. For a date field, send YYYY-MM-DD or an ISO 8601 date-time. Use this tool, not taskFieldValuePut, for a date field.',
+    'Set the value of one custom field on a task. It replaces the value that the field has now. It works for number, Select, text and date fields. Read the field ids and the Select option ids with projectFieldsGet (the input notes call it listFields). For a Select field, send the option id, not its label. For a date field, send YYYY-MM-DD or an ISO 8601 date-time. Use this tool, not taskFieldValuePut, for a date field.',
   renameProject:
     'Rename a project. It replaces the name of the project. The new name is one line of up to 2000 characters.',
 };

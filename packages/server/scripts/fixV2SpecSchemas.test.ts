@@ -1,7 +1,8 @@
 import { dereference } from '@readme/openapi-parser';
+import { codegen } from '@taskade/mcp-openapi-codegen';
 import { describe, expect, it } from 'vitest';
 
-import { inlineSchemaRelativeRefs } from './inlineSchemaRelativeRefs';
+import { inlineSchemaRelativeRefs, nullEnumToNull } from './fixV2SpecSchemas';
 
 const CONTENT_TYPE = { type: 'string', enum: ['text/markdown', 'text/plain'] };
 
@@ -121,7 +122,11 @@ describe('inlineSchemaRelativeRefs', () => {
                     properties: {
                       a: { $ref: '#/components/schemas/Task' },
                       b: { $ref: '#/properties/missing' },
+                      c: { $ref: '#/paths/~1y' },
                     },
+                    // Decoys: without the exclusion, `a` and `c` resolve to these.
+                    components: { schemas: { Task: { type: 'string' } } },
+                    paths: { '/y': { type: 'string' } },
                   },
                 },
               },
@@ -133,5 +138,50 @@ describe('inlineSchemaRelativeRefs', () => {
     };
 
     expect(inlineSchemaRelativeRefs(doc)).toEqual(doc);
+  });
+});
+
+describe('nullEnumToNull', () => {
+  const nullEnum = { enum: ['null'], nullable: true };
+
+  it('rewrites the spec shape of a JSON null and keeps every other enum', () => {
+    expect(
+      nullEnumToNull({
+        properties: {
+          taskId: nullEnum,
+          contentType: { type: 'string', enum: ['text/plain'] },
+          word: { type: 'string', enum: ['null'], nullable: true },
+        },
+      }),
+    ).toEqual({
+      properties: {
+        taskId: { nullable: true },
+        contentType: { type: 'string', enum: ['text/plain'] },
+        word: { type: 'string', enum: ['null'], nullable: true },
+      },
+    });
+  });
+
+  it('makes the codegen accept a JSON null, not the string "null"', async () => {
+    const operation = {
+      requestBody: {
+        content: {
+          'application/json': {
+            schema: { type: 'object', properties: { taskId: nullEnum } },
+          },
+        },
+      },
+      responses: {},
+    };
+    const doc = {
+      openapi: '3.0.3',
+      info: { title: 'Test', version: '1.0.0' },
+      paths: { '/createTask': { post: operation } },
+    };
+
+    expect(await codegen({ document: doc as never })).toContain('taskId: z.literal("null")');
+    const output = await codegen({ document: nullEnumToNull(doc) });
+    expect(output).toContain('taskId: z.null()');
+    expect(output).not.toContain('z.literal("null")');
   });
 });

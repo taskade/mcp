@@ -1,11 +1,18 @@
-// The live v2 spec writes some `$ref` values relative to their own schema, not to
-// the document root: `#/properties/tasks/items/anyOf/0/properties/contentType` inside
-// the `createTask` body, and `#/properties/data/...` inside `components.schemas.Field`.
-// An OpenAPI parser reads every `#/` pointer from the document root, so the
-// dereference throws "Missing $ref pointer". This module replaces each such ref with a
-// copy of the schema that it points to inside the same schema. It does not change a
-// `#/components/` or `#/paths/` ref. It keeps a ref that it cannot resolve, so the
-// parser still fails loudly on it.
+// Two fixes for schema shapes of the live v2 spec that the codegen reads wrong.
+//
+// inlineSchemaRelativeRefs: the spec writes some `$ref` values relative to their own
+// schema, not to the document root: `#/properties/tasks/items/anyOf/0/properties/contentType`
+// inside the `createTask` body, and `#/properties/data/...` inside
+// `components.schemas.Field`. An OpenAPI parser reads every `#/` pointer from the
+// document root, so the dereference throws "Missing $ref pointer". The fix replaces
+// each such ref with a copy of the schema that it points to inside the same schema. It
+// does not change a `#/components/` or `#/paths/` ref. It keeps a ref that it cannot
+// resolve, so the parser still fails loudly on it.
+//
+// nullEnumToNull: the spec writes a JSON `null` (zod `z.null()`) as
+// `{ enum: ['null'], nullable: true }`, for example `taskId` in the first `createTask`
+// item. The codegen reads that as the string "null". The fix writes `{ nullable: true }`,
+// which the codegen reads as JSON `null`.
 
 const isSchemaRelativeRef = (ref: unknown): ref is string =>
   typeof ref === 'string' &&
@@ -88,4 +95,26 @@ export const inlineSchemaRelativeRefs = (doc: any) => {
       ),
     },
   };
+};
+
+export const nullEnumToNull = (node: any): any => {
+  if (node == null || typeof node !== 'object') {
+    return node;
+  }
+  if (Array.isArray(node)) {
+    return node.map(nullEnumToNull);
+  }
+  const { enum: values, ...rest } = node;
+  if (
+    node.nullable === true &&
+    node.type === undefined &&
+    Array.isArray(values) &&
+    values.length === 1 &&
+    values[0] === 'null'
+  ) {
+    return rest;
+  }
+  return Object.fromEntries(
+    Object.entries(node).map(([key, value]) => [key, nullEnumToNull(value)]),
+  );
 };
