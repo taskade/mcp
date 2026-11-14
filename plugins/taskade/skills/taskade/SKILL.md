@@ -16,7 +16,7 @@ Taskade turns one prompt into a running app. A workspace has three connected par
 
 Pick the session you are in.
 
-- **You have only this link, or a task that needs the user's Taskade data.** Connect the MCP server (see "Connect"), then do the task. A user who gave you only this link wants the setup, so do the setup.
+- **You have only this link, or a task that needs the user's Taskade data.** Connect the MCP server (see "Connect"), then do the task. If the user asked you to set up Taskade, do the setup. If the user gave you only this link, say in one line that you will add the Taskade MCP server, then do it.
 - **You have a question about Taskade** (what it does, plans, how it compares). Answer from "Words" below and from `https://www.taskade.com/llms.txt`. Change no client configuration.
 - **You write code that keeps running after this session** (a server, a scheduled job). Use the public API with a personal access token: `https://www.taskade.com/api/documentation/v2`.
 
@@ -27,14 +27,14 @@ Three parties change a workspace. Send each job to the right one.
 | Job | Who does it |
 |---|---|
 | Read the workspace. Change projects, tasks, agents and app files. Run an automation that is On. | You, through MCP |
-| Build a new app. Add a feature that needs new data, an agent or an automation. Add fields to a project. Create or change an automation. Give an agent tools, make it public, or build an agent team (Pro and up). Run one action in a connected app. | Taskade EVE, the AI builder inside Taskade. You write the request (see "Hand off to Taskade EVE") |
-| Publish, update or unpublish an app. Connect a domain. Clone an app kit. | The owner, in the Taskade app |
+| Build a new app. Add a feature that needs new data, an agent or an automation. Add fields to a project. Create or change an automation. Give an agent integration tools, make it public, or build an agent team (Pro and up). Run one action in a connected app. | Taskade EVE, the AI builder inside Taskade. You write the request (see "Hand off to Taskade EVE") |
+| Publish or unpublish an app with the Publish button. Connect a domain. Clone an app kit. | The owner, in the Taskade app |
 
-MCP cannot start Taskade EVE, and `prompt_agent` cannot reach it. For "who can use the app", Taskade EVE proposes the setting and the owner applies it with one click.
+MCP cannot start Taskade EVE, and `prompt_agent` cannot reach it. For "who can use the app", Taskade EVE proposes the setting and the owner applies it. A `write_file` change to an app that is live can go live at once (see "Rules").
 
 ## Connect
 
-If Taskade tools are in your tool list, use them and skip this section. No Taskade tools means that the server is not set up yet. It does not mean that MCP is unavailable, and the setup is your work.
+If Taskade tools are in your tool list, use them and skip this section. If your client loads tools on demand, search the list first. No Taskade tools means that the server is not set up yet. It does not mean that MCP is unavailable, and the setup is your work.
 
 - MCP server: `https://www.taskade.com/mcp` (Streamable HTTP, OAuth 2.0 with PKCE, client registration is automatic).
 - Your client's own MCP documentation is the source of truth for how to add a server. Use its setup command when it has one, not a config file that you write by hand.
@@ -89,9 +89,11 @@ The server lists every tool with its inputs. The resource `taskade://getting-sta
 
 - `delete_task` also deletes every task nested under it, and the API cannot recover them. Read the project first.
 - `complete_task` on a recurring task moves its date forward and returns `recurred: true`. Do not say that the task is done in that case.
-- `assign_task` takes member handles from `list_project_members`. If one handle is not a member, nothing is assigned.
+- `assign_task` takes member handles. `list_project_members` lists the members of a project. If one handle is not a member of the project or its workspace, nothing is assigned.
 - `set_task_field_value` on a Select field takes the option id from `list_fields`, not the visible label.
 - `set_task_date` with no time zone uses the time zone of the user's account, not UTC.
+- `update_agent` with `enableProjectTool: true` lets an agent read and write project data itself, so `prompt_agent` can give it work in projects.
+- If `run_flow` returns the status `unknown` or `running`, do not call it again for the same request. Read `get_flow_runs`.
 
 ## Hand off to Taskade EVE
 
@@ -107,11 +109,11 @@ Write the request for the user. Use the user's words, and name each part separat
 
 Leave these out of a request: passwords, API keys and tokens (the user connects each account when Taskade EVE asks), and file names, packages and frameworks.
 
-For a new app, give the user this link: `https://www.taskade.com/create?prompt=<the request, URL-encoded>`. The link fills in the request and starts nothing. The user reads the request and starts the build. If the request is too long for a link, give the text and `https://www.taskade.com/create`.
+For a new app, give the user this link: `https://www.taskade.com/create?prompt=<the request, URL-encoded>`. The link fills in the request and starts nothing. The user reads the request and starts the build. Percent-encode the whole request, also `&`, `#`, `+` and parentheses. Show the request as text too. If the link is longer than 2,000 characters, give the text and `https://www.taskade.com/create`.
 
 For a change to an existing app, give the request text and the app link `https://www.taskade.com/spaces/{spaceId}`. The user opens the app and gives the request to Taskade EVE there.
 
-A build uses the user's AI credits. When Taskade EVE finishes, it lists what it built, the defaults it chose and what it needs from the user. Then read the result with `list_spaces` and `inspect_space`.
+A build uses the user's AI credits. When Taskade EVE finishes, it lists what it built, the defaults it chose and what it needs from the user. Then ask the user for the name of the new app, find its space in `list_spaces`, and read it with `inspect_space` and `list_projects`.
 
 Do not create projects or agents for a new app before the build. A new app gets its own space with its own data. Put the data shape in the request, and import the rows with MCP after the build.
 
@@ -132,7 +134,8 @@ An app kit is a finished Taskade Genesis app that anyone can copy into a workspa
 - Only `app/` files are writable with `write_file`. When `app/AGENTS.md` exists, it lists the files the platform refuses to change.
 - `run_flow` and `prompt_agent` are real actions: they count toward the user's plan and can use AI credits, and an automation step can send email or act in a connected app. Before the first call in a session, say so and wait for the user's "yes". After that, make only the calls that the user asks for.
 - Never delete an agent, project or task unless the user asks for that exact item.
-- Never put a password, an API key or a token in a request, a link or a file.
+- Never put a password, an API key or a token in a request for Taskade EVE or in a link.
+- `enable_share_link` makes a project open to anyone who has the link. Get the user's "yes" first.
 - Report what you checked, not what you meant to do.
 
 ## Links

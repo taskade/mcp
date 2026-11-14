@@ -1,6 +1,6 @@
 # Write a strong build request for Taskade EVE
 
-Taskade EVE is the AI builder inside Taskade. It turns one request into a running app: projects, agents, knowledge links, automations and the interface, in that order. A new build makes its own app space with its own data. This server cannot start a build. Your job is to write the request. For a new app, the user opens `https://www.taskade.com/create?prompt=<the request, URL-encoded>`, reads the request and starts the build.
+Taskade EVE is the AI builder inside Taskade. It turns one request into a running app: projects, agents, knowledge links, automations and the interface, in that order. A new build makes its own app space with its own data. This server cannot start a build. Your job is to write the request. For a new app, the user opens `https://www.taskade.com/create?prompt=<the request, URL-encoded>`, reads the request and starts the build. Percent-encode the whole request, also `&`, `#`, `+`, parentheses and line breaks. Show the request as text too. If the link is longer than 2,000 characters, give the text and `https://www.taskade.com/create`.
 
 ## Put each part in the request, in this order
 

@@ -78,19 +78,29 @@ Out of scope: online payments.
 
 ## 4. Hand it off by link
 
+- Call `list_spaces` and ask which workspace the app is for. Tell the user to start the build while they are in that workspace.
 - Tell the user that a build uses their AI credits.
-- Give the user this link: `https://www.taskade.com/create?prompt=<the request, URL-encoded>`. Encode the whole request, line breaks included. The link fills in the request and starts nothing. The user reads the request and starts the build.
-- If the request is too long for a link, give the request text and `https://www.taskade.com/create`. The user pastes the text into the prompt box there.
+- Give the user this link: `https://www.taskade.com/create?prompt=<the request, URL-encoded>`. The link fills in the request and starts nothing. The user reads the request and starts the build.
+- Percent-encode the whole request, also `&`, `#`, `+`, parentheses and line breaks. Show the request as text too.
+- If the link is longer than 2,000 characters, give the request text and `https://www.taskade.com/create`. The user pastes the text into the prompt box there.
 - Never put `?prompt=` on any other Taskade URL.
 
 ## 5. After the build
 
 When Taskade EVE finishes, it lists what it built, the defaults it chose and what it needs from the user. Ask the user to tell you when the build is done. Then:
 
-- Call `list_spaces` to find the new app space. Send `pageInfo.endCursor` as `after` until `pageInfo.hasNextPage` is false. If the name is not clear, ask the user which space it is.
+- Ask the user for the name of the new app.
+- Call `list_spaces` and find the space with that name. Each space has an `id`, a `name` and a `parentId`. A space under a workspace has a `parentId`. Send `pageInfo.endCursor` as `after` until `pageInfo.hasNextPage` is false. If no name matches, or more than one name matches, ask the user which space it is.
 - Call `inspect_space` on `.` to read its projects, agents, automations and `app/`. Compare them with the plan, and tell the user what is different.
-- To import real rows, call `list_fields` on the target project for the field ids and the option ids. Then call `create_task` (20 per call) and `set_task_field_value` for each value. A Select field takes the option id, not the label. For a large file or a duplicate check, follow the import-spreadsheet skill.
+- Call `list_projects` with the id of the new app space to get the project ids. Then call `list_fields` with the id of the target project for the field ids and the option ids.
 - If the new space has `projects/memory/TASKS.md`, it holds the build plan of Taskade EVE. The fix-my-app skill reads it later.
+
+## 6. Put the real data into the app
+
+Write no row before the user says "yes" to the plan for the data.
+
+- Rows in a file: follow the import-spreadsheet skill for every import, also a small one. It sets the mapping, writes a first small batch, and checks it before the rest. Its reference `references/custom-fields.md` lists the field types that `set_task_field_value` can write.
+- Rows in a project that exists: offer `copy_project`. It copies a project that you can read to a workspace. The destination is a `spaceId` from `list_spaces`, here the new app space. The copy is a new project with a new id. Get the user's "yes" before the copy.
 
 For a change to the app after the build, give the request text and the app link `https://www.taskade.com/spaces/{spaceId}`. The user opens the app and gives the request to Taskade EVE there. The owner publishes the app in the Taskade app. For who can use the app, Taskade EVE proposes the setting and the owner applies it.
 

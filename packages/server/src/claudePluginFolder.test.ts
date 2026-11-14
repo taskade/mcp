@@ -50,6 +50,29 @@ const allowedExtensions = new Set([
 
 const refusedFileNames = new Set(['package.json', 'package-lock.json', 'npm-shrinkwrap.json']);
 
+// Every plugin manifest that carries public description text.
+const manifestFiles = [
+  'plugin.json',
+  'gemini-extension.json',
+  '.claude-plugin/plugin.json',
+  '.claude-plugin/marketplace.json',
+  '.cursor-plugin/plugin.json',
+  '.agents/plugins/marketplace.json',
+  'plugins/taskade/.claude-plugin/plugin.json',
+];
+
+// Returns each URL that carries a prompt parameter (`?prompt=` or `&prompt=`, any case) and is
+// not /create. A Markdown link passes when its target is /create: the text up to the last
+// bracket, parenthesis, quote or backtick is not part of the URL.
+function promptUrlProblems(text: string): string[] {
+  return [...text.matchAll(/(\S*?)([?&]prompt=)/gi)]
+    .map((match) => ({ url: match[1].replace(/^.*[[\]()<>`"']/, ''), param: match[2] }))
+    .filter(
+      ({ url }) => !['', 'https://www.taskade.com/create', '/create'].includes(url.toLowerCase()),
+    )
+    .map(({ url, param }) => `${url}${param}`);
+}
+
 type Entry = { path: string; isSymlink: boolean; isDirectory: boolean };
 
 function walk(dir: string, prefix = ''): Entry[] {
@@ -171,19 +194,37 @@ describe('skills/ (the skill files that every host reads)', () => {
   });
 
   it('puts ?prompt= only on https://www.taskade.com/create', () => {
-    // A build link fills in the request on /create and starts nothing. A ?prompt= on
-    // another Taskade URL can start a build that the user did not review.
+    // A build link fills in the request on /create and starts nothing. A prompt parameter
+    // on another Taskade URL can start a build that the user did not review. The manifests
+    // are in scope because their description strings are public listing text.
     const files = [
       ...filesIn(join(repoRoot, 'skills')).map((file) => `skills/${file}`),
       'README.md',
       'plugins/taskade/README.md',
+      ...manifestFiles,
     ];
     const problems = files.flatMap((file) =>
-      [...readFileSync(join(repoRoot, file), 'utf8').matchAll(/(\S*)\?prompt=/g)]
-        .map((match) => match[1].replace(/^[`(<"']+/, ''))
-        .filter((url) => !['', 'https://www.taskade.com/create', '/create'].includes(url))
-        .map((url) => `${file}: ${url}?prompt=`),
+      promptUrlProblems(readFileSync(join(repoRoot, file), 'utf8')).map((url) => `${file}: ${url}`),
     );
     expect(problems).toEqual([]);
+  });
+
+  it('finds a prompt parameter on any URL other than /create', () => {
+    expect(promptUrlProblems('`https://www.taskade.com/create?prompt=<request>`')).toEqual([]);
+    expect(
+      promptUrlProblems('new build `/create?prompt=`, never put `?prompt=` elsewhere'),
+    ).toEqual([]);
+    expect(
+      promptUrlProblems('[Open the build](https://www.taskade.com/create?prompt=Build%20a%20CRM)'),
+    ).toEqual([]);
+    expect(promptUrlProblems('https://www.taskade.com/spaces/abc?prompt=hi')).toEqual([
+      'https://www.taskade.com/spaces/abc?prompt=',
+    ]);
+    expect(promptUrlProblems('https://www.taskade.com/spaces/abc?x=1&prompt=hi')).toEqual([
+      'https://www.taskade.com/spaces/abc?x=1&prompt=',
+    ]);
+    expect(promptUrlProblems('https://www.taskade.com/spaces/abc?Prompt=hi')).toEqual([
+      'https://www.taskade.com/spaces/abc?Prompt=',
+    ]);
   });
 });
