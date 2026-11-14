@@ -5,19 +5,17 @@ import fs from 'fs';
 import {
   ENABLED_TASKADE_V2_ACTIONS,
   HUMANIZED_TASKADE_V2_ACTIONS,
+  TASKADE_V2_ACTION_DESCRIPTIONS,
   TASKADE_V2_ACTION_HINTS,
 } from '../src/constants.v2';
+import { inlineSchemaRelativeRefs } from './inlineSchemaRelativeRefs';
 
 // Taskade API v2 is a flat RPC API whose operations omit `operationId`; the codegen
 // derives tool names from the path (e.g. POST /promptAgent -> "promptAgent").
 const deriveName = (p: string) => p.replace(/^\//, '').split('/')[0];
 
-// Why prune before dereferencing: the live v2 spec currently has a broken self-$ref
-// inside components.schemas.Field (data.fillerConfig...sourceRef) that makes a full
-// dereference throw. The enabled v2 tools don't reference Field, so we keep only the
-// allow-listed paths + the component schemas transitively reachable from them. This
-// is also what scopes the generated surface to the enabled tools. Remove once the
-// upstream spec is fixed and the allow-list grows to need the rest.
+// The prune keeps only the allow-listed paths and the component schemas that they
+// reach. It scopes the generated surface to the enabled tools.
 const pruneToEnabled = (doc: any) => {
   const enabled = new Set<string>(ENABLED_TASKADE_V2_ACTIONS);
   const paths: Record<string, unknown> = {};
@@ -72,20 +70,25 @@ const pruneToEnabled = (doc: any) => {
 const raw = JSON.parse(fs.readFileSync('taskade-public.v2.json', 'utf8'));
 let document;
 try {
-  document = await dereference(pruneToEnabled(raw) as never);
+  document = await dereference(inlineSchemaRelativeRefs(pruneToEnabled(raw)) as never);
 } catch (error) {
-  // The live v2 spec has a known broken self-$ref in components.schemas.Field; pruneToEnabled
-  // sidesteps it only while the allow-list stays clear of schemas that reach Field. If this
-  // throws, an enabled tool likely now references the broken node — see the pruneToEnabled note.
+  // inlineSchemaRelativeRefs resolves a ref that points inside its own schema. A ref that
+  // it cannot resolve stays, and the dereference fails on it here.
   throw new Error(
-    `v2 codegen: failed to dereference the pruned spec (likely the known upstream Field self-$ref reached by a newly enabled action): ${(error as Error).message}`,
+    `v2 codegen: failed to dereference the pruned spec (an enabled action reaches a $ref that resolves nowhere): ${(error as Error).message}`,
+    { cause: error },
   );
 }
 
 const actions = Object.fromEntries(
   Object.entries(HUMANIZED_TASKADE_V2_ACTIONS).map(([name, title]) => [
     name,
-    { title, ...TASKADE_V2_ACTION_HINTS[name as keyof typeof HUMANIZED_TASKADE_V2_ACTIONS] },
+    {
+      title,
+      description:
+        TASKADE_V2_ACTION_DESCRIPTIONS[name as keyof typeof HUMANIZED_TASKADE_V2_ACTIONS],
+      ...TASKADE_V2_ACTION_HINTS[name as keyof typeof HUMANIZED_TASKADE_V2_ACTIONS],
+    },
   ]),
 );
 

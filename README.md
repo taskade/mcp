@@ -67,7 +67,7 @@ To add only the hosted server to Codex, run `codex mcp add taskade --url https:/
 - [Example prompts](#example-prompts)
 - [Troubleshooting](#troubleshooting)
 - [Local package (stdio)](#local-package-stdio)
-- [Local package tools (62)](#local-package-tools-62)
+- [Local package tools (66)](#local-package-tools-66)
 - [Why Taskade MCP?](#why-taskade-mcp)
 - [Agent Recipes](#agent-recipes)
 - [OpenAPI Codegen](#openapi-codegen)
@@ -347,7 +347,7 @@ The local package runs over stdio only. It has no HTTP or SSE mode. For a client
 
 ---
 
-## Local package tools (62)
+## Local package tools (66)
 
 The local package has its own tool names. They map to the Taskade public API v1 and v2.
 
@@ -374,6 +374,8 @@ The local package has its own tool names. They map to the Taskade public API v1 
 | `projectShareLinkEnable` | Enable the share link |
 | `projectBlocksGet` | Get all blocks in a project |
 | `projectTasksGet` | Get all tasks in a project |
+| `listTasks` | List tasks in a project, with a filter for open or completed tasks (API v2) |
+| `renameProject` | Rename a project (API v2) |
 | `folderProjectsGet` | List projects in a folder |
 
 ### Tasks
@@ -382,6 +384,7 @@ The local package has its own tool names. They map to the Taskade public API v1 
 |------|-------------|
 | `taskGet` | Get task details |
 | `taskCreate` | Create one or more tasks |
+| `createTask` | Create 1 to 20 tasks (API v2) |
 | `taskPut` | Update a task |
 | `taskDelete` | Delete a task |
 | `taskComplete` | Mark task as complete |
@@ -398,7 +401,8 @@ The local package has its own tool names. They map to the Taskade public API v1 
 | `taskNoteDelete` | Delete task note |
 | `taskFieldsValueGet` | Get all field values |
 | `taskFieldValueGet` | Get a specific field value |
-| `taskFieldValuePut` | Set a field value |
+| `taskFieldValuePut` | Set a text, number or Select field value |
+| `setTaskFieldValue` | Set a text, number, Select or date field value (API v2) |
 | `taskFieldValueDelete` | Delete a field value |
 
 ### AI Agents
@@ -473,7 +477,7 @@ Taskade MCP gives your AI assistant **access to your workspace** — projects, t
                          ↓
   ┌──────────────────────────────────┐
   │     Taskade MCP Server           │
-  │     (62 tools, 8 categories)     │
+  │     (66 tools, 8 categories)     │
   └──────────────────────────────────┘
        ↓              ↓            ↓
   folderCreateAgent  agentKnowledge  agentPublicAccess
@@ -500,7 +504,7 @@ Taskade MCP gives your AI assistant **access to your workspace** — projects, t
 
 ### Why Taskade MCP Over Other MCP Servers?
 
-Taskade MCP includes **AI agent management** (create, train, deploy agents), **knowledge base training** (attach docs, projects, media), and **OpenAPI codegen** (generate MCP tools from any API spec). 62 tools across 8 categories.
+Taskade MCP includes **AI agent management** (create, train, deploy agents), **knowledge base training** (attach docs, projects, media), and **OpenAPI codegen** (generate MCP tools from any API spec). 66 tools across 8 categories.
 
 ---
 

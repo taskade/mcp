@@ -247,8 +247,8 @@ export class TaskadeMCPServer extends McpServer {
     });
 
     // Taskade API v2 (beta) — additive layer for capabilities v1 lacks (agent chat,
-    // webhooks). Same bearer token; base URL is /api/v2. The v1 tools above are
-    // unaffected.
+    // webhooks, a project rename, a date field write). Same bearer token; base URL is
+    // /api/v2. The v1 tools above are unaffected.
     setupToolsV2(this, {
       url: 'https://www.taskade.com/api/v2',
       fetch,
@@ -264,6 +264,17 @@ export class TaskadeMCPServer extends McpServer {
               {
                 type: 'text',
                 text: "This is the agent's reply. Relay it to the user; manage agents at https://www.taskade.com/agents.",
+              },
+            ],
+          };
+        },
+        createTask: (response) => {
+          return {
+            content: [
+              { type: 'text', text: JSON.stringify(response) },
+              {
+                type: 'text',
+                text: 'The url to new tasks is in the format of: https://www.taskade.com/d/{projectId}#node-{taskId}. Share the links with the user.',
               },
             ],
           };
