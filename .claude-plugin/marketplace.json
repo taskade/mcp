@@ -7,7 +7,7 @@
       "name": "taskade",
       "source": "./",
       "description": "Use Taskade from Claude: projects, tasks, AI agents, automations and Taskade Genesis apps. Needs a paid Taskade plan.",
-      "version": "0.2.2",
+      "version": "0.2.3",
       "author": { "name": "Taskade", "url": "https://www.taskade.com" },
       "license": "MIT",
       "homepage": "https://www.taskade.com/mcp",

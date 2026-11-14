@@ -1,6 +1,6 @@
 {
   "name": "taskade",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "mcpServers": {
     "taskade": { "httpUrl": "https://www.taskade.com/mcp" }
   }
