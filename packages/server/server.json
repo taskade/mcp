@@ -24,7 +24,7 @@
     "url": "https://github.com/taskade/mcp.git",
     "source": "github"
   },
-  "version": "0.1.4",
+  "version": "0.2.0",
   "remotes": [
     {
       "type": "streamable-http",
@@ -35,7 +35,7 @@
     {
       "registryType": "npm",
       "identifier": "@taskade/mcp-server",
-      "version": "0.1.4",
+      "version": "0.2.0",
       "transport": {
         "type": "stdio"
       },
