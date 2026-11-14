@@ -16,7 +16,7 @@ Call `list_spaces`. Keep paging while `hasNextPage` is true.
 - If the call fails with a sign-in error (401), tell the user to connect Taskade. In Claude Code, they run `/mcp`, pick `taskade` and sign in. In Claude, ChatGPT or Cursor, they open the connector settings and connect Taskade.
 - A workspace on the Free plan does not appear in the list. If the response has `hiddenForPlan` and a `hint`, show the hint to the user. The hint holds the upgrade link.
 - If a later call fails with a plan error, say that Taskade MCP is part of every paid plan, and link https://www.taskade.com/pricing.
-- If the list is empty with no hint, tell the user to open https://www.taskade.com and create a workspace first.
+- If the list is empty with no hint, the account can still have a workspace. Call `list_spaces` one more time. If the list is still empty, ask the user to check their workspaces at https://www.taskade.com, and to create one if they have none.
 
 ## 2. Show a short picture of the workspace
 
