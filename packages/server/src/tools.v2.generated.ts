@@ -267,7 +267,11 @@ export const setupToolsV2 = (server: McpServer, opts: OpenAPIToolRuntimeConfigOp
   server.tool(
     'getConversation',
     'Get agent conversation by ID',
-    z.object({ agentId: z.string().min(1), convoId: z.string().min(1) }).shape,
+    z.object({
+      agentId: z.string().min(1),
+      convoId: z.string().min(1),
+      includeTranscript: z.boolean().default(false),
+    }).shape,
     {
       readOnlyHint: true,
       destructiveHint: false,
@@ -287,8 +291,156 @@ export const setupToolsV2 = (server: McpServer, opts: OpenAPIToolRuntimeConfigOp
     },
   );
   server.tool(
+    'listTasks',
+    'Read-only. List the tasks of a project, one page at a time. Returns the id, text, parent id and completed flag of each task. It returns no custom field values. Set completed to false to list only open tasks. To read the next page, pass the id of the last task as after.',
+    z.object({
+      projectId: z.string().min(1).describe('The project ID to list tasks for'),
+      limit: z.number().default(100),
+      after: z
+        .string()
+        .describe('Cursor: task ID to get tasks after (do not combine with before)')
+        .optional(),
+      before: z
+        .string()
+        .describe('Cursor: task ID to get tasks before (do not combine with after)')
+        .optional(),
+      completed: z
+        .boolean()
+        .describe(
+          "Set false to list only open tasks, or true to list only completed ones. Leave it out to list both. The filter reads each task's own flag, and the cursors and `limit` apply to the filtered list.",
+        )
+        .optional(),
+    }).shape,
+    {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
+      title: 'List Tasks in a Project',
+    },
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'listTasks',
+        path: '/listTasks',
+        method: 'POST',
+        input: args,
+        pathParamKeys: [],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'renameProject',
+    'Rename a project. It replaces the name of the project. The new name is one line of up to 2000 characters.',
+    z.object({
+      projectId: z.string().min(1).describe('The project ID to rename'),
+      name: z
+        .string()
+        .regex(new RegExp('^[^\\r\\n]*$'))
+        .min(1)
+        .max(2000)
+        .describe('The new project name'),
+    }).shape,
+    {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: true,
+      openWorldHint: false,
+      title: 'Rename a Project',
+    },
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'renameProject',
+        path: '/renameProject',
+        method: 'POST',
+        input: args,
+        pathParamKeys: [],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'createTask',
+    'Create 1 to 20 tasks in a project. Give each task its text as content, a contentType (text/markdown or text/plain) and a placement. To add a task at the top or bottom of the project, leave out taskId and use afterbegin or beforeend. To add it next to or inside a task, give that taskId with beforebegin, afterend, afterbegin or beforeend. Returns the id of each new task.',
+    z.object({
+      projectId: z.string().min(1).describe('The project to create tasks in'),
+      tasks: z
+        .array(
+          z.union([
+            z
+              .object({
+                contentType: z.enum(['text/markdown', 'text/plain']),
+                content: z.string().max(2000),
+                taskId: z.null().optional(),
+                placement: z.enum(['afterbegin', 'beforeend']),
+              })
+              .strict(),
+            z
+              .object({
+                contentType: z.enum(['text/markdown', 'text/plain']),
+                content: z.string().max(2000),
+                taskId: z.string().min(1),
+                placement: z.enum(['beforebegin', 'afterbegin', 'beforeend', 'afterend']),
+              })
+              .strict(),
+          ]),
+        )
+        .min(1)
+        .max(20)
+        .describe('Tasks to create, positioned relative to an existing task or the project root'),
+    }).shape,
+    {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+      openWorldHint: false,
+      title: 'Create Tasks',
+    },
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'createTask',
+        path: '/createTask',
+        method: 'POST',
+        input: args,
+        pathParamKeys: [],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
+    'setTaskFieldValue',
+    'Set the value of one custom field on a task. It replaces the value that the field has now. It works for number, Select, text and date fields. Read the field ids and the Select option ids with projectFieldsGet (the input notes call it listFields). For a Select field, send the option id, not its label. For a date field, send YYYY-MM-DD or an ISO 8601 date-time. Use this tool, not taskFieldValuePut, for a date field.',
+    z.object({
+      projectId: z.string().min(1).describe('The project the task lives in'),
+      taskId: z.string().min(1).describe('The task ID (from `listTasks`)'),
+      fieldId: z.string().min(1).describe('Custom field ID (from `listFields`)'),
+      value: z
+        .union([z.number(), z.string().min(1)])
+        .describe(
+          'Number for number fields; option ID for Select fields; text for string fields; YYYY-MM-DD or an ISO 8601 date-time for DateTime fields. Send digits for a string field as a JSON string (for example "01234"): a number loses leading zeros, and a long ID loses digits.',
+        ),
+    }).shape,
+    {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: true,
+      openWorldHint: false,
+      title: 'Set a Custom Field Value',
+    },
+    async (args) => {
+      return await config.executeToolCall({
+        name: 'setTaskFieldValue',
+        path: '/setTaskFieldValue',
+        method: 'POST',
+        input: args,
+        pathParamKeys: [],
+        queryParamKeys: [],
+      });
+    },
+  );
+  server.tool(
     'subscribeWebhook',
-    'Subscribe to a webhook for a Taskade event',
+    '[Deprecated: use POST /webhooks] Subscribe to a webhook for a Taskade event (unsigned)',
     z.object({
       targetUrl: z.string().url(),
       triggerType: z.enum([
@@ -320,7 +472,7 @@ export const setupToolsV2 = (server: McpServer, opts: OpenAPIToolRuntimeConfigOp
   );
   server.tool(
     'unsubscribeWebhook',
-    'Remove a previously-created webhook subscription',
+    '[Deprecated: use DELETE /webhooks/:id] Remove a previously-created webhook subscription',
     z.object({ hookId: z.string().min(1) }).shape,
     {
       readOnlyHint: false,
