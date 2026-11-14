@@ -55,6 +55,8 @@ The `taskade` plugin connects your AI tool to your Taskade workspace through the
 
 **Cursor:** the Cursor plugin `taskade` (`.cursor-plugin/`) in this repository adds the same hosted server and skills.
 
+**Claude directory:** the directory listing reads the plugin from `plugins/taskade/`, a copy of the root plugin files. The other hosts read the root files.
+
 To add only the hosted server to Codex, run `codex mcp add taskade --url https://www.taskade.com/mcp`, then `codex mcp login taskade`.
 
 ---
