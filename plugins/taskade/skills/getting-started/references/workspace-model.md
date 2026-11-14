@@ -11,9 +11,9 @@ Read this when the user asks what a part of Taskade is, or when you must pick th
 | Project | The records: a tree of rows (tasks) with custom fields. Leads, jobs, invoices and products live here. | `list_projects`, `read_project`, `list_tasks`, `list_fields` |
 | Agent | An AI assistant with instructions and knowledge (projects and files it can read). | `list_agents`, `get_agent`, `prompt_agent` |
 | Automation | A trigger and a chain of steps that run without a click: a schedule, a form, an email, a new task, or "When asked". Steps can write to projects, ask an agent, or act in one of 100+ connected apps. | `list_automations`, `get_flow_runs`, `run_flow` |
-| App | A Taskade Genesis app: a web app (React) on top of the projects, agents and automations of the workspace. | `inspect_space` on `app/`, `write_file` |
+| App | A Taskade Genesis app: a web app (React) on top of the projects, agents and automations of its own space. Each app has its own space under a workspace. | `inspect_space` on `app/`, `write_file` |
 
-Taskade calls projects, agents, automations and the app together "Workspace DNA": projects are the memory, agents are the intelligence, automations are the execution, and the app is the interface.
+Taskade calls projects, agents and automations together "Workspace DNA": projects are the memory, agents are the intelligence, and automations are the execution. The app is the interface on top of these three parts.
 
 ## One copy of the data
 
@@ -69,4 +69,9 @@ MCP access is part of every paid Taskade plan. A workspace on the Free plan does
 | List automations, read their run history, run one that starts "When asked" | Create or edit an automation, turn it On or Off |
 | Read and edit app source files | Publish the app, set who can use it, connect a domain |
 
-For a task in the right column, write the exact request for the user to paste into Taskade EVE in that workspace, and give the workspace link.
+For a task in the right column, send the job to the right party:
+
+- Publish an app or connect a domain: the owner does it in the Taskade app.
+- Set who can use an app: Taskade EVE proposes the setting, and the owner applies it.
+- Build a new app: write the request, and give the user `https://www.taskade.com/create?prompt=<the request, URL-encoded>`. The link fills in the request and starts nothing.
+- Change an existing app (fields, automations): write the request, and give the app link `https://www.taskade.com/spaces/{spaceId}`. The user opens the app and gives the request to Taskade EVE there.

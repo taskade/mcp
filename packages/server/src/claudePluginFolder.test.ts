@@ -135,3 +135,55 @@ describe('plugins/taskade (the Claude directory plugin folder)', () => {
     ).toEqual([]);
   });
 });
+
+describe('skills/ (the skill files that every host reads)', () => {
+  it('gives each skill a name that matches its folder and a one-line description', () => {
+    const skillsDir = join(repoRoot, 'skills');
+    const problems = readdirSync(skillsDir)
+      .filter((name) => lstatSync(join(skillsDir, name)).isDirectory())
+      .sort()
+      .flatMap((dir) => {
+        const text = readFileSync(join(skillsDir, dir, 'SKILL.md'), 'utf8');
+        const frontmatter = /^---\n([\s\S]*?)\n---\n/.exec(text);
+        if (frontmatter == null) {
+          return [`${dir}/SKILL.md: no frontmatter`];
+        }
+        const fields = new Map<string, string>();
+        const lineProblems = frontmatter[1].split('\n').flatMap((line) => {
+          const field = /^([a-z-]+): (.+)$/.exec(line);
+          if (field == null) {
+            return [`${dir}/SKILL.md: frontmatter line is not "key: value": ${line}`];
+          }
+          fields.set(field[1], field[2]);
+          return [];
+        });
+        const name = fields.get('name');
+        const description = fields.get('description') ?? '';
+        return [
+          ...lineProblems,
+          ...(name === dir ? [] : [`${dir}/SKILL.md: name is ${name}, not ${dir}`]),
+          ...(description.length >= 1 && description.length <= 1024 && !/^[>|]/.test(description)
+            ? []
+            : [`${dir}/SKILL.md: description must be one line of 1 to 1,024 characters`]),
+        ];
+      });
+    expect(problems).toEqual([]);
+  });
+
+  it('puts ?prompt= only on https://www.taskade.com/create', () => {
+    // A build link fills in the request on /create and starts nothing. A ?prompt= on
+    // another Taskade URL can start a build that the user did not review.
+    const files = [
+      ...filesIn(join(repoRoot, 'skills')).map((file) => `skills/${file}`),
+      'README.md',
+      'plugins/taskade/README.md',
+    ];
+    const problems = files.flatMap((file) =>
+      [...readFileSync(join(repoRoot, file), 'utf8').matchAll(/(\S*)\?prompt=/g)]
+        .map((match) => match[1].replace(/^[`(<"']+/, ''))
+        .filter((url) => !['', 'https://www.taskade.com/create', '/create'].includes(url))
+        .map((url) => `${file}: ${url}?prompt=`),
+    );
+    expect(problems).toEqual([]);
+  });
+});

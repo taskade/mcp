@@ -1,6 +1,6 @@
 # Taskade
 
-This plugin connects Claude to your [Taskade](https://www.taskade.com) workspace. Its 7 skills tell Claude which Taskade tools to use and what to check before it reports back.
+This plugin connects Claude to your [Taskade](https://www.taskade.com) workspace. Its skills tell Claude which Taskade tools to use and what to check before it reports back.
 
 ## Skills
 
@@ -10,7 +10,7 @@ This plugin connects Claude to your [Taskade](https://www.taskade.com) workspace
 - **fix-my-app**: fixes a problem in a Taskade Genesis app, one checked change at a time.
 - **app-report**: writes a short status report on your projects and automations.
 - **backup-my-app**: copies a Taskade Genesis app into a local folder as readable files.
-- **plan-new-app**: plans a new Taskade Genesis app, creates its projects and AI agent, and writes the build prompt for Taskade EVE.
+- **plan-new-app**: plans a new Taskade Genesis app, writes the build request for Taskade EVE with a link that fills it in, and imports real rows after the build.
 
 ## How it connects
 
@@ -22,7 +22,7 @@ The plugin runs no code of its own. Tool calls go only to `https://www.taskade.c
 
 ## What it cannot do
 
-The plugin cannot create or edit an automation, build or publish an app, or set who can use an app. Taskade EVE does those jobs inside Taskade. The plugin writes the request for you to paste into Taskade EVE.
+The plugin cannot build an app, add fields to a project, or create or edit an automation. Taskade EVE does those jobs inside Taskade. The plugin writes the request for Taskade EVE, and for a new app it gives you a link that fills in the request and starts nothing. You publish an app and connect a domain in Taskade. For who can use an app, Taskade EVE proposes the setting and you apply it.
 
 ## Links
 

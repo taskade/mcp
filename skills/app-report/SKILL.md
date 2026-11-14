@@ -52,6 +52,6 @@ Needs a decision:
 ## 4. Offer to save or repeat
 
 - Offer to save the report as a new project (`create_project` with the report as markdown).
-- If the user wants this every week, say that a weekly email report is a Taskade automation. They can ask Taskade EVE: "Every Monday at 8am, email me a summary of my Jobs and Invoices projects." This plugin cannot create automations.
+- If the user wants this every week, say that a weekly email report is a Taskade automation. This plugin cannot create automations. Give the user this request and the app link `https://www.taskade.com/spaces/{spaceId}`: "Every Monday at 8am, email me a summary of my Jobs and Invoices projects." The user opens the app and gives the request to Taskade EVE there.
 
 Links on https://www.taskade.com: app `/spaces/{spaceId}`, project `/d/{projectId}`, automation `/flows/{flowId}`, agent `/agent/{agentId}`. Never invent another URL shape.
