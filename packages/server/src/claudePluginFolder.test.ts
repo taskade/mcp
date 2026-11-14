@@ -61,11 +61,11 @@ const manifestFiles = [
   'plugins/taskade/.claude-plugin/plugin.json',
 ];
 
-// Returns each URL that carries a prompt parameter (`?prompt=`, `&prompt=` or `&amp;prompt=`, any case) and is
-// not /create. A Markdown link passes when its target is /create: the text up to the last
+// Returns each URL that carries a prompt parameter and is not /create. The parameter is `?prompt=`,
+// `&prompt=` or an HTML-escaped `&amp;prompt=` at any depth of escaping, in any letter case. A Markdown link passes when its target is /create: the text up to the last
 // bracket, parenthesis, quote or backtick is not part of the URL.
 function promptUrlProblems(text: string): string[] {
-  return [...text.matchAll(/(\S*?)((?:\?|&(?:amp;)?)prompt=)/gi)]
+  return [...text.matchAll(/(\S*?)((?:\?|&(?:amp;)*)prompt=)/gi)]
     .map((match) => ({ url: match[1].replace(/^.*[[\]()<>`"']/, ''), param: match[2] }))
     .filter(
       ({ url }) => !['', 'https://www.taskade.com/create', '/create'].includes(url.toLowerCase()),
@@ -225,6 +225,9 @@ describe('skills/ (the skill files that every host reads)', () => {
     ]);
     expect(promptUrlProblems('https://www.taskade.com/spaces/abc?x=1&amp;prompt=hi')).toEqual([
       'https://www.taskade.com/spaces/abc?x=1&amp;prompt=',
+    ]);
+    expect(promptUrlProblems('https://www.taskade.com/spaces/abc?x=1&amp;amp;prompt=hi')).toEqual([
+      'https://www.taskade.com/spaces/abc?x=1&amp;amp;prompt=',
     ]);
     expect(promptUrlProblems('https://www.taskade.com/spaces/abc?Prompt=hi')).toEqual([
       'https://www.taskade.com/spaces/abc?Prompt=',
