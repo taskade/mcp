@@ -1,6 +1,6 @@
 # Write a strong build request for Taskade EVE
 
-Taskade EVE is the AI builder inside Taskade. It turns one request into a running app: projects, agents, knowledge links, automations and the interface, in that order. A new build makes its own app space with its own data. This server cannot start a build. Your job is to write the request. For a new app, the user opens `https://www.taskade.com/create?prompt=<the request, URL-encoded>`, reads the request and starts the build. Percent-encode the whole request, also `&`, `#`, `+`, parentheses and line breaks. Show the request as text too. If the link is longer than 2,000 characters, give the text and `https://www.taskade.com/create`.
+Taskade EVE is the AI builder inside Taskade. It turns one request into a running app: projects, agents, knowledge links, automations and the interface, in that order. A new build makes its own app space with its own data. This server cannot start a build. Your job is to write the request. For a new app, the user opens `https://www.taskade.com/create?prompt=<the request, URL-encoded>`, reads the request, picks the workspace on the build page and starts the build. Percent-encode the whole request, also `&`, `#`, `+`, parentheses and line breaks. Show the request as text too. If the link is longer than 2,000 characters, give the text and `https://www.taskade.com/create`.
 
 ## Put each part in the request, in this order
 
@@ -36,7 +36,7 @@ The most useful sentence names a full cycle: an input, an action, and a result t
 | "when an email arrives at the intake address" | From an email |
 | "when a task is added to Jobs" | From a change in a project |
 | "when my other system posts to a webhook" | From a webhook |
-| "when I ask" | By hand ("When asked"). This kind can also be run from this server with `run_flow`. |
+| "when I ask" | By hand ("When asked"). When it is On, this server can run it with `run_flow`. |
 
 Naming a connected app (Gmail, Slack, Google Sheets) is fine. The user connects that account in Taskade before the step can run. Say what must happen when a step fails (retry, skip, or notify the user), so that a failure is not silent.
 

@@ -26,7 +26,7 @@ Three parties change a workspace. Send each job to the right one.
 
 | Job | Who does it |
 |---|---|
-| Read the workspace. Change projects, tasks, agents and app files. Run an automation that is On. | You, through MCP |
+| Read the workspace. Change projects, tasks, agents and app files. Run an automation that is On and starts "When asked". | You, through MCP |
 | Build a new app. Add a feature that needs new data, an agent or an automation. Add fields to a project. Create or change an automation. Give an agent integration tools, make it public, or build an agent team (Pro and up). Run one action in a connected app. | Taskade EVE, the AI builder inside Taskade. You write the request (see "Hand off to Taskade EVE") |
 | Publish or unpublish an app with the Publish button. Connect a domain. Clone an app kit. | The owner, in the Taskade app |
 

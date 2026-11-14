@@ -66,7 +66,7 @@ MCP access is part of every paid Taskade plan. A workspace on the Free plan does
 |---|---|
 | Read and change projects, rows, fields, dates and assignees. Write notes (a read does not show notes). | Add or change custom fields and their options |
 | Create agents, edit their instructions, link knowledge, ask an agent | Build a new app from a prompt (Taskade EVE) |
-| List automations, read their run history, run one that starts "When asked" | Create or edit an automation, turn it On or Off |
+| List automations, read their run history, run one that is On and starts "When asked" | Create or edit an automation, turn it On or Off |
 | Read and edit app source files. A `write_file` change to a live app can go live at once. | Publish the app, set who can use it, connect a domain |
 
 For a task in the right column, send the job to the right party:
