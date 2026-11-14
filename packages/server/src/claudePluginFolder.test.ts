@@ -194,9 +194,9 @@ describe('skills/ (the skill files that every host reads)', () => {
   });
 
   it('puts ?prompt= only on https://www.taskade.com/create', () => {
-    // A build link fills in the request on /create and starts nothing. A prompt parameter
-    // on another Taskade URL can start a build that the user did not review. The manifests
-    // are in scope because their description strings are public listing text.
+    // /create is the only supported entry point for a request link: it fills in the request
+    // and starts nothing. The manifests are in scope because their description strings are
+    // public listing text.
     const files = [
       ...filesIn(join(repoRoot, 'skills')).map((file) => `skills/${file}`),
       'README.md',
