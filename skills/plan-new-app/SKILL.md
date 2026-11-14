@@ -78,7 +78,7 @@ Out of scope: online payments.
 
 ## 4. Hand it off by link
 
-- Call `list_spaces` and ask which workspace the app is for. Tell the user to start the build while they are in that workspace.
+- Ask which workspace the app is for. If Taskade is connected, call `list_spaces` and show the names. If it is not connected, ask the user for the name and continue: the link needs no MCP. Tell the user to start the build while they are in that workspace.
 - Tell the user that a build uses their AI credits.
 - Give the user this link: `https://www.taskade.com/create?prompt=<the request, URL-encoded>`. The link fills in the request and starts nothing. The user reads the request and starts the build.
 - Percent-encode the whole request, also `&`, `#`, `+`, parentheses and line breaks. Show the request as text too.
