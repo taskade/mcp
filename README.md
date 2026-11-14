@@ -35,11 +35,11 @@ This repo holds the Taskade [agent plugin](#agent-plugin-for-claude-code-codex-c
 
 ## Agent plugin for Claude Code, Codex, Copilot, Gemini CLI and Cursor
 
-The `taskade` plugin connects your AI tool to your Taskade workspace through the hosted server, and adds 7 skills: a front door (`taskade`) and six jobs (`getting-started`, `import-spreadsheet`, `fix-my-app`, `app-report`, `backup-my-app`, `plan-new-app`). The skills tell the agent which tools to call, in which order, and what to check before it reports back.
+The `taskade` plugin connects your AI tool to your Taskade workspace through the hosted server, and adds skills: a front door (`taskade`) and the job skills (`getting-started`, `import-spreadsheet`, `fix-my-app`, `app-report`, `backup-my-app`, `plan-new-app`). The skills tell the agent which tools to call, in which order, and what to check before it reports back.
 
 - **Plan:** MCP access is part of every paid Taskade plan (Starter and up). Sign in once with your Taskade account.
 - **What it does:** imports a spreadsheet into a project, fixes a Taskade Genesis app one checked change at a time, reports on your projects and automations, backs up an app to a folder, and plans a new app.
-- **What stays in Taskade:** the plugin cannot create or edit an automation, build or publish an app, or set who can use an app. For those jobs, it writes the request for you to paste into Taskade EVE.
+- **What stays in Taskade:** the plugin cannot build an app, add fields to a project, or create or edit an automation. For those jobs, it writes the request for Taskade EVE. For a new app, it gives you a link that fills in the request and starts nothing. You publish an app and connect a domain in Taskade. For who can use an app, Taskade EVE proposes the setting and you apply it.
 
 | Host | Install |
 |---|---|
@@ -197,11 +197,12 @@ Every hosted tool declares MCP tool annotations. Claude can run a read-only tool
 
 | Area | Read-only tools | Write tools |
 |---|---|---|
-| Workspaces | `list_spaces`, `list_folders`, `list_media`, `list_templates`, `inspect_space` | `write_file` (Genesis app source in `app/`) |
+| Workspaces | `list_spaces`, `list_folders`, `list_media`, `list_templates`, `inspect_space` | `write_file` (Taskade Genesis app source in `app/`) |
 | Automations | `list_automations`, `get_flow_runs` | `run_flow` |
 | Projects | `list_projects`, `list_my_projects`, `get_project`, `read_project`, `list_fields`, `list_blocks`, `list_project_members`, `get_share_link` | `create_project`, `create_project_from_template`, `copy_project`, `complete_project`, `restore_project`, `enable_share_link` |
 | Tasks | `list_tasks` | `create_task`, `update_task`, `complete_task`, `uncomplete_task`, `delete_task`, `move_task`, `set_task_note`, `delete_task_note`, `set_task_date`, `delete_task_date`, `assign_task`, `unassign_task`, `set_task_field_value`, `delete_task_field_value` |
 | AI agents | `list_agents`, `get_agent`, `list_conversations`, `get_conversation` | `create_agent`, `update_agent`, `delete_agent`, `prompt_agent`, `add_knowledge_project`, `remove_knowledge_project`, `add_knowledge_media`, `remove_knowledge_media` |
+| App kits | `list_my_kits` | `publish_kit_version` |
 
 - `get_flow_runs`: reads the recent runs of one automation, newest first. Each run has its status and times. A failed run also names the failed step and a short error. It needs edit rights on automations.
 - `run_flow`: starts one run of an automation that is On and starts "When asked". Every run is real: it counts toward the monthly automation runs of the plan, and AI steps use credits.
@@ -220,7 +221,7 @@ The server also serves the resource `taskade://getting-started`, a short guide f
    Tools: `create_agent`, `add_knowledge_project`, `prompt_agent`.
 4. **Close out a sprint.** "In the Sprint 42 project, mark every task that mentions 'shipped' as complete, then mark the project as completed."
    Tools: `list_tasks`, `complete_task`, `complete_project`.
-5. **Edit a Genesis app.** "In my CRM app, read `app/src/App.tsx` and change the page title to Acme CRM."
+5. **Edit a Taskade Genesis app.** "In my CRM app, read `app/src/App.tsx` and change the page title to Acme CRM."
    Tools: `inspect_space`, `write_file`.
 
 ---
@@ -699,7 +700,7 @@ See [open issues](https://github.com/taskade/mcp/issues) for planned features an
 
 **Recently shipped (v0.1.0):** Agent chat (`promptAgent`) and webhook triggers, live now via the [Taskade API v2 tool layer](#agent-chat--webhooks-api-v2-beta).
 
-- **Automation tools**: the hosted server lists automations, reads their runs and runs a "When asked" automation (`list_automations`, `get_flow_runs`, `run_flow`). Create, enable and manage automations through MCP are on the roadmap.
+- **Automation tools**: the hosted server lists automations, reads their runs and runs an automation that is On and starts "When asked" (`list_automations`, `get_flow_runs`, `run_flow`). Create, enable and manage automations through MCP are on the roadmap.
 - **`agent.js`** — Open-source autonomous agent toolkit (coming soon)
 - **TaskOS** — Agent platform at [docs.taskade.com](https://docs.taskade.com)
 

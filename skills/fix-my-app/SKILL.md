@@ -40,7 +40,7 @@ Before: shows "No jobs yet" because it reads the field "Status"
 After:  reads the field "Job Status", which is the real field name
 ```
 
-If the cause is inside an automation, say so. Automations cannot be edited here: give the user the automation link and the one change to ask Taskade EVE for.
+If the cause is inside an automation, say so. Automations cannot be edited here. Give the user the one change to ask Taskade EVE for, the automation link, and the app link `https://www.taskade.com/spaces/{spaceId}`. The user opens the app and gives the request to Taskade EVE there.
 
 ## 4. Make the change
 
