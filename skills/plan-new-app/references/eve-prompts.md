@@ -7,7 +7,7 @@ Taskade EVE is the AI builder inside Taskade. It turns one request into a runnin
 1. **Who uses the app and what they do.** "My clients sign in and see only their own jobs" says sign-in, per-user rows and a client portal in one sentence.
 2. **The records, as nouns, with their fields.** Name each kind of record (jobs, invoices, applicants) and its fields with a type: "Status (New, Scheduled, Done)", "Price (number, USD)", "Due date (date)". Each kind of record becomes a project.
 3. **The agents.** Say who uses each agent, which records it answers from, and what it does (see "Agents" below).
-4. **What happens without a click.** "Every Monday at 8am, email me a list of late invoices." Each such sentence becomes an automation.
+4. **What happens without a click.** "Every Monday at 8am New York time, email me a list of late invoices." Name the time zone for each time. Each such sentence becomes an automation.
 5. **What the screens show, and who signs in.** A board, a chart, a form, a calendar, a chat with the agent. Say which. Ask for a sign-in only when the app needs one.
 6. **The look and the language.** Name something concrete: light or dark, the brand colors, the language of the pages.
 7. **What is out of scope.**
@@ -18,7 +18,8 @@ Leave out the technology. Do not name a database, a framework, a package, a file
 weak:   Build a CRM.
 strong: Track leads through the stages New, Contacted, Proposal, Won and Lost,
         with owner, deal value (number, USD) and next action date.
-        When a lead has no change for 14 days, flag it and email me a list every Monday.
+        When a lead has no change for 14 days, flag it, and every Monday at 8am
+        New York time email me a list.
         Show a pipeline board, a chart of deal value by owner, and a lead form on the home page.
 ```
 
