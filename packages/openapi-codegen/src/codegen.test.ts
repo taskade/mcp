@@ -1,4 +1,5 @@
 import { OpenAPIV3 } from 'openapi-types';
+import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 
 import { codegen } from './codegen';
@@ -38,6 +39,38 @@ const hintsFor = (output: string, toolName: string) => {
 };
 
 describe('codegen derived annotations', () => {
+  it('codegen_escapesDescriptionsFromSpecsAndActionOverrides', async () => {
+    const DESCRIPTION = 'Read "quoted" text\nfrom C:\\tools';
+    const OUTPUT = await codegen({
+      document: {
+        ...document,
+        paths: {
+          '/things': {
+            get: { operationId: 'thingList', description: DESCRIPTION, responses: {} },
+            post: { operationId: 'thingCreate', responses: {} },
+          },
+        },
+      },
+      actions: { thingCreate: { description: DESCRIPTION } },
+    });
+
+    const SOURCE = ts.createSourceFile('tools.ts', OUTPUT, ts.ScriptTarget.Latest);
+    const DESCRIPTIONS: string[] = [];
+    const VISIT = (node: ts.Node): void => {
+      if (ts.isCallExpression(node) && node.expression.getText(SOURCE) === 'server.tool') {
+        const VALUE = node.arguments[1];
+        expect(ts.isStringLiteral(VALUE)).toBe(true);
+        if (ts.isStringLiteral(VALUE)) {
+          DESCRIPTIONS.push(VALUE.text);
+        }
+      }
+      ts.forEachChild(node, VISIT);
+    };
+
+    VISIT(SOURCE);
+    expect(DESCRIPTIONS).toEqual([DESCRIPTION, DESCRIPTION]);
+  });
+
   it('derives the full MCP hint set from the HTTP method', async () => {
     const output = await codegen({ document });
 

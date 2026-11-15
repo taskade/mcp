@@ -132,7 +132,11 @@ export const codegen = async (opts: CodegenOpts) => {
 
     const description = actionConfig?.description ?? tool.description;
 
-    const toolArgs = [`"${tool.name}"`, `"${description}"`, generateToolInputFromParsedTool(tool)];
+    const toolArgs = [
+      `"${tool.name}"`,
+      JSON.stringify(description),
+      generateToolInputFromParsedTool(tool),
+    ];
 
     // annotations always carry the derived hint set, so always include them
     toolArgs.push(JSON.stringify(annotations));
