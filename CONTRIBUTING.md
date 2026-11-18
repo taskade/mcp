@@ -19,9 +19,14 @@ Run `yarn install` in the root folder of the project to install all dependencies
 
 The Claude plugin directory reads only `plugins/taskade/`. Codex, Cursor, Gemini CLI, Copilot CLI, `npx skills add` and `claude plugin marketplace add taskade/mcp` read the root files (`.claude-plugin/`, `.mcp.json`, `skills/`).
 
-After you edit a skill, `.mcp.json`, `LICENSE` or `assets/logo.png`, copy the change into `plugins/taskade/`. For a skill, run `rsync -a --delete skills/ plugins/taskade/skills/` from the repo root.
+[taskade/skills](https://github.com/taskade/skills) is the source of the skills. Open an issue or a pull request for a skill there. For each release, the script `scripts/sync-mcp.sh` of taskade/skills writes these files here, and a pull request brings them in:
 
-When you bump the plugin version, change it in `plugins/taskade/.claude-plugin/plugin.json` too. `yarn test` fails when the two copies differ.
+- `skills/` and `plugins/taskade/skills/`
+- `plugins/taskade/README.md`
+- `.mcp.json` and `assets/logo.png`, at the root and in `plugins/taskade/`
+- The plugin version in each manifest, and the description of the Claude Code, Cursor and Codex manifests
+
+The other fields of the manifests and `LICENSE` belong to this repository. When you edit `LICENSE` or a field that both `.claude-plugin/plugin.json` files hold, edit both copies. `yarn test` fails when the copies differ.
 
 ## Pull requests
 

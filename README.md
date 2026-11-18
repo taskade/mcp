@@ -35,7 +35,7 @@ This repo holds the Taskade [agent plugin](#agent-plugin-for-claude-code-codex-c
 
 ## Agent plugin for Claude Code, Codex, Copilot, Gemini CLI and Cursor
 
-The `taskade` plugin connects your AI tool to your Taskade workspace through the hosted server, and adds skills: a front door (`taskade`) and the job skills (`getting-started`, `import-spreadsheet`, `fix-my-app`, `app-report`, `backup-my-app`, `plan-new-app`). The skills tell the agent which tools to call, in which order, and what to check before it reports back.
+The `taskade` plugin connects your AI tool to your Taskade workspace through the hosted server, and adds skills: a front door (`taskade`) and the job skills. The skills tell the agent which tools to call, in which order, and what to check before it reports back. The home of the skills is [taskade/skills](https://github.com/taskade/skills): it lists each skill, and it takes issues and pull requests for the skills. This repository holds a generated copy of each release.
 
 - **Plan:** MCP access is part of every paid Taskade plan (Starter and up). Sign in once with your Taskade account.
 - **What it does:** imports a spreadsheet into a project, fixes a Taskade Genesis app one checked change at a time, reports on your projects and automations, backs up an app to a folder, and plans a new app.
@@ -55,7 +55,7 @@ The `taskade` plugin connects your AI tool to your Taskade workspace through the
 
 **Cursor:** the Cursor plugin `taskade` (`.cursor-plugin/`) in this repository adds the same hosted server and skills.
 
-**Claude directory:** the directory listing reads the plugin from `plugins/taskade/`, a copy of the root plugin files. The other hosts read the root files.
+**Claude directory:** the directory listing reads the plugin from `plugins/taskade/`. The other hosts read the root files. The sync of each release of [taskade/skills](https://github.com/taskade/skills) writes `skills/` and `plugins/taskade/skills/` with the same files.
 
 To add only the hosted server to Codex, run `codex mcp add taskade --url https://www.taskade.com/mcp`, then `codex mcp login taskade`.
 
