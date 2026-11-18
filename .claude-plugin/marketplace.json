@@ -6,7 +6,7 @@
     {
       "name": "taskade",
       "source": "./",
-      "description": "Use Taskade from Claude: projects, tasks, AI agents, automations and Taskade Genesis apps. Needs a paid Taskade plan.",
+      "description": "Use Taskade from Claude: projects, tasks, AI agents, automations and Taskade Genesis apps. The connection needs a paid Taskade plan. The Markdown and project view skills work with no connection.",
       "version": "0.3.1",
       "author": { "name": "Taskade", "url": "https://www.taskade.com" },
       "license": "MIT",
