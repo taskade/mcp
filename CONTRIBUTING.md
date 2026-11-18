@@ -26,7 +26,7 @@ The Claude plugin directory reads only `plugins/taskade/`. Codex, Cursor, Gemini
 - `.mcp.json` and `assets/logo.png`, at the root and in `plugins/taskade/`
 - The plugin version in each manifest, and the description of the Claude Code, Cursor and Codex manifests
 
-The other fields of the manifests and `LICENSE` belong to this repository. When you edit `LICENSE` or a field that both `.claude-plugin/plugin.json` files hold, edit both copies. `yarn test` fails when the copies differ.
+The other fields of the manifests and `LICENSE` belong to this repository. In each sync pull request, write the release notes of the new version in `publication.release_notes` of `plugin.json`. When you edit `LICENSE` or a field that both `.claude-plugin/plugin.json` files hold, edit both copies. `yarn test` fails when the copies differ.
 
 ## Pull requests
 

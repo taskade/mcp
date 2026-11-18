@@ -81,7 +81,7 @@
         }
       },
       "publication": {
-        "release_notes": "The front-door skill now routes by session and hands a new build to Taskade EVE with a link that fills in the request. The plan-new-app skill writes the request first and imports real rows after the build."
+        "release_notes": "Two new skills work with no connection. taskade-markdown writes a Markdown or CSV file that Taskade imports as a clean project. project-views picks the project view that answers a question."
       }
     }
   }
