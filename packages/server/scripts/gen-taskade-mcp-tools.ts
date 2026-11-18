@@ -5,6 +5,7 @@ import {
   ENABLED_TASKADE_ACTIONS,
   HUMANIZED_TASKADE_ACTIONS,
   TASKADE_ACTION_HINTS,
+  TASKADE_PARAMETER_DESCRIPTIONS,
 } from '../src/constants';
 
 const document = await dereference('taskade-public.yaml');
@@ -12,10 +13,15 @@ const document = await dereference('taskade-public.yaml');
 // Supply a human-friendly title per tool from the humanized action map; the
 // codegen derives readOnly/destructive hints from each operation's HTTP method,
 // and TASKADE_ACTION_HINTS overrides them where the method does not tell.
+// TASKADE_PARAMETER_DESCRIPTIONS describes the parameters that the spec does not.
 const actions = Object.fromEntries(
   Object.entries(HUMANIZED_TASKADE_ACTIONS).map(([name, title]) => [
     name,
-    { title, ...TASKADE_ACTION_HINTS[name] },
+    {
+      title,
+      parameterDescriptions: TASKADE_PARAMETER_DESCRIPTIONS,
+      ...TASKADE_ACTION_HINTS[name],
+    },
   ]),
 );
 

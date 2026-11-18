@@ -125,3 +125,102 @@ describe('codegen derived annotations', () => {
     });
   });
 });
+
+describe('codegen tool titles', () => {
+  it('sets the action title at the top level and keeps it in the annotations', async () => {
+    const TITLE = 'List "All" Things';
+    const OUTPUT = await codegen({ document, actions: { thingList: { title: TITLE } } });
+
+    const SOURCE = ts.createSourceFile('tools.ts', OUTPUT, ts.ScriptTarget.Latest, true);
+    const stringProperty = (node: ts.Node | undefined, key: string) => {
+      if (!node || !ts.isObjectLiteralExpression(node)) {
+        return undefined;
+      }
+      const PROPERTY = node.properties.find(
+        (item): item is ts.PropertyAssignment =>
+          ts.isPropertyAssignment(item) && item.name.getText(SOURCE) === key,
+      );
+      return PROPERTY && ts.isStringLiteral(PROPERTY.initializer)
+        ? PROPERTY.initializer.text
+        : undefined;
+    };
+
+    // Each tool: the title of its `.update({ title })` call and its annotation title.
+    const TITLES: Record<string, { title?: string; annotationTitle?: string }> = {};
+    const VISIT = (node: ts.Node): void => {
+      if (
+        ts.isCallExpression(node) &&
+        ts.isPropertyAccessExpression(node.expression) &&
+        node.expression.name.text === 'tool' &&
+        node.expression.expression.getText(SOURCE) === 'server'
+      ) {
+        const NAME = node.arguments[0];
+        const PARENT = node.parent;
+        const UPDATE =
+          ts.isPropertyAccessExpression(PARENT) &&
+          PARENT.name.text === 'update' &&
+          ts.isCallExpression(PARENT.parent)
+            ? PARENT.parent
+            : undefined;
+        if (ts.isStringLiteral(NAME)) {
+          TITLES[NAME.text] = {
+            title: stringProperty(UPDATE?.arguments[0], 'title'),
+            annotationTitle: stringProperty(node.arguments[3], 'title'),
+          };
+        }
+      }
+      ts.forEachChild(node, VISIT);
+    };
+
+    VISIT(SOURCE);
+    expect(TITLES).toEqual({
+      thingList: { title: TITLE, annotationTitle: TITLE },
+      // A tool with no title in its action config gets no title.
+      thingCreate: { title: undefined, annotationTitle: undefined },
+      thingUpdate: { title: undefined, annotationTitle: undefined },
+      thingDelete: { title: undefined, annotationTitle: undefined },
+    });
+  });
+});
+
+describe('codegen parameter descriptions', () => {
+  it('fills a missing parameter description from the action config and keeps a spec description', async () => {
+    const OUTPUT = await codegen({
+      document: {
+        ...document,
+        paths: {
+          '/things/{thingId}': {
+            get: {
+              operationId: 'thingGet',
+              description: 'Get a thing',
+              parameters: [
+                { name: 'thingId', in: 'path', required: true, schema: { type: 'string' } },
+                {
+                  name: 'limit',
+                  in: 'query',
+                  description: 'The spec text',
+                  schema: { type: 'number' },
+                },
+              ],
+              responses: {},
+            },
+          },
+        },
+      },
+      actions: {
+        thingGet: {
+          parameterDescriptions: {
+            thingId: 'The id of the thing.',
+            limit: 'The override text',
+            missing: 'A parameter that the tool does not have',
+          },
+        },
+      },
+    });
+
+    expect(OUTPUT).toContain('thingId: z.string().describe("The id of the thing.")');
+    expect(OUTPUT).toContain('limit: z.number().describe("The spec text").optional()');
+    expect(OUTPUT).not.toContain('The override text');
+    expect(OUTPUT).not.toContain('missing');
+  });
+});

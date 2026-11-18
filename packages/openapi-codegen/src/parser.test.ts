@@ -88,3 +88,65 @@ describe('parseOpenApi name resolution', () => {
     expect(tools[0].inputSchema.required).toEqual(['spaceId', 'agentId', 'prompt']);
   });
 });
+
+describe('parseOpenApi parameter descriptions', () => {
+  it('copies the description of a path or query parameter into its property schema', () => {
+    const tools = parseOpenApi({
+      '/projects/{projectId}/tasks': {
+        get: {
+          operationId: 'projectTasksGet',
+          parameters: [
+            {
+              name: 'projectId',
+              in: 'path',
+              required: true,
+              description: 'The id of the project',
+              schema: { type: 'string' },
+            },
+            {
+              name: 'after',
+              in: 'query',
+              description: 'Return the tasks after this task id',
+              schema: { type: 'string' },
+            },
+          ],
+          responses: {},
+        },
+      },
+    } as never);
+
+    expect(tools[0].pathParamsSchema?.properties?.projectId).toEqual({
+      type: 'string',
+      description: 'The id of the project',
+    });
+    expect(tools[0].queryParamsSchema?.properties?.after).toEqual({
+      type: 'string',
+      description: 'Return the tasks after this task id',
+    });
+    expect(tools[0].pathParamsSchema?.required).toEqual(['projectId']);
+  });
+
+  it('keeps the schema description when the parameter and its schema both have one', () => {
+    const tools = parseOpenApi({
+      '/projects': {
+        get: {
+          operationId: 'projectsGet',
+          parameters: [
+            {
+              name: 'limit',
+              in: 'query',
+              description: 'The parameter text',
+              schema: { type: 'number', description: 'The schema text' },
+            },
+          ],
+          responses: {},
+        },
+      },
+    } as never);
+
+    expect(tools[0].queryParamsSchema?.properties?.limit).toEqual({
+      type: 'number',
+      description: 'The schema text',
+    });
+  });
+});

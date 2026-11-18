@@ -102,8 +102,12 @@ describe('OpenAPI Codegen Schema Validation', () => {
     expect(output).toContain('workspaceId: z.string()');
     expect(output).toContain('taskId: z.string()');
 
-    // Verify query parameter extraction with defaults/optionals
-    expect(output).toContain('dryRun: z.boolean().default(false)');
+    // Verify query parameter extraction with defaults/optionals. The description of a
+    // parameter sits beside its schema in the spec and reaches the zod schema.
+    expect(output).toContain(
+      'dryRun: z.boolean().describe("Simulate without saving").default(false)',
+    );
+    expect(output).toContain('workspaceId: z.string().describe("Target workspace identifier")');
     expect(output).toContain('includeArchived: z.boolean().optional()');
 
     // Verify request body properties in createTask

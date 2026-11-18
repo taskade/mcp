@@ -162,3 +162,28 @@ export const TASKADE_ACTION_HINTS: Partial<Record<string, ActionHints>> = {
   agentUpdate: { destructiveHint: true, idempotentHint: true },
   agentPublicUpdate: { destructiveHint: true, idempotentHint: true },
 };
+
+// Descriptions for input parameters that the spec does not describe, keyed by parameter
+// name. The v1 and v2 generators pass the same map to every tool. The codegen uses a
+// text only for a parameter with no spec description, and it ignores a name that a tool
+// does not have. Add a name here only when the text is true for each tool that has a
+// parameter with that name.
+export const TASKADE_PARAMETER_DESCRIPTIONS: Record<string, string> = {
+  workspaceId: 'The id of the workspace.',
+  folderId: 'Folder/Workspace/Space ID',
+  projectId: 'The id of the project.',
+  projectTitle: 'The title of the new copy of the project.',
+  templateId: 'The id of the project template.',
+  taskId: 'The id of the task.',
+  fieldId: 'The id of the field.',
+  assigneeHandle: 'The handle of the assignee.',
+  agentId: 'The id of the agent.',
+  publicAgentId: 'The id of the public agent.',
+  convoId: 'The id of the conversation.',
+  mediaId: 'The id of the media.',
+  hookId: 'The id of the webhook subscription that subscribeWebhook returns.',
+  targetUrl: 'The https URL that receives the webhook events.',
+  limit: 'The maximum number of items in one page of results.',
+  page: 'The page number of the results. The first page is 1.',
+  includeTranscript: 'Set to true to return the transcript of the conversation too.',
+};
