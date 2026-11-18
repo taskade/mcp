@@ -1,6 +1,6 @@
 ---
 name: taskade-markdown
-description: Write a Markdown or CSV file that Taskade turns into a clean project, and tell the user how to bring it in. Writing the file needs no Taskade account and no MCP connection. Use when the user asks for a plan, checklist, outline or task list "for Taskade", wants to move notes from another app into Taskade, or asks which Markdown Taskade keeps. Do not use it to add rows to an existing project with duplicate checks (use import-spreadsheet) or to build a new app (use plan-new-app).
+description: Write a Markdown or CSV file that Taskade turns into a clean project, and tell the user how to bring it in. Writing the file needs no Taskade account and no MCP connection. Use when the user asks for a plan, checklist, outline or task list "for Taskade", wants to move notes from another app into Taskade, or asks which Markdown Taskade keeps. For rows with duplicate checks in a project that exists, use taskade-spreadsheet-to-app. For a new app, use taskade-build-app.
 ---
 
 # Write Markdown for Taskade
@@ -65,7 +65,7 @@ The **Import with AI** tab also takes `.md` files and **Paste Text & Markdown**.
 
 ## With a connection
 
-- `create_project` takes a `spaceId` and the Markdown as `content`. It returns the new project id.
+- `create_project` takes a `spaceId` and the Markdown as `content`. It returns the new project id. Pass `view` (`list`, `table`, `board`, `calendar` or `mindmap`) to open the project in that view.
 - To add Markdown under an existing project, use `create_task`. It reads each task's content as Markdown by default. One call takes at most 20 tasks. For a full file, use `create_project`.
 
 ## Known problems
@@ -86,6 +86,6 @@ The **Import with AI** tab also takes `.md` files and **Paste Text & Markdown**.
 
 ## Scope
 
-- Rows with duplicate checks and field values in an existing project: use `import-spreadsheet`.
-- A new app with data, agents and automations: use `plan-new-app`.
+- Rows with duplicate checks and field values in an existing project: use `taskade-spreadsheet-to-app`.
+- A new app with data, agents and automations: use `taskade-build-app`.
 - This skill does not change or delete rows that exist.
