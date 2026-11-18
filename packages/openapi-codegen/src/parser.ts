@@ -96,9 +96,16 @@ export const parseOpenApi = (
               obj = queryParamsSchema;
             }
 
-            obj.properties![param.name] = normalizeAllOf(
-              convertOpenApiSchemaToJsonSchema(param.schema),
-            );
+            const propertySchema = normalizeAllOf(convertOpenApiSchemaToJsonSchema(param.schema));
+
+            // An OpenAPI Parameter Object keeps its description beside `schema`, not
+            // inside it. Copy it into the property schema so that the tool input schema
+            // carries it. A description inside the schema stays as it is.
+            if (param.description && !propertySchema.description) {
+              propertySchema.description = param.description;
+            }
+
+            obj.properties![param.name] = propertySchema;
 
             if (param.required) {
               obj.required!.push(param.name);

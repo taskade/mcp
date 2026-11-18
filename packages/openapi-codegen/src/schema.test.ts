@@ -98,7 +98,13 @@ describe('OpenAPI Codegen Schema Validation', () => {
         paths: {
           '/projects/{projectId}': {
             parameters: [
-              { name: 'projectId', in: 'path', required: true, schema: { type: 'string' } },
+              {
+                name: 'projectId',
+                in: 'path',
+                required: true,
+                description: 'The project to retrieve',
+                schema: { type: 'string' },
+              },
               { name: 'limit', in: 'query', schema: { type: 'integer' } },
             ],
             get: { operationId: 'projectGet', responses: {} },
@@ -107,7 +113,7 @@ describe('OpenAPI Codegen Schema Validation', () => {
       },
     });
 
-    expect(output).toContain('projectId: z.string()');
+    expect(output).toContain('projectId: z.string().describe("The project to retrieve")');
     expect(output).toContain('limit: z.number().int().optional()');
     expect(output).toContain('pathParamKeys: ["projectId"]');
     expect(output).toContain('queryParamKeys: ["limit"]');
@@ -124,8 +130,12 @@ describe('OpenAPI Codegen Schema Validation', () => {
     expect(output).toContain('workspaceId: z.string()');
     expect(output).toContain('taskId: z.string()');
 
-    // Verify query parameter extraction with defaults/optionals
-    expect(output).toContain('dryRun: z.boolean().default(false)');
+    // Verify query parameter extraction with defaults/optionals. The description of a
+    // parameter sits beside its schema in the spec and reaches the zod schema.
+    expect(output).toContain(
+      'dryRun: z.boolean().describe("Simulate without saving").default(false)',
+    );
+    expect(output).toContain('workspaceId: z.string().describe("Target workspace identifier")');
     expect(output).toContain('includeArchived: z.boolean().optional()');
 
     // Verify request body properties in createTask

@@ -95,8 +95,19 @@ describe('parseOpenApi parameter inheritance', () => {
     const tools = parseOpenApi({
       '/projects/{projectId}': {
         parameters: [
-          { name: 'projectId', in: 'path', required: true, schema: { type: 'string' } },
-          { name: 'limit', in: 'query', schema: { type: 'integer' } },
+          {
+            name: 'projectId',
+            in: 'path',
+            required: true,
+            description: 'The project to retrieve',
+            schema: { type: 'string' },
+          },
+          {
+            name: 'limit',
+            in: 'query',
+            description: 'The maximum number of results',
+            schema: { type: 'integer' },
+          },
         ],
         get: { operationId: 'projectGet', responses: {} },
         delete: { operationId: 'projectDelete', responses: {} },
@@ -105,8 +116,12 @@ describe('parseOpenApi parameter inheritance', () => {
 
     for (const tool of tools) {
       expect(tool.pathParamsSchema?.required).toEqual(['projectId']);
-      expect(tool.pathParamsSchema?.properties).toEqual({ projectId: { type: 'string' } });
-      expect(tool.queryParamsSchema?.properties).toEqual({ limit: { type: 'integer' } });
+      expect(tool.pathParamsSchema?.properties).toEqual({
+        projectId: { type: 'string', description: 'The project to retrieve' },
+      });
+      expect(tool.queryParamsSchema?.properties).toEqual({
+        limit: { type: 'integer', description: 'The maximum number of results' },
+      });
 
       const request = prepareToolCallOperation({
         name: tool.name,
@@ -126,11 +141,24 @@ describe('parseOpenApi parameter inheritance', () => {
       '/projects/{id}': {
         parameters: [
           { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
-          { name: 'id', in: 'query', required: true, schema: { type: 'integer' } },
+          {
+            name: 'id',
+            in: 'query',
+            required: true,
+            description: 'The shared id',
+            schema: { type: 'integer' },
+          },
         ],
         get: {
           operationId: 'projectGet',
-          parameters: [{ name: 'id', in: 'query', schema: { type: 'string' } }],
+          parameters: [
+            {
+              name: 'id',
+              in: 'query',
+              description: 'The operation id',
+              schema: { type: 'string' },
+            },
+          ],
           responses: {},
         },
         delete: { operationId: 'projectDelete', responses: {} },
@@ -139,9 +167,75 @@ describe('parseOpenApi parameter inheritance', () => {
 
     expect(tools[0].pathParamsSchema?.properties).toEqual({ id: { type: 'string' } });
     expect(tools[0].pathParamsSchema?.required).toEqual(['id']);
-    expect(tools[0].queryParamsSchema?.properties).toEqual({ id: { type: 'string' } });
+    expect(tools[0].queryParamsSchema?.properties).toEqual({
+      id: { type: 'string', description: 'The operation id' },
+    });
     expect(tools[0].queryParamsSchema?.required).toEqual([]);
-    expect(tools[1].queryParamsSchema?.properties).toEqual({ id: { type: 'integer' } });
+    expect(tools[1].queryParamsSchema?.properties).toEqual({
+      id: { type: 'integer', description: 'The shared id' },
+    });
     expect(tools[1].queryParamsSchema?.required).toEqual(['id']);
+  });
+});
+
+describe('parseOpenApi parameter descriptions', () => {
+  it('copies the description of a path or query parameter into its property schema', () => {
+    const tools = parseOpenApi({
+      '/projects/{projectId}/tasks': {
+        get: {
+          operationId: 'projectTasksGet',
+          parameters: [
+            {
+              name: 'projectId',
+              in: 'path',
+              required: true,
+              description: 'The id of the project',
+              schema: { type: 'string' },
+            },
+            {
+              name: 'after',
+              in: 'query',
+              description: 'Return the tasks after this task id',
+              schema: { type: 'string' },
+            },
+          ],
+          responses: {},
+        },
+      },
+    } as never);
+
+    expect(tools[0].pathParamsSchema?.properties?.projectId).toEqual({
+      type: 'string',
+      description: 'The id of the project',
+    });
+    expect(tools[0].queryParamsSchema?.properties?.after).toEqual({
+      type: 'string',
+      description: 'Return the tasks after this task id',
+    });
+    expect(tools[0].pathParamsSchema?.required).toEqual(['projectId']);
+  });
+
+  it('keeps the schema description when the parameter and its schema both have one', () => {
+    const tools = parseOpenApi({
+      '/projects': {
+        get: {
+          operationId: 'projectsGet',
+          parameters: [
+            {
+              name: 'limit',
+              in: 'query',
+              description: 'The parameter text',
+              schema: { type: 'number', description: 'The schema text' },
+            },
+          ],
+          responses: {},
+        },
+      },
+    } as never);
+
+    expect(tools[0].queryParamsSchema?.properties?.limit).toEqual({
+      type: 'number',
+      description: 'The schema text',
+    });
   });
 });
