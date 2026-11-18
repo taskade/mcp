@@ -9,7 +9,7 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint --fix . --ext .js,.jsx,.ts,.tsx",
     "test": "vitest run",
-    "changeset:version": "changeset version",
+    "changeset:version": "changeset version && tsx packages/server/scripts/sync-dockerfile-version.ts",
     "changeset:publish": "changeset publish",
     "publish": "run-s build lint changeset:publish"
   },
