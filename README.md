@@ -5,7 +5,7 @@
 Paste this to your agent:
 
 ```text
-Set up Taskade for me: https://www.taskade.com/SKILL.md
+Set up Taskade for me. Read and follow https://www.taskade.com/SKILL.md
 ```
 
 **[Taskade](https://www.taskade.com) is the AI-native workspace for projects, AI agents and automations. [Taskade Genesis](https://www.taskade.com/create) builds a running app from one prompt.**
@@ -35,11 +35,17 @@ This repo holds the Taskade [agent plugin](#agent-plugin-for-claude-code-codex-c
 
 ## Agent plugin for Claude Code, Codex, Copilot, Gemini CLI and Cursor
 
-The `taskade` plugin connects your AI tool to your Taskade workspace through the hosted server, and adds skills: a front door (`taskade`) and the job skills. The skills tell the agent which tools to call, in which order, and what to check before it reports back. The home of the skills is [taskade/skills](https://github.com/taskade/skills): it lists each skill, and it takes issues and pull requests for the skills. This repository holds a generated copy of each release.
+The `taskade` plugin connects your AI tool to your Taskade workspace through the hosted server, and adds skills: a front door (`taskade`) and one skill for each job. The skills tell the agent which tools to call, in which order, and what to check before it reports back. The home of the skills is [taskade/skills](https://github.com/taskade/skills). It lists each skill, and it takes issues and pull requests for the skills. The [`skills/`](skills) folder of this repository holds a generated copy of each release.
+
+To start, paste this to your agent:
+
+```text
+Set up Taskade for me. Read and follow https://www.taskade.com/SKILL.md
+```
 
 - **Plan:** MCP access is part of every paid Taskade plan (Starter and up). Sign in once with your Taskade account.
-- **What it does:** imports a spreadsheet into a project, fixes a Taskade Genesis app one checked change at a time, reports on your projects and automations, backs up an app to a folder, and plans a new app.
-- **What stays in Taskade:** the plugin cannot build an app, add fields to a project, or create or edit an automation. For those jobs, it writes the request for Taskade EVE. For a new app, it gives you a link that fills in the request and starts nothing. You publish an app and connect a domain in Taskade. For who can use an app, Taskade EVE proposes the setting and you apply it.
+- **What it does:** the front door connects Taskade, shows what is in your workspace, changes projects, tasks, fields, AI agents and Taskade Genesis app files, and picks the project view that answers a question. The job skills plan a new Taskade Genesis app for Taskade EVE, check and fix an app, fix its first screen, make it safe to share, clone an app kit, turn a spreadsheet into a project or app, back up and publish an app, build and test an AI agent, turn the plan of a code repository into a project, write a status report, and write a Markdown or CSV file for import.
+- **What stays in Taskade:** the plugin cannot build an app or create or edit an automation. For those jobs, it writes the request for Taskade EVE, and you start the build. For a new app, it gives you a link that fills in the request and starts nothing. You publish an app, choose who can use it, turn an automation On or Off, and connect a domain in Taskade.
 
 | Host | Install |
 |---|---|
@@ -49,7 +55,7 @@ The `taskade` plugin connects your AI tool to your Taskade workspace through the
 | Gemini CLI | `gemini extensions install https://github.com/taskade/mcp` |
 | VS Code | See below |
 | Cursor | See below |
-| Any other agent | `npx skills add taskade/mcp` installs the skills only. Then add the hosted server `https://www.taskade.com/mcp` to the agent and sign in (see the [quick start](#taskade-mcp-server-quick-start)). |
+| Any other agent | `npx skills add taskade/skills` installs the skills from their home, and `npx skills add taskade/mcp` installs the copy in this repository. Both install the skills only. Then add the hosted server `https://www.taskade.com/mcp` to the agent and sign in (see the [quick start](#taskade-mcp-server-quick-start)). |
 
 **VS Code:** turn on the `chat.plugins.enabled` setting. Then run **Chat: Install Plugin From Source** from the Command Palette and enter `https://github.com/taskade/mcp`.
 
@@ -713,7 +719,7 @@ See [open issues](https://github.com/taskade/mcp/issues) for planned features an
 ## Privacy & Security
 
 - **Hosted server.** Taskade runs it on `www.taskade.com`. It reads and writes only the workspaces that your Taskade account can access and that are on a paid plan. The server does not read your chat history with the AI client. `prompt_agent` runs a Taskade agent, which can use its own tools, for example web search.
-- **Agent plugin.** The plugin holds skills (text files) and the address of the hosted server. It runs no code of its own. The backup skill writes workspace files to a local folder (`./taskade-backup/` unless you name another one).
+- **Agent plugin.** The plugin holds skills (text files) and the address of the hosted server. It runs no code of its own. The `taskade-publish-app` skill writes its backup of an app to a local folder (`./taskade-backup/` unless you name another one). The `taskade-repo-to-project` skill reads a local code repository and sends no source code to Taskade.
 - **Local package.** Your API token authorizes the server to call the Taskade public API (`https://www.taskade.com/api/v1` and `https://www.taskade.com/api/v2`) on your behalf. The package sends your data to no other service. Keep the token in an environment variable, and never commit it.
 - **Privacy policy:** [taskade.com/privacy](https://www.taskade.com/privacy). **Terms:** [taskade.com/terms](https://www.taskade.com/terms).
 - **Security and vulnerability reports:** see [SECURITY.md](./SECURITY.md).

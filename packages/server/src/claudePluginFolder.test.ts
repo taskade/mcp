@@ -14,9 +14,11 @@ const pluginDir = join(repoRoot, 'plugins/taskade');
 const copiedFiles = ['.mcp.json', 'LICENSE', 'assets/logo.png'];
 
 const fixCommands = [
-  'Run these commands from the repo root to sync plugins/taskade/:',
-  '  rsync -a --delete skills/ plugins/taskade/skills/',
-  ...copiedFiles.map((file) => `  cp ${file} plugins/taskade/${file}`),
+  'skills/, plugins/taskade/skills/, .mcp.json and assets/logo.png are a generated copy of taskade/skills.',
+  'Do not edit them here. Make the change in https://github.com/taskade/skills, then run',
+  'scripts/sync-mcp.sh of taskade/skills with the path of this checkout.',
+  'LICENSE belongs to this repository. Run this command from the repo root to copy it:',
+  '  cp LICENSE plugins/taskade/LICENSE',
 ].join('\n');
 
 const sharedManifestFields = [

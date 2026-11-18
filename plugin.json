@@ -12,8 +12,8 @@
     "com.openai": {
       "interface": {
         "displayName": "Taskade",
-        "shortDescription": "Projects, agents and apps",
-        "longDescription": "Import a spreadsheet into a Taskade project, fix a Taskade Genesis app with a checked change, get a status report from your projects and automations, back up an app, or plan a new app. Sign in with your Taskade account. The plugin cannot build an app or create or edit an automation. It writes the request for Taskade EVE, the builder inside Taskade. You publish an app in Taskade.",
+        "shortDescription": "Plan, check and fix apps, projects and agents",
+        "longDescription": "Plan a new Taskade Genesis app, check and fix your apps, fix the first screen, make an app safe to share, clone an app kit, turn a spreadsheet into an app, back up and publish an app, build and test an AI agent, turn the plan of a code repository into a project, and get a status report on your projects and automations. Sign in with your Taskade account. The plugin cannot build an app or create or edit an automation. It writes the request for Taskade EVE, the builder inside Taskade, and you start the build. You publish an app in Taskade.",
         "developerName": "Taskade",
         "category": "Productivity",
         "capabilities": ["Read", "Write"],
@@ -24,9 +24,9 @@
         "privacyPolicyURL": "https://www.taskade.com/privacy",
         "termsOfServiceURL": "https://www.taskade.com/terms",
         "defaultPrompt": [
-          "Import this spreadsheet of leads into my Taskade CRM and skip duplicates",
-          "Give me a status report of my Taskade workspace for this week",
-          "My Taskade app shows a blank page after login. Fix it and show me what changed"
+          "Plan a client portal app in Taskade and give me the build link for Taskade EVE",
+          "Check my Taskade apps and tell me what to fix first",
+          "Import this spreadsheet of leads into my Taskade CRM and skip duplicates"
         ]
       },
       "review": {
@@ -81,7 +81,7 @@
         }
       },
       "publication": {
-        "release_notes": "Two new skills work with no connection. taskade-markdown writes a Markdown or CSV file that Taskade imports as a clean project. project-views picks the project view that answers a question."
+        "release_notes": "The job skills have new names that start with taskade-. taskade-build-app replaces plan-new-app, taskade-fix-app replaces fix-my-app, taskade-spreadsheet-to-app replaces import-spreadsheet, taskade-report replaces app-report, and taskade-publish-app replaces backup-my-app. The front door taskade now does the setup of getting-started and gives the project view advice. New skills: taskade-check-app, taskade-fix-first-screen, taskade-secure-app, taskade-clone-kit, taskade-build-agent, taskade-repo-to-project and taskade-markdown. The skills come from taskade/skills."
       }
     }
   }

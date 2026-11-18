@@ -19,14 +19,14 @@ Run `yarn install` in the root folder of the project to install all dependencies
 
 The Claude plugin directory reads only `plugins/taskade/`. Codex, Cursor, Gemini CLI, Copilot CLI, `npx skills add` and `claude plugin marketplace add taskade/mcp` read the root files (`.claude-plugin/`, `.mcp.json`, `skills/`).
 
-[taskade/skills](https://github.com/taskade/skills) is the source of the skills. Open an issue or a pull request for a skill there. For each release, the script `scripts/sync-mcp.sh` of taskade/skills writes these files here, and a pull request brings them in:
+[taskade/skills](https://github.com/taskade/skills) is the one source of the skills. Send every skill change there, as an issue or a pull request. Do not edit `skills/` or `plugins/taskade/skills/` here. These two folders are a generated copy, and the next sync replaces a change in them. For each release, the script `scripts/sync-mcp.sh` of taskade/skills writes these files here, and a pull request brings them in:
 
 - `skills/` and `plugins/taskade/skills/`
 - `plugins/taskade/README.md`
 - `.mcp.json` and `assets/logo.png`, at the root and in `plugins/taskade/`
 - The plugin version in each manifest, and the description of the Claude Code, Cursor and Codex manifests and of the Claude Code marketplace
 
-The other fields of the manifests and `LICENSE` belong to this repository. In each sync pull request, write the release notes of the new version in `publication.release_notes` of `plugin.json`. When you edit `LICENSE` or a field that both `.claude-plugin/plugin.json` files hold, edit both copies. `yarn test` fails when the copies differ.
+The other fields of the manifests and `LICENSE` belong to this repository. In each sync pull request, write the release notes of the new version in `publication.release_notes` of `plugin.json`, and update the `interface` text of `plugin.json` when the skills change what the plugin does. The script prints these fields at the end of each run. When you edit `LICENSE` or a field that both `.claude-plugin/plugin.json` files hold, edit both copies. `yarn test` fails when the copies differ.
 
 ## Pull requests
 
