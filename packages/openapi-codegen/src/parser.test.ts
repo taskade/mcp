@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { deriveToolName, parseOpenApi } from './parser';
+import { prepareToolCallOperation } from './runtime';
 
 describe('deriveToolName', () => {
   it('derives a camelCase name from a flat RPC path (API v2)', () => {
@@ -86,6 +87,94 @@ describe('parseOpenApi name resolution', () => {
       'prompt',
     ]);
     expect(tools[0].inputSchema.required).toEqual(['spaceId', 'agentId', 'prompt']);
+  });
+});
+
+describe('parseOpenApi parameter inheritance', () => {
+  it('parseOpenApi_inheritsPathAndQueryParametersForEachOperation', () => {
+    const tools = parseOpenApi({
+      '/projects/{projectId}': {
+        parameters: [
+          {
+            name: 'projectId',
+            in: 'path',
+            required: true,
+            description: 'The project to retrieve',
+            schema: { type: 'string' },
+          },
+          {
+            name: 'limit',
+            in: 'query',
+            description: 'The maximum number of results',
+            schema: { type: 'integer' },
+          },
+        ],
+        get: { operationId: 'projectGet', responses: {} },
+        delete: { operationId: 'projectDelete', responses: {} },
+      },
+    });
+
+    for (const tool of tools) {
+      expect(tool.pathParamsSchema?.required).toEqual(['projectId']);
+      expect(tool.pathParamsSchema?.properties).toEqual({
+        projectId: { type: 'string', description: 'The project to retrieve' },
+      });
+      expect(tool.queryParamsSchema?.properties).toEqual({
+        limit: { type: 'integer', description: 'The maximum number of results' },
+      });
+
+      const request = prepareToolCallOperation({
+        name: tool.name,
+        path: tool.path,
+        method: 'GET',
+        input: { projectId: 'project/one', limit: 10 },
+        pathParamKeys: Object.keys(tool.pathParamsSchema?.properties ?? {}),
+        queryParamKeys: Object.keys(tool.queryParamsSchema?.properties ?? {}),
+      });
+      expect(request.url).toBe('/projects/project%2Fone?limit=10');
+      expect(request.body).toBeUndefined();
+    }
+  });
+
+  it('parseOpenApi_operationParametersOverrideOnlyTheMatchingNameAndLocation', () => {
+    const tools = parseOpenApi({
+      '/projects/{id}': {
+        parameters: [
+          { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
+          {
+            name: 'id',
+            in: 'query',
+            required: true,
+            description: 'The shared id',
+            schema: { type: 'integer' },
+          },
+        ],
+        get: {
+          operationId: 'projectGet',
+          parameters: [
+            {
+              name: 'id',
+              in: 'query',
+              description: 'The operation id',
+              schema: { type: 'string' },
+            },
+          ],
+          responses: {},
+        },
+        delete: { operationId: 'projectDelete', responses: {} },
+      },
+    });
+
+    expect(tools[0].pathParamsSchema?.properties).toEqual({ id: { type: 'string' } });
+    expect(tools[0].pathParamsSchema?.required).toEqual(['id']);
+    expect(tools[0].queryParamsSchema?.properties).toEqual({
+      id: { type: 'string', description: 'The operation id' },
+    });
+    expect(tools[0].queryParamsSchema?.required).toEqual([]);
+    expect(tools[1].queryParamsSchema?.properties).toEqual({
+      id: { type: 'integer', description: 'The shared id' },
+    });
+    expect(tools[1].queryParamsSchema?.required).toEqual(['id']);
   });
 });
 
