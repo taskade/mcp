@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "taskade",
-  "version": "0.2.3",
-  "description": "Use Taskade from your AI tool: import a spreadsheet into a project, fix a Taskade Genesis app, report on your projects and automations, back up an app, and plan a new app for Taskade EVE to build. Connects to the hosted Taskade MCP server with your Taskade login. Needs a paid Taskade plan.",
+  "version": "0.3.1",
+  "description": "Use Taskade from your AI tool: import a spreadsheet into a project, fix a Taskade Genesis app, report on your projects and automations, back up an app, and plan a new app for Taskade EVE to build. Connects to the hosted Taskade MCP server with your Taskade login. The connection needs a paid Taskade plan. The Markdown and project view skills work with no connection.",
   "author": { "name": "Taskade", "email": "hello@taskade.com", "url": "https://www.taskade.com" },
   "homepage": "https://www.taskade.com/mcp",
   "repository": "https://github.com/taskade/mcp",

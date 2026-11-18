@@ -1,7 +1,7 @@
 {
   "name": "taskade",
-  "version": "0.2.3",
-  "description": "Connect Cursor to your Taskade workspace: projects, tasks, AI agents, automations and Taskade Genesis app files. Sign in with OAuth. Needs a paid Taskade plan.",
+  "version": "0.3.1",
+  "description": "Connect Cursor to your Taskade workspace: projects, tasks, AI agents, automations and Taskade Genesis app files. Sign in with OAuth. The connection needs a paid Taskade plan. The Markdown and project view skills work with no connection.",
   "author": {
     "name": "Taskade",
     "email": "hello@taskade.com"

@@ -1,3 +1,5 @@
+<!-- Generated from taskade/skills version 0.3.1 by scripts/sync-mcp.sh. Edit the plugin in taskade/skills, not here. -->
+
 # Taskade
 
 This plugin connects Claude to your [Taskade](https://www.taskade.com) workspace. Its skills tell Claude which Taskade tools to use and what to check before it reports back.
@@ -11,10 +13,12 @@ This plugin connects Claude to your [Taskade](https://www.taskade.com) workspace
 - **app-report**: writes a short status report on your projects and automations.
 - **backup-my-app**: copies a Taskade Genesis app into a local folder as readable files.
 - **plan-new-app**: plans a new Taskade Genesis app, writes the build request for Taskade EVE with a link that fills it in, and imports real rows after the build.
+- **taskade-markdown**: writes a Markdown or CSV file that Taskade imports as a clean project. It needs no connection.
+- **project-views**: picks the project view that answers a question, and explains why a view is empty or locked. It needs no connection.
 
 ## How it connects
 
-The plugin uses the hosted Taskade MCP server at `https://www.taskade.com/mcp`. You sign in once with your Taskade account through OAuth. You do not need an API key. MCP access is part of every paid Taskade plan (Starter and up).
+The plugin uses the hosted Taskade MCP server at `https://www.taskade.com/mcp`. You sign in once with your Taskade account through OAuth. You do not need an API key. MCP access is part of every paid Taskade plan (Starter and up). The skills `taskade-markdown` and `project-views` work with no connection. You need a Taskade account only to import the file.
 
 ## What data it sends
 
