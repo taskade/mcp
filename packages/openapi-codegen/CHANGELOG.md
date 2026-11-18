@@ -1,5 +1,22 @@
 # @taskade/mcp-openapi-codegen
 
+## 0.0.8
+
+### Patch Changes
+
+- [#137](https://github.com/taskade/mcp/pull/137) [`ccefa6f`](https://github.com/taskade/mcp/commit/ccefa6f9e5384e2acfaa7267c9189174bc45a505) Thanks [@iyuzhang](https://github.com/iyuzhang)! - Escape tool descriptions when generating TypeScript so quotes, newlines and backslashes preserve their original values.
+
+- [#140](https://github.com/taskade/mcp/pull/140) [`68afb53`](https://github.com/taskade/mcp/commit/68afb53ca3ef2316d3b2bccf38261b25caa71fab) Thanks [@iyuzhang](https://github.com/iyuzhang)! - Inherit path-level OpenAPI parameters and let operation-level parameters override matching names and locations.
+
+- [#141](https://github.com/taskade/mcp/pull/141) [`dde7275`](https://github.com/taskade/mcp/commit/dde7275bb6f8187b610583c34b4aa92b0795d20f) Thanks [@johnxie](https://github.com/johnxie)! - Send the description of each OpenAPI parameter and a top-level `title` for each tool.
+
+  - The codegen now copies the `description` of an OpenAPI Parameter Object into the tool input schema. Before, it read only the parameter `schema` and dropped the description.
+  - The generated code now calls `.update({ title })` on the tool that `server.tool()` returns, so `tools/list` returns the action title as a top-level `title`, as the MCP specification defines it. The title stays in `annotations.title` too. The generated code needs `@modelcontextprotocol/sdk` 1.13.0 or later.
+  - A new action option, `parameterDescriptions`, describes the parameters that the spec does not describe. A spec description always wins.
+  - The server describes its id, page and limit parameters, and pins the version of `@taskade/mcp-server` in the Dockerfile. `yarn changeset:version` updates the pin for each release.
+
+  No tool name, tool description, input type or required list changes.
+
 ## 0.0.7
 
 ### Patch Changes

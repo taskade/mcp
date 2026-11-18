@@ -5,6 +5,6 @@ LABEL description="Taskade MCP Server — AI tools for projects, tasks, agents, 
 LABEL org.opencontainers.image.source="https://github.com/taskade/mcp"
 LABEL org.opencontainers.image.licenses="MIT"
 
-RUN npm install -g @taskade/mcp-server@0.2.0
+RUN npm install -g @taskade/mcp-server@0.2.1
 
 ENTRYPOINT ["taskade-mcp-server"]
