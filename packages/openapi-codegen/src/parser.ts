@@ -84,8 +84,9 @@ export const parseOpenApi = (
       };
 
       // Handle parameters (path, query, header, cookie)
-      if (operation.parameters) {
-        for (const param of operation.parameters) {
+      const parameters = mergeParameters(value.parameters ?? [], operation.parameters ?? []);
+      if (parameters.length > 0) {
+        for (const param of parameters) {
           if (isParameterObject(param) && param.schema) {
             let obj: IJsonSchema = inputSchema;
 
@@ -95,9 +96,16 @@ export const parseOpenApi = (
               obj = queryParamsSchema;
             }
 
-            obj.properties![param.name] = normalizeAllOf(
-              convertOpenApiSchemaToJsonSchema(param.schema),
-            );
+            const propertySchema = normalizeAllOf(convertOpenApiSchemaToJsonSchema(param.schema));
+
+            // An OpenAPI Parameter Object keeps its description beside `schema`, not
+            // inside it. Copy it into the property schema so that the tool input schema
+            // carries it. A description inside the schema stays as it is.
+            if (param.description && !propertySchema.description) {
+              propertySchema.description = param.description;
+            }
+
+            obj.properties![param.name] = propertySchema;
 
             if (param.required) {
               obj.required!.push(param.name);
@@ -179,4 +187,19 @@ export const parseOpenApi = (
   });
 
   return tools;
+};
+
+const mergeParameters = (
+  pathParameters: Array<OpenAPIV3.ParameterObject | OpenAPIV3.ReferenceObject>,
+  operationParameters: Array<OpenAPIV3.ParameterObject | OpenAPIV3.ReferenceObject>,
+): OpenAPIV3.ParameterObject[] => {
+  const parameters = new Map<string, OpenAPIV3.ParameterObject>();
+
+  for (const parameter of [...pathParameters, ...operationParameters]) {
+    if (isParameterObject(parameter)) {
+      parameters.set(`${parameter.in}:${parameter.name}`, parameter);
+    }
+  }
+
+  return Array.from(parameters.values());
 };

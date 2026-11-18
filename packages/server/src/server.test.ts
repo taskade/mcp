@@ -133,6 +133,15 @@ describe('TaskadeMCPServer API requests', () => {
     }
   });
 
+  it('sends a top-level title on each tool, the same as its annotation title', async () => {
+    const { tools } = await client.listTools();
+
+    for (const tool of tools) {
+      expect(tool.title, tool.name).toBeTruthy();
+      expect(tool.title, tool.name).toBe(tool.annotations?.title);
+    }
+  });
+
   it('advertises tools and no resources, and sends only the name and version as serverInfo', () => {
     expect(client.getServerCapabilities()).toEqual({ tools: { listChanged: true } });
     expect(client.getServerVersion()).toEqual({ name: 'taskade', version: packageVersion });

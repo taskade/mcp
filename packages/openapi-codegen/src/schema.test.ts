@@ -91,6 +91,34 @@ const testDocument: OpenAPIV3.Document = {
 };
 
 describe('OpenAPI Codegen Schema Validation', () => {
+  it('codegen_includesInheritedParametersInSchemasAndDispatchers', async () => {
+    const output = await codegen({
+      document: {
+        ...testDocument,
+        paths: {
+          '/projects/{projectId}': {
+            parameters: [
+              {
+                name: 'projectId',
+                in: 'path',
+                required: true,
+                description: 'The project to retrieve',
+                schema: { type: 'string' },
+              },
+              { name: 'limit', in: 'query', schema: { type: 'integer' } },
+            ],
+            get: { operationId: 'projectGet', responses: {} },
+          },
+        },
+      },
+    });
+
+    expect(output).toContain('projectId: z.string().describe("The project to retrieve")');
+    expect(output).toContain('limit: z.number().int().optional()');
+    expect(output).toContain('pathParamKeys: ["projectId"]');
+    expect(output).toContain('queryParamKeys: ["limit"]');
+  });
+
   it('correctly maps path, query, and requestBody parameters into tool zod schemas', async () => {
     const output = await codegen({ document: testDocument });
 
@@ -102,8 +130,12 @@ describe('OpenAPI Codegen Schema Validation', () => {
     expect(output).toContain('workspaceId: z.string()');
     expect(output).toContain('taskId: z.string()');
 
-    // Verify query parameter extraction with defaults/optionals
-    expect(output).toContain('dryRun: z.boolean().default(false)');
+    // Verify query parameter extraction with defaults/optionals. The description of a
+    // parameter sits beside its schema in the spec and reaches the zod schema.
+    expect(output).toContain(
+      'dryRun: z.boolean().describe("Simulate without saving").default(false)',
+    );
+    expect(output).toContain('workspaceId: z.string().describe("Target workspace identifier")');
     expect(output).toContain('includeArchived: z.boolean().optional()');
 
     // Verify request body properties in createTask
