@@ -11,6 +11,12 @@ type IsActionsEnabledOpt = Array<string> | ((actionName: string) => boolean);
 type ActionConfig = Partial<{
   title: string;
   description: string;
+  /**
+   * Descriptions for the top-level input parameters, keyed by parameter name. The
+   * codegen uses one only for a parameter that has no description in the spec, so a
+   * spec description always wins. A name that the tool does not have is ignored.
+   */
+  parameterDescriptions: Record<string, string>;
   normalizer: (args: any) => any;
   /**
    * Explicit MCP annotation overrides. When set, they beat the values derived
@@ -37,13 +43,23 @@ const isActionsEnabled = (isActionsEnabledOpt: IsActionsEnabledOpt, actionName: 
   return isActionsEnabledOpt.includes(actionName);
 };
 
-const generateToolInputFromParsedTool = (tool: ParsedTool) => {
+const generateToolInputFromParsedTool = (
+  tool: ParsedTool,
+  parameterDescriptions: Record<string, string> = {},
+) => {
   const mergedSchema = JSON.parse(JSON.stringify(tool.inputSchema));
   mergedSchema.properties = {
     ...mergedSchema.properties,
     ...tool.pathParamsSchema?.properties,
     ...tool.queryParamsSchema?.properties,
   };
+
+  for (const [name, description] of Object.entries(parameterDescriptions)) {
+    const property = mergedSchema.properties[name];
+    if (property && typeof property === 'object' && !property.description) {
+      mergedSchema.properties[name] = { ...property, description };
+    }
+  }
   mergedSchema.required = [
     ...mergedSchema.required,
     ...(tool.pathParamsSchema?.required ?? []),
@@ -135,7 +151,7 @@ export const codegen = async (opts: CodegenOpts) => {
     const toolArgs = [
       `"${tool.name}"`,
       JSON.stringify(description),
-      generateToolInputFromParsedTool(tool),
+      generateToolInputFromParsedTool(tool, actionConfig?.parameterDescriptions),
     ];
 
     // annotations always carry the derived hint set, so always include them
@@ -164,7 +180,14 @@ export const codegen = async (opts: CodegenOpts) => {
               });
         }`);
 
-    output += `server.tool(${toolArgs.join(',')});\n`;
+    // `title` is a top-level field of a tool definition in the MCP specification
+    // (2025-06-18 and later). The deprecated `server.tool()` has no title argument, so
+    // `update()` sets it. The title stays in the annotations too, for clients that read
+    // `annotations.title`. This form does not use `registerTool`, because its types
+    // fail with TS2589 ("excessively deep") on a zod 3 shape.
+    const titleUpdate = actionTitle ? `.update({ title: ${JSON.stringify(actionTitle)} })` : '';
+
+    output += `server.tool(${toolArgs.join(',')})${titleUpdate};\n`;
   });
 
   output += `

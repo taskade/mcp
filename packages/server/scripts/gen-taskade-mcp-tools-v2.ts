@@ -2,6 +2,7 @@ import { dereference } from '@readme/openapi-parser';
 import { codegen } from '@taskade/mcp-openapi-codegen';
 import fs from 'fs';
 
+import { TASKADE_PARAMETER_DESCRIPTIONS } from '../src/constants';
 import {
   ENABLED_TASKADE_V2_ACTIONS,
   HUMANIZED_TASKADE_V2_ACTIONS,
@@ -89,6 +90,7 @@ const actions = Object.fromEntries(
       title,
       description:
         TASKADE_V2_ACTION_DESCRIPTIONS[name as keyof typeof HUMANIZED_TASKADE_V2_ACTIONS],
+      parameterDescriptions: TASKADE_PARAMETER_DESCRIPTIONS,
       ...TASKADE_V2_ACTION_HINTS[name as keyof typeof HUMANIZED_TASKADE_V2_ACTIONS],
     },
   ]),
