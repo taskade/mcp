@@ -2,34 +2,129 @@
 
 # Taskade MCP Server and Agent Plugin
 
+**Connect your AI client to your [Taskade](https://www.taskade.com) workspace: projects, tasks, AI agents, automations and [Taskade Genesis](https://www.taskade.com/create) apps.**
+
 Paste this to your agent:
 
 ```text
 Set up Taskade for me. Read and follow https://www.taskade.com/SKILL.md
 ```
 
-**[Taskade](https://www.taskade.com) is the AI-native workspace for projects, AI agents and automations. [Taskade Genesis](https://www.taskade.com/create) builds a running app from one prompt.**
+</div>
 
-**Connect Taskade to Claude, Claude Code, ChatGPT, Codex, Cursor, VS Code, GitHub Copilot, Gemini CLI, Windsurf and any other client of the [Model Context Protocol](https://modelcontextprotocol.io/).**
+## Connect in one step
+
+The hosted server is `https://www.taskade.com/mcp`. You install nothing. Your client opens a Taskade sign-in page once.
+
+**Claude Code**
+
+```bash
+claude mcp add --transport http taskade https://www.taskade.com/mcp
+```
+
+Then type `/mcp`, select the Taskade server, and sign in.
+
+**Codex**
+
+```bash
+codex mcp add taskade --url https://www.taskade.com/mcp
+codex mcp login taskade
+```
+
+**Cursor**
 
 [![Add to Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=taskade&config=eyJ1cmwiOiJodHRwczovL3d3dy50YXNrYWRlLmNvbS9tY3AifQ%3D%3D)
+
+Or add this to `~/.cursor/mcp.json`, then sign in from the MCP settings of Cursor:
+
+```json
+{
+  "mcpServers": {
+    "taskade": {
+      "type": "http",
+      "url": "https://www.taskade.com/mcp"
+    }
+  }
+}
+```
+
+**VS Code**
+
 [![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-007ACC?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=taskade&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fwww.taskade.com%2Fmcp%22%7D)
+
+Or run:
+
+```bash
+code --add-mcp '{"name":"taskade","type":"http","url":"https://www.taskade.com/mcp"}'
+```
+
+**Claude (desktop and web)**
+
 [![Connect in Claude](https://img.shields.io/badge/Connect_in-Claude-D97757?style=flat-square)](https://claude.ai/directory/taskade-ai)
 
-**Claude Code:** `claude mcp add --transport http taskade https://www.taskade.com/mcp`
+Open [Taskade AI in the Claude directory](https://claude.ai/directory/taskade-ai), connect it, and sign in to Taskade.
+
+**Any of these clients, from a terminal**
+
+```bash
+npx @taskade/cli plug <client>
+```
+
+The client is `claude-code`, `codex`, `cursor`, `vscode` or `claude-desktop`. The [CLI](https://github.com/taskade/cli) shows the change and asks before it writes anything.
+
+ChatGPT, Windsurf, a client with no sign-in page, and a client that runs only local servers: see [the setup for each client](#taskade-mcp-server-quick-start).
+
+<div align="center">
 
 [![npm](https://img.shields.io/npm/v/@taskade/mcp-server?style=flat-square&color=FF2D60)](https://www.npmjs.com/package/@taskade/mcp-server)
 [![GitHub stars](https://img.shields.io/github/stars/taskade/mcp?style=flat-square)](https://github.com/taskade/mcp)
 [![License](https://img.shields.io/github/license/taskade/mcp?style=flat-square)](https://github.com/taskade/mcp/blob/main/LICENSE)
 
-**Hosted server:** `https://www.taskade.com/mcp` (Streamable HTTP, OAuth). Nothing to install.
-
 </div>
 
-This repo holds the Taskade [agent plugin](#agent-plugin-for-claude-code-codex-copilot-gemini-cli-and-cursor) and two packages:
+---
 
-- [MCP Server](https://github.com/taskade/mcp/tree/main/packages/server) (`@taskade/mcp-server`): the local stdio server, for clients that cannot connect to a remote server.
-- [OpenAPI Codegen](https://github.com/taskade/mcp/tree/main/packages/openapi-codegen): generate MCP tools from any OpenAPI spec, not only Taskade.
+## Hosted server or local package
+
+Taskade runs the hosted server. This repository does not build it. Most people need only the hosted server.
+
+| | Hosted server | Local package (`@taskade/mcp-server`) |
+|---|---|---|
+| **Address or command** | `https://www.taskade.com/mcp` | `npx -y @taskade/mcp-server` |
+| **Sign-in** | OAuth in your browser. A client with no OAuth sends a personal access token in the `Authorization: Bearer` header. | A personal access token in the `TASKADE_API_KEY` environment variable |
+| **Install** | None | Node.js 18 or later. Your client starts the server on your computer over stdio. |
+| **What it can do** | Read and change projects, tasks, custom fields and AI agents. Prompt an agent and attach knowledge to it. Edit the source of a Taskade Genesis app. Run an automation that starts "When asked", and read its runs. Publish a new version of an app kit. | Read and change projects, tasks, custom fields, AI agents and media through REST API v1. Generate an agent from a prompt, turn on public agent access, delete media, prompt an agent, and manage the legacy webhook subscriptions. It cannot edit app source. |
+| **Plan** | Every paid Taskade plan | Any plan. Each tool keeps the access rules of the API call that it makes. |
+| **Use it when** | Your client connects to remote servers. This is the case for most clients. | You need a REST API v1 operation that the hosted server does not expose. |
+| **Tool reference** | [Hosted tools](#hosted-tools) | [Local package tools](#local-package-tools-66) |
+
+To call another MCP server from Taskade, use the [MCP Client connector](https://www.taskade.com/learn/connect/mcp-client-integration) in an automation. It runs on every plan. Help to choose: [Which Taskade MCP do I want?](https://www.taskade.com/docs/mcp/which-mcp)
+
+This repository holds:
+
+- The Taskade [agent plugin](#agent-plugin-for-claude-code-codex-copilot-gemini-cli-and-cursor) and its skills, a generated copy of [taskade/skills](https://github.com/taskade/skills).
+- [MCP Server](https://github.com/taskade/mcp/tree/main/packages/server) (`@taskade/mcp-server`): the local package.
+- [OpenAPI Codegen](https://github.com/taskade/mcp/tree/main/packages/openapi-codegen) (`@taskade/mcp-openapi-codegen`): generate MCP tools from any OpenAPI spec, not only Taskade.
+
+## Contents
+
+- [Connect in one step](#connect-in-one-step)
+- [Hosted server or local package](#hosted-server-or-local-package)
+- [Agent plugin](#agent-plugin-for-claude-code-codex-copilot-gemini-cli-and-cursor)
+- [Taskade MCP server: quick start](#taskade-mcp-server-quick-start) (Claude, Claude Code, Codex, ChatGPT, Cursor, VS Code, Windsurf, other clients)
+- [Hosted tools](#hosted-tools)
+- [Example prompts](#example-prompts)
+- [Troubleshooting](#troubleshooting)
+- [Local package (stdio)](#local-package-stdio)
+- [Local package tools (66)](#local-package-tools-66)
+- [Why Taskade MCP?](#why-taskade-mcp)
+- [Agent Recipes](#agent-recipes)
+- [OpenAPI Codegen](#openapi-codegen)
+- [What is Taskade?](#what-is-taskade)
+- [Privacy & Security](#privacy--security)
+- [Support](#support)
+- [Contributing](#contributing)
+- [License](#license)
 
 ---
 
@@ -67,26 +162,6 @@ To add only the hosted server to Codex, run `codex mcp add taskade --url https:/
 
 ---
 
-## Contents
-
-- [Agent plugin](#agent-plugin-for-claude-code-codex-copilot-gemini-cli-and-cursor)
-- [Taskade MCP server: quick start](#taskade-mcp-server-quick-start) (Claude, Claude Code, ChatGPT, Cursor, VS Code, Windsurf)
-- [Hosted tools](#hosted-tools)
-- [Example prompts](#example-prompts)
-- [Troubleshooting](#troubleshooting)
-- [Local package (stdio)](#local-package-stdio)
-- [Local package tools (66)](#local-package-tools-66)
-- [Why Taskade MCP?](#why-taskade-mcp)
-- [Agent Recipes](#agent-recipes)
-- [OpenAPI Codegen](#openapi-codegen)
-- [What is Taskade?](#what-is-taskade)
-- [Privacy & Security](#privacy--security)
-- [Support](#support)
-- [Contributing](#contributing)
-- [License](#license)
-
----
-
 ## Demo
 
 MCP-powered Taskade agent running inside Claude Desktop by Anthropic:
@@ -102,26 +177,30 @@ MCP-powered Taskade agent running inside Claude Desktop by Anthropic:
 
 ## Taskade MCP server: quick start
 
+Every client uses the same server and the same two sign-in options. The reference for each command below is the public guide [Hosted Taskade MCP](https://www.taskade.com/docs/mcp/hosted-mcp).
+
 | | |
 |---|---|
 | **URL** | `https://www.taskade.com/mcp` |
 | **Transport** | Streamable HTTP |
-| **Auth** | OAuth 2.0 with PKCE and dynamic client registration. Your client opens a Taskade sign-in page once. |
-| **Plan** | MCP access is part of every paid Taskade plan (Starter and up). On the Free plan, `list_spaces` returns no workspaces. |
+| **Auth** | OAuth 2.0 with PKCE and dynamic client registration. Your client opens a Taskade sign-in page once. A client that sends only headers uses `Authorization: Bearer <personal access token>`. |
+| **Plan** | MCP access is part of every paid Taskade plan (Starter and up). A Free workspace does not show in `list_spaces`. |
 | **Discovery** | `https://www.taskade.com/.well-known/oauth-protected-resource/mcp` |
 
 An `initialize` request without a token returns `401` on purpose. The `401` tells your client where to start the OAuth sign-in.
 
-### Claude (web, Desktop and mobile)
+### Claude (desktop and web)
 
-Select **Connect in Claude** at the top of this page to open **Taskade AI** in the [Claude directory](https://claude.ai/directory/taskade-ai). To add the server as a custom connector instead:
+The Claude directory lists the hosted server as **Taskade AI**. Open [Taskade AI in the Claude directory](https://claude.ai/directory/taskade-ai), connect it, and sign in to Taskade.
 
-1. In Claude, go to [**Customize > Connectors**](https://claude.ai/customize/connectors) and select **Add custom connector**. On a Team or Enterprise plan, an Owner first adds the connector in **Organization settings > Connectors** (**Add**, then **Custom**).
-2. Enter the name `Taskade` and the URL `https://www.taskade.com/mcp`, then select **Add**.
-3. Select **Connect**, sign in to Taskade, and approve access.
-4. In a chat, select **+ > Connectors** and turn on Taskade.
+To add the server by hand as a custom connector:
 
-If the dialog asks for an **OAuth client**, select **Register automatically**. The connector also works in Claude Desktop and the Claude mobile apps on the same account.
+1. In Claude, open **Settings** > **Connectors**.
+2. Click **Add custom connector**.
+3. Type `Taskade` as the name. Paste `https://www.taskade.com/mcp` as the URL. Click **Add**.
+4. Click **Connect**, then sign in to Taskade and allow access.
+
+The Claude labels can change between releases. If you do not see **Connectors**, search the Claude help for "custom connectors".
 
 ### Claude Code
 
@@ -129,39 +208,79 @@ If the dialog asks for an **OAuth client**, select **Register automatically**. T
 claude mcp add --transport http taskade https://www.taskade.com/mcp
 ```
 
-Then run `/mcp` in Claude Code and select **taskade** to sign in.
-
-### ChatGPT
-
-ChatGPT connects to a remote MCP server as a custom connector in developer mode. It uses OAuth only.
-
-1. In ChatGPT settings, turn on developer mode for apps and connectors.
-2. Create a connector. Enter `Taskade` as the name and `https://www.taskade.com/mcp` as the server URL.
-3. Select OAuth as the authentication. Sign in to Taskade and allow access.
-
-Developer mode is available only on some ChatGPT plans, and its labels change often.
-
-### Cursor
-
-Select **Add to Cursor** at the top of this page, or add this to `~/.cursor/mcp.json`:
+In Claude Code, type `/mcp`, select the Taskade server, and sign in. To share the server with your team, commit this `.mcp.json` file at the root of the repository:
 
 ```json
 {
   "mcpServers": {
     "taskade": {
+      "type": "http",
       "url": "https://www.taskade.com/mcp"
     }
   }
 }
 ```
 
+To add the server and the Taskade skills together, install the [agent plugin](#agent-plugin-for-claude-code-codex-copilot-gemini-cli-and-cursor).
+
+### Codex
+
+```bash
+codex mcp add taskade --url https://www.taskade.com/mcp
+codex mcp login taskade
+```
+
+The login command opens Taskade in your browser. Sign in and allow access.
+
+### ChatGPT
+
+ChatGPT connects to a remote MCP server as a custom connector in developer mode. It uses OAuth only.
+
+1. In ChatGPT settings, turn on developer mode for apps and connectors.
+2. Create a connector. Type `Taskade` as the name and `https://www.taskade.com/mcp` as the server URL.
+3. Select OAuth as the authentication. Sign in to Taskade and allow access.
+
+Developer mode is available only on some ChatGPT plans, and its labels change often.
+
+### Cursor
+
+Select **Add to Cursor** in [Connect in one step](#connect-in-one-step), or add this to `~/.cursor/mcp.json` (all projects) or `.cursor/mcp.json` (one project):
+
+```json
+{
+  "mcpServers": {
+    "taskade": {
+      "type": "http",
+      "url": "https://www.taskade.com/mcp"
+    }
+  }
+}
+```
+
+Save the file. Open the MCP settings of Cursor, find **taskade**, and sign in when Cursor asks.
+
 ### VS Code
 
-Select **Install in VS Code** at the top of this page, or run:
+Select **Install in VS Code** in [Connect in one step](#connect-in-one-step), or run:
 
 ```bash
 code --add-mcp '{"name":"taskade","type":"http","url":"https://www.taskade.com/mcp"}'
 ```
+
+You can also add the server to `.vscode/mcp.json` in your workspace. The key is `servers`, not `mcpServers`:
+
+```json
+{
+  "servers": {
+    "taskade": {
+      "type": "http",
+      "url": "https://www.taskade.com/mcp"
+    }
+  }
+}
+```
+
+Start the server from `mcp.json`, and sign in when VS Code asks. Use the Taskade tools in Copilot Chat agent mode.
 
 ### Windsurf
 
@@ -177,9 +296,11 @@ Add this to `~/.codeium/windsurf/mcp_config.json`:
 }
 ```
 
+If Windsurf does not open a sign-in page, add the `headers` block from the next section.
+
 ### Other clients and servers (API token)
 
-A client that cannot do OAuth can send a Taskade personal access token as a Bearer token. Create the token in [Taskade Settings > API](https://www.taskade.com/settings/api).
+A client that cannot do OAuth sends a Taskade personal access token as a Bearer token. Create the token in [Taskade Settings > API](https://www.taskade.com/settings/api).
 
 ```json
 {
@@ -187,13 +308,30 @@ A client that cannot do OAuth can send a Taskade personal access token as a Bear
     "taskade": {
       "type": "http",
       "url": "https://www.taskade.com/mcp",
-      "headers": { "Authorization": "Bearer YOUR_TASKADE_API_TOKEN" }
+      "headers": {
+        "Authorization": "Bearer <paste-your-token-here>"
+      }
     }
   }
 }
 ```
 
-Full guide: [Hosted Taskade MCP](https://github.com/taskade/docs/blob/main/apis-living-system-development/genesis-app-mcp.md).
+Treat a config file that holds a token as a secret. Do not commit it. The token can do everything that your account can do.
+
+A client that runs only local stdio servers can reach the hosted server through the `mcp-remote` bridge. It runs OAuth in your browser:
+
+```json
+{
+  "mcpServers": {
+    "taskade": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://www.taskade.com/mcp"]
+    }
+  }
+}
+```
+
+Full guide: [Hosted Taskade MCP](https://www.taskade.com/docs/mcp/hosted-mcp).
 
 ---
 
@@ -205,7 +343,7 @@ Every hosted tool declares MCP tool annotations. Claude can run a read-only tool
 |---|---|---|
 | Workspaces | `list_spaces`, `list_folders`, `list_media`, `list_templates`, `inspect_space` | `write_file` (Taskade Genesis app source in `app/`) |
 | Automations | `list_automations`, `get_flow_runs` | `run_flow` |
-| Projects | `list_projects`, `list_my_projects`, `get_project`, `read_project`, `list_fields`, `list_blocks`, `list_project_members`, `get_share_link` | `create_project`, `create_project_from_template`, `copy_project`, `complete_project`, `restore_project`, `enable_share_link` |
+| Projects | `list_projects`, `list_my_projects`, `get_project`, `read_project`, `list_fields`, `list_blocks`, `list_project_members`, `get_share_link` | `create_project`, `create_project_from_template`, `copy_project`, `rename_project`, `set_field`, `complete_project`, `restore_project`, `enable_share_link` |
 | Tasks | `list_tasks` | `create_task`, `update_task`, `complete_task`, `uncomplete_task`, `delete_task`, `move_task`, `set_task_note`, `delete_task_note`, `set_task_date`, `delete_task_date`, `assign_task`, `unassign_task`, `set_task_field_value`, `delete_task_field_value` |
 | AI agents | `list_agents`, `get_agent`, `list_conversations`, `get_conversation` | `create_agent`, `update_agent`, `delete_agent`, `prompt_agent`, `add_knowledge_project`, `remove_knowledge_project`, `add_knowledge_media`, `remove_knowledge_media` |
 | App kits | `list_my_kits` | `publish_kit_version` |
@@ -213,7 +351,16 @@ Every hosted tool declares MCP tool annotations. Claude can run a read-only tool
 - `get_flow_runs`: reads the recent runs of one automation, newest first. Each run has its status and times. A failed run also names the failed step and a short error. It needs edit rights on automations.
 - `run_flow`: starts one run of an automation that is On and starts "When asked". Every run is real: it counts toward the monthly automation runs of the plan, and AI steps use credits.
 
-The server also serves the resource `taskade://getting-started`, a short guide for the model.
+The server also serves the resource `taskade://getting-started`, a short guide for the model. Taskade adds tools over time, and your client shows the current list after it connects. Each tool is described in [the MCP toolset](https://www.taskade.com/docs/mcp/hosted-mcp#the-mcp-toolset).
+
+### What stays in Taskade
+
+- **A new app.** The hosted server cannot build a new Taskade Genesis app. Your agent writes the request, and you start the build in Taskade with Taskade EVE.
+- **Automations.** The hosted server cannot create or edit an automation. Taskade EVE does that inside Taskade.
+- **Publishing and access.** You publish an app that is not live yet, and you choose who can use it, in Taskade.
+- **Media uploads.** Upload a file with the REST API or the Action API.
+
+The hosted server can edit the source of an existing app. On a live app, each `write_file` starts a new build, and the app publishes it by default.
 
 ---
 
@@ -234,13 +381,62 @@ The server also serves the resource `taskade://getting-started`, a short guide f
 
 ## Troubleshooting
 
-| Symptom | Cause and fix |
-|---|---|
-| `401 Unauthorized` on the first request | Expected. Your client must start the OAuth sign-in. If it does not, update the client or use an API token (see above). |
-| `list_spaces` returns no workspaces | MCP access needs a paid plan on that workspace. Upgrade at [taskade.com/pricing](https://www.taskade.com/pricing). |
-| A tool returns "permission denied" | Your role in that workspace or project does not allow the action. Ask a workspace owner for access. |
-| Claude shows "Authorization with the MCP server failed" | Remove the connector, add it again, and sign in to the correct Taskade account. |
-| A local `npx` server fails with "TASKADE_API_KEY appears to be invalid" | Create a new token in [Settings > API](https://www.taskade.com/settings/api). |
+### First aid
+
+Run this command first. It changes nothing on your machine:
+
+```bash
+npx @taskade/cli doctor
+```
+
+It checks your Node.js version, sends a request with no sign-in to the server, reads the sign-in metadata, and lists the clients on your machine that have a `taskade` entry. With a personal access token in `TASKADE_TOKEN`, it also sends an MCP `initialize` and a `tools/list` request with that token. Each line starts with `ok`, `fail` or `--` (skipped). A failed line gives the next step. A run with no token gives lines like these:
+
+```text
+ok    The server answers. Without sign-in it returns 401 and names its sign-in metadata.
+ok    Sign-in metadata: https://www.taskade.com/mcp/.well-known/oauth-protected-resource
+ok    Authorization server: https://www.taskade.com/.well-known/oauth-authorization-server
+
+--    TASKADE_TOKEN is not set, so the token check is skipped. Clients that sign in need no token.
+
+Clients (read only):
+--    Cursor: installed, no taskade server found.
+      Next: npx @taskade/cli plug cursor
+```
+
+### Failures and fixes
+
+| What you see | Cause | Fix |
+|---|---|---|
+| The client cannot connect to `https://taskade.com/mcp` | The host has no `www`. That host answers `301` and points to `https://www.taskade.com/mcp`. The sign-in metadata names only the `www` address. | Use `https://www.taskade.com/mcp`. |
+| `401` with `{"error":"Unauthorized"}` before you sign in | This is normal. Without a token, the server answers `401` with a `WWW-Authenticate` header that names its sign-in metadata. Your client reads it and opens the Taskade sign-in. | Finish the sign-in. If no sign-in page opens, update the client, or send a personal access token (see [other clients](#other-clients-and-servers-api-token)). |
+| `401` with `{"error":"Unauthorized"}` from a client that sends a token | The server found no token. It reads a token only from the `Authorization` header, in the form `Bearer <token>`. It ignores a token in another header, a token without `Bearer`, and a token in the URL. | Send `Authorization: Bearer <token>`. |
+| `401` with `{"error":"Invalid or expired token"}` | The server read the token and refused it. The token is wrong or revoked. | Create a new token in [Settings > API](https://www.taskade.com/settings/api), and update the header. |
+| `list_spaces` returns no workspaces, or `MCP access is not available on this workspace's current plan.` | The workspace is on the Free plan. The hosted tools need a paid plan, and `list_spaces` hides a Free workspace. The list also comes in pages, and one page can be empty while more pages remain. | Page until `hasNextPage` is `false`. Upgrade the workspace at [taskade.com/pricing](https://www.taskade.com/pricing), or pick a paid workspace. |
+| The client runs only local stdio servers | The hosted server uses Streamable HTTP. | Connect through the [`mcp-remote` bridge](#other-clients-and-servers-api-token), or use the [local package](#local-package-stdio). |
+| The agent does not see the Taskade tools after an install | The client has not loaded the new server, or the sign-in is not done. | Restart the client, or open its MCP list: `/mcp` in Claude Code, the MCP settings in Cursor, or start the server from `mcp.json` in VS Code. Then sign in. `npx @taskade/cli doctor` shows which clients have a `taskade` entry. |
+| `Access denied: you are not a member of this space.` | Your account is not a member of the workspace. | Make sure that the workspace ID is correct, or ask for an invitation. |
+| A tool returns "permission denied" | Your role in that workspace or project does not allow the action. | Ask a workspace owner for access. |
+| The OAuth sign-in starts again and again | The browser is signed in to another Taskade account, or the stored credential is old. | Sign in to the right Taskade account in your browser. Remove the Taskade server from the client, then add it again. |
+| Claude shows "Authorization with the MCP server failed" | The connector sign-in failed. | Remove the connector, add it again, and sign in to the correct Taskade account. |
+| The local package stops with `TASKADE_API_KEY environment variable is not set.` or `TASKADE_API_KEY appears to be invalid (too short).` | The client did not pass a token to the local package. | Create a token in [Settings > API](https://www.taskade.com/settings/api), and set `TASKADE_API_KEY` in the `env` block of the client config. |
+
+The full list of tool errors is in [Troubleshooting](https://www.taskade.com/docs/mcp/hosted-mcp#troubleshooting) of the hosted guide.
+
+### Test the local package with the MCP Inspector
+
+The [MCP Inspector](https://github.com/modelcontextprotocol/inspector) starts the local package and shows its tools. Check the Node.js version that its README asks for. This command opens the web UI, where you can list and call each tool:
+
+```bash
+npx @modelcontextprotocol/inspector -e TASKADE_API_KEY=your-api-key-here -- npx -y @taskade/mcp-server
+```
+
+For a check in a terminal, the CLI mode prints the tool list as JSON and exits:
+
+```bash
+npx @modelcontextprotocol/inspector --cli -e TASKADE_API_KEY=your-api-key-here --method tools/list -- npx -y @taskade/mcp-server
+```
+
+The tool list does not call the Taskade API. To test the token, call a tool such as `workspacesGet`. The Inspector stores the `-e` values in the keychain of your system, or in a file when no keychain is available. See its README.
 
 If the problem continues, open an [issue](https://github.com/taskade/mcp/issues) or email [support@taskade.com](mailto:support@taskade.com).
 
@@ -248,21 +444,20 @@ If the problem continues, open an [issue](https://github.com/taskade/mcp/issues)
 
 ## Local package (stdio)
 
-Use the local package when your client supports only stdio servers, or when you need a tool that only the local package has, for example the webhook tools (`subscribeWebhook`, `unsubscribeWebhook`). It runs on your machine with `npx` and calls the Taskade public API over the network with a personal access token.
+Use the local package when you need a REST API v1 operation that the hosted server does not expose. Examples are generate an agent from a prompt, turn on public agent access, delete media, and the legacy webhook subscription tools (`subscribeWebhook`, `unsubscribeWebhook`). The package runs on your computer with `npx` and needs Node.js 18 or later. It calls the Taskade public API over the network with a personal access token. It does not edit Taskade Genesis app source. Guide: [Workspace MCP](https://www.taskade.com/docs/mcp/workspace-mcp).
 
-| I want to... | Use | Where / auth |
-|---|---|---|
-| Use Taskade from Claude, Cursor, VS Code or another client that supports remote servers | **Hosted server** | `https://www.taskade.com/mcp` · OAuth 2.0 or API token · paid plans |
-| Run Taskade tools in a client that supports only stdio, or use the webhook tools | **Local package** (`@taskade/mcp-server`) | `npx` · personal access token · needs network access to taskade.com |
-| Let my Taskade agents reach Slack, Shopify or Gmail | **[MCP Connectors](https://github.com/taskade/docs/blob/main/genesis-living-system-builder/genesis/mcp-connectors.md)** | Hosted, in the Taskade app |
+### 1. Get your API key
 
-### 1. Get Your API Key
-
-Go to [Taskade Settings > API](https://www.taskade.com/settings/api) and create a Personal Access Token.
+Go to [Taskade Settings > API](https://www.taskade.com/settings/api) and create a personal access token.
 
 ### 2. Claude Desktop
 
-Add to your `claude_desktop_config.json`:
+Add the server to the Claude Desktop config file, then restart Claude Desktop.
+
+| OS | File |
+|---|---|
+| macOS | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+| Windows | `%APPDATA%\Claude\claude_desktop_config.json` |
 
 ```json
 {
@@ -278,9 +473,15 @@ Add to your `claude_desktop_config.json`:
 }
 ```
 
-### 3. Cursor
+### 3. Claude Code
 
-Add to your Cursor MCP settings:
+```bash
+claude mcp add --transport stdio taskade --env TASKADE_API_KEY=your-api-key-here -- npx -y @taskade/mcp-server
+```
+
+### 4. Cursor
+
+Add this to `~/.cursor/mcp.json` (all projects) or `.cursor/mcp.json` (one project):
 
 ```json
 {
@@ -296,7 +497,7 @@ Add to your Cursor MCP settings:
 }
 ```
 
-### 4. Windsurf
+### 5. Windsurf
 
 Add to `~/.codeium/windsurf/mcp_config.json` (or **Settings → Cascade → MCP → Add Server**):
 
@@ -314,7 +515,7 @@ Add to `~/.codeium/windsurf/mcp_config.json` (or **Settings → Cascade → MCP 
 }
 ```
 
-### 5. Cline
+### 6. Cline
 
 In VS Code, open the Cline **MCP Servers** panel → **Configure MCP Servers** and add:
 
@@ -332,14 +533,23 @@ In VS Code, open the Cline **MCP Servers** panel → **Configure MCP Servers** a
 }
 ```
 
-### 6. VS Code
+### 7. VS Code
 
-Add a `.vscode/mcp.json` to your workspace (VS Code uses the `servers` key; `${input:…}` prompts for your key on first run):
+Add `.vscode/mcp.json` to your workspace. VS Code uses the `servers` key. The `${input:…}` value asks for the token on the first run, so the file holds no secret:
 
 ```json
 {
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "taskade_api_key",
+      "description": "Taskade personal access token",
+      "password": true
+    }
+  ],
   "servers": {
     "taskade": {
+      "type": "stdio",
       "command": "npx",
       "args": ["-y", "@taskade/mcp-server"],
       "env": {
@@ -350,9 +560,9 @@ Add a `.vscode/mcp.json` to your workspace (VS Code uses the `servers` key; `${i
 }
 ```
 
-### 7. Remote and HTTP clients
+### 8. Remote and HTTP clients
 
-The local package runs over stdio only. It has no HTTP or SSE mode. For a client that connects over HTTP, use the hosted server at `https://www.taskade.com/mcp` (see [Taskade MCP server: quick start](#taskade-mcp-server-quick-start)).
+The npm package runs over stdio only. For a client that connects over HTTP, use the hosted server at `https://www.taskade.com/mcp` (see [Taskade MCP server: quick start](#taskade-mcp-server-quick-start)).
 
 ---
 
@@ -676,7 +886,7 @@ await codegen({
 });
 ```
 
-Works with any OpenAPI 3.0+ spec. Generate MCP tools for your own APIs in minutes.
+Works with any OpenAPI 3.0+ spec. Generate MCP tools for your own APIs in minutes. The [package README](https://github.com/taskade/mcp/tree/main/packages/openapi-codegen) shows how to connect the generated tools to an MCP server.
 
 ---
 
@@ -759,3 +969,10 @@ Help us improve MCP tools, OpenAPI workflows, and agent capabilities.
 
 MIT
 
+---
+
+<div align="center">
+
+[Taskade](https://www.taskade.com) · [Build an app from a prompt](https://www.taskade.com/create) · [Taskade App Factory](https://www.taskade.com/apps) · [MCP docs](https://www.taskade.com/docs/mcp) · [Developer docs](https://www.taskade.com/docs) · [Skills](https://github.com/taskade/skills) · [CLI](https://github.com/taskade/cli) · [Integrations](https://github.com/taskade/integrations)
+
+</div>
