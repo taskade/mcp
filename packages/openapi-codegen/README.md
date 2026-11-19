@@ -8,7 +8,7 @@ Generate MCP tools from any OpenAPI Schema in seconds.
 - Install `@taskade/mcp-openapi-codegen` and `@readme/openapi-parser` package:
 
 ```sh
-npm install --dev @taskade/mcp-openapi-codegen @readme/openapi-parser
+npm install --save-dev @taskade/mcp-openapi-codegen @readme/openapi-parser
 ```
 
 - Create a script to run the codegen:
