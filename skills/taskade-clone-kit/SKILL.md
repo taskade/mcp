@@ -1,6 +1,6 @@
 ---
 name: taskade-clone-kit
-description: Copy a Taskade app kit into the user's workspace and make it theirs in 3 steps (their name and look, their data, their automations on), with a check after each step. Use when the user says "use this template", "clone this kit", "copy this app", "make this app mine", "I found an app on taskade.com/apps", or names a kit page. To build a new app from an idea, use taskade-build-app instead. Next jobs are taskade-spreadsheet-to-app to bring in the user's real rows, taskade-check-app to check the copy, taskade-publish-app to publish it.
+description: Copy a Taskade app kit into the user's workspace and make it theirs in 3 steps (their name and look, their data, their automations on), with a check after each step. Use when the user says "use this template", "clone this kit", "copy this app", "make this app mine", "I found an app on taskade.com/apps", or names a kit page. To build a new app from an idea, use taskade-build-app instead. For a project template, use the front door taskade. Next jobs are taskade-spreadsheet-to-app to bring in the user's real rows, taskade-check-app to check the copy, taskade-publish-app to publish it.
 ---
 
 # Clone an app kit and make it yours

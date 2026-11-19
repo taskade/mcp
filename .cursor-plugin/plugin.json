@@ -1,6 +1,6 @@
 {
   "name": "taskade",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Connect Cursor to your Taskade workspace: projects, tasks, fields, AI agents, automations and Taskade Genesis app files. Build, check, fix, secure, clone and publish Taskade Genesis apps, and fix the first screen. Import a spreadsheet, get a status report, build an AI agent, and turn the plan of a code repository into a project. Sign in with OAuth. The connection needs a paid Taskade plan. The Markdown skill works with no connection.",
   "author": {
     "name": "Taskade",
