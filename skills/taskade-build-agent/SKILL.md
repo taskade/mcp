@@ -1,6 +1,6 @@
 ---
 name: taskade-build-agent
-description: Create, tune and test a custom AI agent in the user's Taskade workspace, with instructions that the user approves, the projects and files that it must know, and a few approved test questions with each answer shown. Use when the user says "make me an agent", "build an AI agent in Taskade", "train an agent on my docs", "teach my agent about my business", "my agent gives wrong answers", "change my agent's instructions", "test my agent" or "delete my agent". Not for an automation (Taskade EVE builds it, see the front door taskade), a broken app (taskade-fix-app) or a new app (taskade-build-app).
+description: Create, tune and test a custom AI agent in the user's Taskade workspace, with instructions that the user approves, the projects and files that it must know, and a few approved test questions with each answer shown. Use when the user says "make me an agent", "build an AI agent in Taskade", "train an agent on my docs", "teach my agent about my business", "my agent gives wrong answers", "change my agent's instructions", "test my agent" or "delete my agent". Not for asking an agent to do work (the front door taskade), an automation (Taskade EVE builds it, see the front door taskade), a broken app (taskade-fix-app) or a new app (taskade-build-app).
 ---
 
 # Build, tune and test a Taskade agent

@@ -1,4 +1,4 @@
-<!-- Generated from taskade/skills version 0.6.2 by scripts/sync-mcp.sh. Edit the plugin in taskade/skills, not here. -->
+<!-- Generated from taskade/skills version 0.6.3 by scripts/sync-mcp.sh. Edit the plugin in taskade/skills, not here. -->
 
 # Taskade
 
