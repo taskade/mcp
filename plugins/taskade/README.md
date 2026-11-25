@@ -1,4 +1,4 @@
-<!-- Generated from taskade/skills version 0.6.3 by scripts/sync-mcp.sh. Edit the plugin in taskade/skills, not here. -->
+<!-- Generated from taskade/skills version 0.7.0 by scripts/sync-mcp.sh. Edit the plugin in taskade/skills, not here. -->
 
 # Taskade
 
@@ -23,14 +23,15 @@ Then run `/mcp`, select **taskade** and sign in.
 
 ## Skills
 
-- **taskade**: the front door. It connects Taskade, shows what is in the workspace, reads and changes projects, tasks, fields, AI agents and Taskade Genesis app files, picks the project view that answers a question, and reads and runs automations.
+- **taskade**: the front door. It connects Taskade, shows what is in the workspace, reads and changes projects, tasks, fields, AI agents and Taskade Genesis app files, picks the project view that answers a question, and reads, runs and turns automations on or off.
 - **taskade-build-app**: plans a new Taskade Genesis app, writes the build request for Taskade EVE with a link that fills it in, and checks the build against the plan.
 - **taskade-spreadsheet-to-app**: turns a CSV or Excel file into a project or app, with sample rows first and the real rows after a yes, and skips duplicates.
 - **taskade-fix-app**: fixes a problem in a Taskade Genesis app, one checked change at a time, and proves it for a visitor, the owner and a signed-in member.
 - **taskade-report**: writes a one-screen status report on your projects and automations.
 - **taskade-check-app**: checks the pages, lists and automations of your apps, each as pass, fail or not checked, with the fix. It changes nothing.
 - **taskade-fix-first-screen**: makes the first screen show the result at once on a phone, with one first action that saves with 0 AI credits and marked sample rows.
-- **taskade-secure-app**: checks who can sign in and which lists are private, and names the 2 settings to confirm in Taskade.
+- **taskade-secure-app**: checks who can sign in and which lists are private, reads who can use each list, and sets the sign-up with your yes (or names the 2 settings to confirm in Taskade).
+- **taskade-fix-flows**: makes your automations work, with a preview and your yes before each change.
 - **taskade-clone-kit**: copies an app kit and makes it yours in 3 steps.
 - **taskade-publish-app**: backs up an app, walks you through Publish in Taskade, publishes a kit version, and names the way back.
 - **taskade-build-agent**: creates or tunes an AI agent with instructions that you approve, the projects and files that it must know, and a few test questions.
@@ -47,7 +48,7 @@ The plugin runs no code of its own. Tool calls go only to `https://www.taskade.c
 
 ## What you do in Taskade
 
-Taskade EVE builds an app and creates or edits an automation inside Taskade. The plugin writes the request for Taskade EVE, and for a new app it gives you a link that fills in the request and starts nothing. You publish an app, choose who can use it, turn an automation On or Off, and connect a domain in Taskade. Taskade EVE can propose who can use the app.
+Taskade EVE builds an app, creates an automation, and adds or removes its steps inside Taskade. The plugin writes the request for Taskade EVE, and for a new app it gives you a link that fills in the request and starts nothing. You publish an app, choose who can use it, turn an automation On or Off (or let the skills do it with your yes), and connect a domain in Taskade. Taskade EVE can propose who can use the app.
 
 ## Links
 

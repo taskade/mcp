@@ -15,6 +15,13 @@ Rules for the whole job:
 - Write nothing that the user did not approve. Get a "yes" for each plan table before the writes.
 - A change made in Taskade does not go back to the repository. This skill is one-way, and it runs only when the user asks. It has no webhook and no schedule.
 
+## Before you start
+
+- If Taskade workspace tools such as `list_spaces` are in your tool list, skip this section. A sign-in tool of your client is not a Taskade tool. If your client loads tools on demand, search the list first.
+- If the Taskade plugin is installed or your client has a Taskade server, and no Taskade tools show, ask the user to sign in to that server. In Claude Code the user runs `/mcp`, picks taskade and signs in. In another client the user signs in from the connector or server settings of the client. Do not add a second server. Only with no Taskade server at all, connect `https://www.taskade.com/mcp` before the first step that calls a Taskade tool. Follow "Connect" in `https://www.taskade.com/SKILL.md`, or in the taskade skill when it is installed.
+- MCP access is part of every paid Taskade plan, not Free. A workspace on the Free plan does not appear in `list_spaces`. If the response has `hiddenForPlan` and a `hint`, show the hint to the user. The hint holds the link to the plans.
+- If a later call fails with a plan error, link `https://www.taskade.com/pricing`. If the user cannot connect, do only the steps that need no Taskade tool, and name the steps that are left.
+
 ## 1. Find the sources (local files only)
 
 Read the repository on disk. Do not call Taskade yet.

@@ -58,7 +58,7 @@ If a folder or a tool is refused, say which role the user has and that a workspa
 
 ## The plan
 
-MCP access is part of every paid Taskade plan. A workspace on the Free plan does not appear in `list_spaces`. If the response has `hiddenForPlan` and a `hint`, show the hint to the user. The hint holds the upgrade link.
+MCP access is part of every paid Taskade plan. A workspace on the Free plan does not appear in `list_spaces`. If the response has `hiddenForPlan` and a `hint`, show the hint to the user. The hint holds the link to the plans.
 
 ## What you do through MCP, and what the owner does in Taskade
 
@@ -66,8 +66,8 @@ MCP access is part of every paid Taskade plan. A workspace on the Free plan does
 |---|---|
 | Read and change projects, rows, dates and assignees. Add a field, rename it, add Select options (`set_field`). Write notes (a read does not show notes). | Delete a field or change its type |
 | Create agents, edit their instructions, link knowledge, ask an agent | Build a new app from a prompt (Taskade EVE) |
-| List automations, read their run history, run one that is On and starts "When asked" | Create or edit an automation (Taskade EVE), turn it On or Off (the owner) |
-| Read and edit app source files. A `write_file` change to a live app can go live at once. | Publish the app, choose who can use it, connect a domain (the owner) |
+| List automations, read their run history, run one that is On and starts "When asked". When the server lists `switch_automation` and `edit_automation`: turn one On or Off, and change a text, number, date or fixed-choice field that the read marks `editable: true` | Create an automation, add or remove a step, or change how it starts (Taskade EVE). Connect the account that a step needs (the owner) |
+| Read and edit app source files. A `write_file` change to a live app can go live at once. When the server lists `app_access` and `app_users`: read who can use each list, and set the sign-up of an app (the workspace owner) | Publish the app, choose who can open it and who can use each list, connect a domain (the owner) |
 
 For a job in the right column, send it to the right party:
 
