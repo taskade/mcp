@@ -1,5 +1,6 @@
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 
+import { createProxyServer, hostedServerTransport, hostedServerUrl, isLegacyMode } from './proxy';
 import { TaskadeMCPServer } from './server';
 
 function validateAccessToken(token: string | undefined): string {
@@ -35,16 +36,34 @@ function validateAccessToken(token: string | undefined): string {
 async function main() {
   const accessToken = validateAccessToken(process.env.TASKADE_API_KEY);
 
-  const server = new TaskadeMCPServer({
-    accessToken,
-  });
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
+  // Legacy mode: the tools that the package generates from the Taskade API v1 and v2.
+  if (isLegacyMode(process.argv.slice(2), process.env)) {
+    const server = new TaskadeMCPServer({
+      accessToken,
+    });
+    const transport = new StdioServerTransport();
+    await server.connect(transport);
 
-  console.error('Taskade MCP Server running on stdio');
+    console.error('Taskade MCP Server running on stdio');
+    return;
+  }
+
+  // Default mode: forward the MCP session to the hosted server.
+  const url = hostedServerUrl(process.env.TASKADE_MCP_URL);
+  const server = await createProxyServer(hostedServerTransport(url, accessToken));
+  // The connection to the hosted server keeps the process alive. Close it when the client
+  // closes stdin, so the process ends as in legacy mode.
+  process.stdin.on('end', () => void server.close());
+  await server.connect(new StdioServerTransport());
+
+  console.error(`Taskade MCP Server running on stdio, connected to ${url.origin}${url.pathname}`);
 }
 
 main().catch((error) => {
-  console.error('Fatal error in main():', error);
+  if (error instanceof Error && error.message.startsWith('ERROR: ')) {
+    console.error(error.message);
+  } else {
+    console.error('Fatal error in main():', error);
+  }
   process.exit(1);
 });

@@ -1,8 +1,12 @@
 # Taskade MCP Server — Workspace MCP (`@taskade/mcp-server`)
 
-The **Workspace MCP** server connects an MCP client that runs local stdio servers (Claude Desktop, Claude Code, Cursor, VS Code, Windsurf) to your Taskade workspace. Its tools read and write your projects, tasks, AI agents, media and custom fields through the Taskade public API.
+The **Workspace MCP** server connects an MCP client that runs local stdio servers (Claude Desktop, Claude Code, Cursor, VS Code, Windsurf) to your Taskade workspace.
 
-Most people need the hosted server instead: `https://www.taskade.com/mcp`. It needs no install, signs in with OAuth, and can edit Taskade Genesis app source. See [Hosted server or local package](https://github.com/taskade/mcp#hosted-server-or-local-package).
+By default, the package connects to the hosted Taskade MCP server, `https://www.taskade.com/mcp`, with your token as a Bearer token. It serves the hosted tools with their names, and forwards each request. The hosted server works on every paid Taskade plan. It does not work on the Free plan.
+
+With `--legacy` (or `TASKADE_MCP_LEGACY=1`), the package serves the tools of version 0.2 instead. They read and write your projects, tasks, AI agents, media and custom fields through the Taskade public API v1 and v2, on any plan. Legacy mode stays for one major version.
+
+A client that connects to remote servers needs no install: it can use `https://www.taskade.com/mcp` directly, with OAuth. See [Hosted server or local package](https://github.com/taskade/mcp#hosted-server-or-local-package).
 
 > 📖 **Full documentation lives in the canonical sources — this package README is intentionally a stub to avoid drift.**
 
@@ -17,6 +21,14 @@ TASKADE_API_KEY="your-api-key-here" npx -y @taskade/mcp-server
 ```
 
 You need Node.js 18 or later and a Taskade personal access token. Create the token at [https://www.taskade.com/settings/api](https://www.taskade.com/settings/api).
+
+Legacy mode:
+
+```sh
+TASKADE_API_KEY="your-api-key-here" npx -y @taskade/mcp-server --legacy
+```
+
+To test the package against another MCP server, for example a local mock, set `TASKADE_MCP_URL`. It accepts an `https://` URL, and an `http://` URL only for `127.0.0.1` and `localhost`.
 
 To list the tools and call them, run the package in the [MCP Inspector](https://github.com/modelcontextprotocol/inspector):
 
