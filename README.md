@@ -142,7 +142,7 @@ Set up Taskade for me. Read and follow https://www.taskade.com/SKILL.md
 
 - **Plan:** MCP access is part of every paid Taskade plan (Starter and up). Sign in once with your Taskade account.
 - **What it does:** the front door connects Taskade, shows what is in your workspace, changes projects, tasks, fields, AI agents and Taskade Genesis app files, and picks the project view that answers a question. The job skills plan a new Taskade Genesis app for Taskade EVE, check and fix an app, fix its first screen, make it safe to share, clone an app kit, turn a spreadsheet into a project or app, back up and publish an app, build and test an AI agent, turn the plan of a code repository into a project, write a status report, and write a Markdown or CSV file for import.
-- **What stays in Taskade:** the plugin cannot build an app or create an automation. For those jobs, it writes the request for Taskade EVE, and you start the build. For a new app, it gives you a link that fills in the request and starts nothing. Through the hosted server, the plugin can turn an existing automation On or Off and change the fields of its steps, each time after a preview that you confirm. You publish an app, set who can use its data, and connect a domain in Taskade.
+- **What stays in Taskade:** the plugin cannot build an app or create an automation. For those jobs, it writes the request for Taskade EVE, and you start the build. For a new app, it gives you a link that fills in the request and starts nothing. The hosted server can turn an existing automation On or Off and change the fields of its steps. Each change shows a preview first, and it runs after you confirm. You publish an app, set who can use its data, and connect a domain in Taskade.
 
 | Host | Install |
 |---|---|
@@ -361,7 +361,7 @@ The server also serves the resource `taskade://getting-started`, a short guide f
 
 ### What costs or changes something
 
-Each tool below changes data or acts outside the workspace, so Claude asks before it runs.
+Each tool below changes data or acts outside the workspace, so your AI app can ask you before it runs.
 
 | Tool | What happens |
 |---|---|
@@ -370,7 +370,7 @@ Each tool below changes data or acts outside the workspace, so Claude asks befor
 | `switch_automation` | Turning On starts the automation on its own start, for example a schedule, a webhook or a form. Its AI steps use credits, and a step can send email or act in a connected app. Turning Off stops its start, and deletes the shared form link of the automation. |
 | `edit_automation` | Replaces the field values of the steps. The next run uses the new values. |
 | `write_file` | Changes or deletes a file of the app. On a live app, it starts a new build, and the app publishes it by default. |
-| `publish_kit_version` | Adds a kit version. People who add the kit from now on get it. People who added it before keep their copy. Buyers get an email, at most once a day. Only the newest 20 versions keep their saved copy. |
+| `publish_kit_version` | Adds a kit version. People who add the kit from now on get it. People who added it before keep their copy. From the second version on, buyers get an email, at most once a day. Only the newest 20 versions keep their saved copy. |
 | `delete_task` | Removes the task and every task under it. The hosted server cannot bring it back. |
 | `delete_agent`, `delete_task_note`, `delete_task_date`, `delete_task_field_value` | Removes the item. |
 
