@@ -28,6 +28,14 @@ The Claude plugin directory reads only `plugins/taskade/`. Codex, Cursor, Gemini
 
 The other fields of the manifests and `LICENSE` belong to this repository. In each sync pull request, write the release notes of the new version in `publication.release_notes` of `plugin.json`, and update the `interface` text of `plugin.json` when the skills change what the plugin does. The script prints these fields at the end of each run. When you edit `LICENSE` or a field that both `.claude-plugin/plugin.json` files hold, edit both copies. `yarn test` fails when the copies differ.
 
+## Hosted tool table
+
+The section "Hosted tools" of `README.md` lists the tools of the hosted server `https://www.taskade.com/mcp` in a table between the markers `<!-- hosted-tools:start -->` and `<!-- hosted-tools:end -->`. `hosted-tools.json` is a snapshot of the same tool list. It holds each tool name, and the title and the read or write mark when they are known.
+
+- `yarn hosted-tools:check` fails when the table and the snapshot do not hold the same tools, or when a tool is in the wrong column. It uses no network. CI runs it.
+- `yarn hosted-tools:sync` fetches the public tool list file `https://www.taskade.com/.well-known/mcp/tools.json`, writes the snapshot, and writes the table from it. The table keeps its rows and its text. A new tool goes to the row "Other". When the file does not answer 200 with the expected shape, the script changes nothing.
+- Until that file is available, edit the snapshot and the table by hand, then run `yarn hosted-tools:check`. Keep the tools of the snapshot sorted by name, and set `count` to the number of tools.
+
 ## Pull requests
 
 We uses Cchangesets to track and publish new releases.
