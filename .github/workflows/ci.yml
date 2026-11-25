@@ -43,6 +43,10 @@ jobs:
       - name: Test
         run: yarn test
 
+      - name: Check the hosted tool table
+        # The README table of hosted tools must match hosted-tools.json. This step uses no network.
+        run: yarn hosted-tools:check
+
       - name: Smoke test the packed codegen package
         # Install the codegen tarball in an empty project outside the workspace and run it
         # with plain Node. This step fails if the tarball has no build output or if a

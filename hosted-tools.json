@@ -1,0 +1,238 @@
+{
+  "server": "https://www.taskade.com/mcp",
+  "count": 58,
+  "tools": [
+    {
+      "name": "add_knowledge_media",
+      "readOnly": false
+    },
+    {
+      "name": "add_knowledge_project",
+      "readOnly": false
+    },
+    {
+      "name": "app_access",
+      "readOnly": true
+    },
+    {
+      "name": "app_users",
+      "readOnly": false
+    },
+    {
+      "name": "assign_task",
+      "readOnly": false
+    },
+    {
+      "name": "complete_project",
+      "readOnly": false
+    },
+    {
+      "name": "complete_task",
+      "readOnly": false
+    },
+    {
+      "name": "copy_project",
+      "readOnly": false
+    },
+    {
+      "name": "create_agent",
+      "readOnly": false
+    },
+    {
+      "name": "create_project",
+      "readOnly": false
+    },
+    {
+      "name": "create_project_from_template",
+      "readOnly": false
+    },
+    {
+      "name": "create_task",
+      "readOnly": false
+    },
+    {
+      "name": "delete_agent",
+      "readOnly": false
+    },
+    {
+      "name": "delete_task",
+      "readOnly": false
+    },
+    {
+      "name": "delete_task_date",
+      "readOnly": false
+    },
+    {
+      "name": "delete_task_field_value",
+      "readOnly": false
+    },
+    {
+      "name": "delete_task_note",
+      "readOnly": false
+    },
+    {
+      "name": "edit_automation",
+      "readOnly": false
+    },
+    {
+      "name": "enable_share_link",
+      "readOnly": false
+    },
+    {
+      "name": "get_agent",
+      "readOnly": true
+    },
+    {
+      "name": "get_conversation",
+      "readOnly": true
+    },
+    {
+      "name": "get_flow_runs",
+      "readOnly": true
+    },
+    {
+      "name": "get_project",
+      "readOnly": true
+    },
+    {
+      "name": "get_share_link",
+      "readOnly": true
+    },
+    {
+      "name": "inspect_space",
+      "readOnly": true
+    },
+    {
+      "name": "list_agents",
+      "readOnly": true
+    },
+    {
+      "name": "list_automations",
+      "readOnly": true
+    },
+    {
+      "name": "list_blocks",
+      "readOnly": true
+    },
+    {
+      "name": "list_conversations",
+      "readOnly": true
+    },
+    {
+      "name": "list_fields",
+      "readOnly": true
+    },
+    {
+      "name": "list_folders",
+      "readOnly": true
+    },
+    {
+      "name": "list_media",
+      "readOnly": true
+    },
+    {
+      "name": "list_my_kits",
+      "readOnly": true
+    },
+    {
+      "name": "list_my_projects",
+      "readOnly": true
+    },
+    {
+      "name": "list_project_members",
+      "readOnly": true
+    },
+    {
+      "name": "list_projects",
+      "readOnly": true
+    },
+    {
+      "name": "list_spaces",
+      "readOnly": true
+    },
+    {
+      "name": "list_tasks",
+      "readOnly": true
+    },
+    {
+      "name": "list_templates",
+      "readOnly": true
+    },
+    {
+      "name": "move_task",
+      "readOnly": false
+    },
+    {
+      "name": "prompt_agent",
+      "readOnly": false
+    },
+    {
+      "name": "publish_kit_version",
+      "readOnly": false
+    },
+    {
+      "name": "read_project",
+      "readOnly": true
+    },
+    {
+      "name": "remove_knowledge_media",
+      "readOnly": false
+    },
+    {
+      "name": "remove_knowledge_project",
+      "readOnly": false
+    },
+    {
+      "name": "rename_project",
+      "readOnly": false
+    },
+    {
+      "name": "restore_project",
+      "readOnly": false
+    },
+    {
+      "name": "run_flow",
+      "readOnly": false
+    },
+    {
+      "name": "set_field",
+      "readOnly": false
+    },
+    {
+      "name": "set_task_date",
+      "readOnly": false
+    },
+    {
+      "name": "set_task_field_value",
+      "readOnly": false
+    },
+    {
+      "name": "set_task_note",
+      "readOnly": false
+    },
+    {
+      "name": "switch_automation",
+      "readOnly": false
+    },
+    {
+      "name": "unassign_task",
+      "readOnly": false
+    },
+    {
+      "name": "uncomplete_task",
+      "readOnly": false
+    },
+    {
+      "name": "update_agent",
+      "readOnly": false
+    },
+    {
+      "name": "update_task",
+      "readOnly": false
+    },
+    {
+      "name": "write_file",
+      "readOnly": false
+    }
+  ]
+}

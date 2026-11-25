@@ -341,6 +341,8 @@ Full guide: [Hosted Taskade MCP](https://www.taskade.com/docs/mcp/hosted-mcp).
 
 Every hosted tool declares MCP tool annotations. Claude can run a read-only tool without a confirmation, and it asks before a tool that deletes or replaces data.
 
+<!-- hosted-tools:start -->
+
 | Area | Read-only tools | Write tools |
 |---|---|---|
 | Workspaces | `list_spaces`, `list_folders`, `list_media`, `list_templates`, `inspect_space` | `write_file` (Taskade Genesis app source in `app/`) |
@@ -350,6 +352,8 @@ Every hosted tool declares MCP tool annotations. Claude can run a read-only tool
 | Tasks | `list_tasks` | `create_task`, `update_task`, `complete_task`, `uncomplete_task`, `delete_task`, `move_task`, `set_task_note`, `delete_task_note`, `set_task_date`, `delete_task_date`, `assign_task`, `unassign_task`, `set_task_field_value`, `delete_task_field_value` |
 | AI agents | `list_agents`, `get_agent`, `list_conversations`, `get_conversation` | `create_agent`, `update_agent`, `delete_agent`, `prompt_agent`, `add_knowledge_project`, `remove_knowledge_project`, `add_knowledge_media`, `remove_knowledge_media` |
 | App kits | `list_my_kits` | `publish_kit_version` |
+
+<!-- hosted-tools:end -->
 
 - `get_flow_runs`: reads the recent runs of one automation, newest first. Each run has its status and times. A failed run also names the failed step and a short error. It needs edit rights on automations.
 - `switch_automation`: turns one automation On or Off, like its switch in Taskade. The first call changes nothing. It shows how the automation starts, its steps, and what it spends or sends. A second call with `confirm: true` makes the change and returns an `undo` call. It needs edit rights on automations.
