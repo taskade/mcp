@@ -2,7 +2,9 @@
 
 # Taskade MCP Server and Agent Plugin
 
-**Connect your AI client to your [Taskade](https://www.taskade.com) workspace: projects, tasks, AI agents, automations and [Taskade Genesis](https://www.taskade.com/create) apps.**
+**Run your [Taskade](https://www.taskade.com/?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp) workspace from Claude, ChatGPT, Codex, Cursor or VS Code: plan a project, update tasks, ask an AI agent, run an automation or turn it on or off, and edit a [Taskade Genesis](https://www.taskade.com/create?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp) app. New apps and new automations start in Taskade with Taskade EVE.**
+
+The hosted server works on every paid Taskade plan. It does not work on the Free plan. [Compare plans](https://www.taskade.com/pricing?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp) · [Create a Taskade account](https://www.taskade.com/signup?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp)
 
 Paste this to your agent:
 
@@ -93,7 +95,7 @@ Taskade runs the hosted server. This repository does not build it. Most people n
 | **Address or command** | `https://www.taskade.com/mcp` | `npx -y @taskade/mcp-server` |
 | **Sign-in** | OAuth in your browser. A client with no OAuth sends a personal access token in the `Authorization: Bearer` header. | A personal access token in the `TASKADE_API_KEY` environment variable |
 | **Install** | None | Node.js 18 or later. Your client starts the server on your computer over stdio. |
-| **What it can do** | Read and change projects, tasks, custom fields and AI agents. Prompt an agent and attach knowledge to it. Edit the source of a Taskade Genesis app. Run an automation that starts "When asked", and read its runs. Publish a new version of an app kit. | Read and change projects, tasks, custom fields, AI agents and media through REST API v1. Generate an agent from a prompt, turn on public agent access, delete media, prompt an agent, and manage the legacy webhook subscriptions. It cannot edit app source. |
+| **What it can do** | Read and change projects, tasks, custom fields and AI agents. Prompt an agent and attach knowledge to it. Edit the source of a Taskade Genesis app, and read who can use it. Run an automation that starts "When asked", and read its runs. Turn an automation on or off, and change the fields of its steps. Publish a new version of an app kit. | Read and change projects, tasks, custom fields, AI agents and media through REST API v1. Generate an agent from a prompt, turn on public agent access, delete media, prompt an agent, and manage the legacy webhook subscriptions. It cannot edit app source. |
 | **Plan** | Every paid Taskade plan | Any plan. Each tool keeps the access rules of the API call that it makes. |
 | **Use it when** | Your client connects to remote servers. This is the case for most clients. | You need a REST API v1 operation that the hosted server does not expose. |
 | **Tool reference** | [Hosted tools](#hosted-tools) | [Local package tools](#local-package-tools) |
@@ -140,7 +142,7 @@ Set up Taskade for me. Read and follow https://www.taskade.com/SKILL.md
 
 - **Plan:** MCP access is part of every paid Taskade plan (Starter and up). Sign in once with your Taskade account.
 - **What it does:** the front door connects Taskade, shows what is in your workspace, changes projects, tasks, fields, AI agents and Taskade Genesis app files, and picks the project view that answers a question. The job skills plan a new Taskade Genesis app for Taskade EVE, check and fix an app, fix its first screen, make it safe to share, clone an app kit, turn a spreadsheet into a project or app, back up and publish an app, build and test an AI agent, turn the plan of a code repository into a project, write a status report, and write a Markdown or CSV file for import.
-- **What stays in Taskade:** the plugin cannot build an app or create or edit an automation. For those jobs, it writes the request for Taskade EVE, and you start the build. For a new app, it gives you a link that fills in the request and starts nothing. You publish an app, choose who can use it, turn an automation On or Off, and connect a domain in Taskade.
+- **What stays in Taskade:** the plugin cannot build an app or create an automation. For those jobs, it writes the request for Taskade EVE, and you start the build. For a new app, it gives you a link that fills in the request and starts nothing. Through the hosted server, the plugin can turn an existing automation On or Off and change the fields of its steps, each time after a preview that you confirm. You publish an app, set who can use its data, and connect a domain in Taskade.
 
 | Host | Install |
 |---|---|
@@ -150,7 +152,7 @@ Set up Taskade for me. Read and follow https://www.taskade.com/SKILL.md
 | Gemini CLI | `gemini extensions install https://github.com/taskade/mcp` |
 | VS Code | See below |
 | Cursor | See below |
-| Any other agent | `npx skills add taskade/skills` installs the skills from their home, and `npx skills add taskade/mcp` installs the copy in this repository. Both install the skills only. Then add the hosted server `https://www.taskade.com/mcp` to the agent and sign in (see the [quick start](#taskade-mcp-server-quick-start)). |
+| Any other agent | `npx skills add taskade/skills` installs the skills from their home. It installs the skills only. Use one source, because the copy in this repository has the same skill names. Then add the hosted server `https://www.taskade.com/mcp` to the agent and sign in (see the [quick start](#taskade-mcp-server-quick-start)). |
 
 **VS Code:** turn on the `chat.plugins.enabled` setting. Then run **Chat: Install Plugin From Source** from the Command Palette and enter `https://github.com/taskade/mcp`.
 
@@ -187,7 +189,7 @@ Every client uses the same server and the same two sign-in options. The referenc
 | **Plan** | MCP access is part of every paid Taskade plan (Starter and up). A Free workspace does not show in `list_spaces`. |
 | **Discovery** | `https://www.taskade.com/.well-known/oauth-protected-resource/mcp` |
 
-An `initialize` request without a token returns `401` on purpose. The `401` tells your client where to start the OAuth sign-in.
+An `initialize` request without a token returns `401` on purpose. The `401` tells your client where to start the OAuth sign-in. It names the same metadata at `https://www.taskade.com/mcp/.well-known/oauth-protected-resource`, the address that `doctor` prints.
 
 ### Claude (desktop and web)
 
@@ -342,22 +344,41 @@ Every hosted tool declares MCP tool annotations. Claude can run a read-only tool
 | Area | Read-only tools | Write tools |
 |---|---|---|
 | Workspaces | `list_spaces`, `list_folders`, `list_media`, `list_templates`, `inspect_space` | `write_file` (Taskade Genesis app source in `app/`) |
-| Automations | `list_automations`, `get_flow_runs` | `run_flow` |
+| Automations | `list_automations`, `get_flow_runs` | `run_flow`, `switch_automation`, `edit_automation` |
+| Apps | `app_access` | `app_users` |
 | Projects | `list_projects`, `list_my_projects`, `get_project`, `read_project`, `list_fields`, `list_blocks`, `list_project_members`, `get_share_link` | `create_project`, `create_project_from_template`, `copy_project`, `rename_project`, `set_field`, `complete_project`, `restore_project`, `enable_share_link` |
 | Tasks | `list_tasks` | `create_task`, `update_task`, `complete_task`, `uncomplete_task`, `delete_task`, `move_task`, `set_task_note`, `delete_task_note`, `set_task_date`, `delete_task_date`, `assign_task`, `unassign_task`, `set_task_field_value`, `delete_task_field_value` |
 | AI agents | `list_agents`, `get_agent`, `list_conversations`, `get_conversation` | `create_agent`, `update_agent`, `delete_agent`, `prompt_agent`, `add_knowledge_project`, `remove_knowledge_project`, `add_knowledge_media`, `remove_knowledge_media` |
 | App kits | `list_my_kits` | `publish_kit_version` |
 
 - `get_flow_runs`: reads the recent runs of one automation, newest first. Each run has its status and times. A failed run also names the failed step and a short error. It needs edit rights on automations.
-- `run_flow`: starts one run of an automation that is On and starts "When asked". Every run is real: it counts toward the monthly automation runs of the plan, and AI steps use credits.
+- `switch_automation`: turns one automation On or Off, like its switch in Taskade. The first call changes nothing. It shows how the automation starts, its steps, and what it spends or sends. A second call with `confirm: true` makes the change and returns an `undo` call. It needs edit rights on automations.
+- `edit_automation`: reads the steps of one automation, and changes the text, number, date and fixed-choice fields of its existing steps. It shows a preview first, applies the change only with `confirm: true`, and returns an `undo` call. A field that can hold a secret reads only as "set" or "not set". It needs edit rights on automations.
+- `app_access`: reads who can read, add and change the data of each list of an app. It returns no rows. Anyone who can edit the app can use it.
+- `app_users`: lists the accounts of an app, and sets its sign-up mode (open to anyone, or by invitation) after a preview that you confirm. Only the workspace owner can use it.
 
 The server also serves the resource `taskade://getting-started`, a short guide for the model. Taskade adds tools over time, and your client shows the current list after it connects. Each tool is described in [the MCP toolset](https://www.taskade.com/docs/mcp/hosted-mcp#the-mcp-toolset).
+
+### What costs or changes something
+
+Each tool below changes data or acts outside the workspace, so Claude asks before it runs.
+
+| Tool | What happens |
+|---|---|
+| `prompt_agent` | Runs the agent once and uses AI credits. The agent can use its own tools, for example web search. |
+| `run_flow` | Starts one real run of an automation that is On and starts "When asked". It counts toward the monthly automation runs of your plan, and AI steps use credits. A step can send email or act in a connected app. |
+| `switch_automation` | Turning On starts the automation on its own start, for example a schedule, a webhook or a form. Its AI steps use credits, and a step can send email or act in a connected app. Turning Off stops its start, and deletes the shared form link of the automation. |
+| `edit_automation` | Replaces the field values of the steps. The next run uses the new values. |
+| `write_file` | Changes or deletes a file of the app. On a live app, it starts a new build, and the app publishes it by default. |
+| `publish_kit_version` | Adds a kit version. People who add the kit from now on get it. People who added it before keep their copy. Buyers get an email, at most once a day. Only the newest 20 versions keep their saved copy. |
+| `delete_task` | Removes the task and every task under it. The hosted server cannot bring it back. |
+| `delete_agent`, `delete_task_note`, `delete_task_date`, `delete_task_field_value` | Removes the item. |
 
 ### What stays in Taskade
 
 - **A new app.** The hosted server cannot build a new Taskade Genesis app. Your agent writes the request, and you start the build in Taskade with Taskade EVE.
-- **Automations.** The hosted server cannot create or edit an automation. Taskade EVE does that inside Taskade.
-- **Publishing and access.** You publish an app that is not live yet, and you choose who can use it, in Taskade.
+- **A new automation.** The hosted server cannot create an automation, add or remove its steps, or connect an account to it. Taskade EVE does that inside Taskade. The server can turn an existing automation On or Off and change the fields of its steps, each time after a preview that you confirm.
+- **Publishing and access.** You publish an app that is not live yet, and you set who can use the data of each list, in Taskade. The server reads those settings with `app_access`.
 - **Media uploads.** Upload a file with the REST API or the Action API.
 
 The hosted server can edit the source of an existing app. On a live app, each `write_file` starts a new build, and the app publishes it by default.
@@ -411,7 +432,7 @@ Clients (read only):
 | `401` with `{"error":"Unauthorized"}` before you sign in | This is normal. Without a token, the server answers `401` with a `WWW-Authenticate` header that names its sign-in metadata. Your client reads it and opens the Taskade sign-in. | Finish the sign-in. If no sign-in page opens, update the client, or send a personal access token (see [other clients](#other-clients-and-servers-api-token)). |
 | `401` with `{"error":"Unauthorized"}` from a client that sends a token | The server found no token. It reads a token only from the `Authorization` header, in the form `Bearer <token>`. It ignores a token in another header, a token without `Bearer`, and a token in the URL. | Send `Authorization: Bearer <token>`. |
 | `401` with `{"error":"Invalid or expired token"}` | The server read the token and refused it. The token is wrong or revoked. | Create a new token in [Settings > API](https://www.taskade.com/settings/api), and update the header. |
-| `list_spaces` returns no workspaces, or `MCP access is not available on this workspace's current plan.` | The workspace is on the Free plan. The hosted tools need a paid plan, and `list_spaces` hides a Free workspace. The list also comes in pages, and one page can be empty while more pages remain. | Page until `hasNextPage` is `false`. Upgrade the workspace at [taskade.com/pricing](https://www.taskade.com/pricing), or pick a paid workspace. |
+| `list_spaces` returns no workspaces, or `MCP access is not available on this workspace's current plan.` | The workspace is on the Free plan. The hosted tools need a paid plan, and `list_spaces` hides a Free workspace. The list also comes in pages, and one page can be empty while more pages remain. | Page until `hasNextPage` is `false`. Upgrade the workspace at [taskade.com/pricing](https://www.taskade.com/pricing?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp), or pick a paid workspace. |
 | The client runs only local stdio servers | The hosted server uses Streamable HTTP. | Connect through the [`mcp-remote` bridge](#other-clients-and-servers-api-token), or use the [local package](#local-package-stdio). |
 | The agent does not see the Taskade tools after an install | The client has not loaded the new server, or the sign-in is not done. | Restart the client, or open its MCP list: `/mcp` in Claude Code, the MCP settings in Cursor, or start the server from `mcp.json` in VS Code. Then sign in. `npx @taskade/cli doctor` shows which clients have a `taskade` entry. |
 | `Access denied: you are not a member of this space.` | Your account is not a member of the workspace. | Make sure that the workspace ID is correct, or ask for an invitation. |
@@ -496,6 +517,8 @@ Add this to `~/.cursor/mcp.json` (all projects) or `.cursor/mcp.json` (one proje
   }
 }
 ```
+
+This file holds your token. A repository can commit a `.cursor/mcp.json` file, so do not put a token in one that you commit. If you use `.cursor/mcp.json` in a project, add that path to `.gitignore`.
 
 ### 5. Windsurf
 
@@ -894,9 +917,9 @@ Works with any OpenAPI 3.0+ spec. Generate MCP tools for your own APIs in minute
 
 ## What is Taskade?
 
-[Taskade](https://www.taskade.com) ([Y Combinator S19](https://www.ycombinator.com/companies/taskade)) is the AI-native workspace for building apps, deploying agents, and automating workflows from a single prompt. **150,000+ apps built.**
+[Taskade](https://www.taskade.com/?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp) ([Y Combinator S19](https://www.ycombinator.com/companies/taskade)) is the AI-native workspace for building apps, deploying agents, and automating workflows from a single prompt. **150,000+ apps built.**
 
-- **Taskade Genesis apps:** build complete apps from prompts. Dashboards, CRMs, portals, forms, deployed instantly. [Try it →](https://www.taskade.com/create)
+- **Taskade Genesis apps:** build complete apps from prompts. Dashboards, CRMs, portals, forms, deployed instantly. [Try it →](https://www.taskade.com/create?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp)
 - **AI Agents:** custom agents with built-in tools, persistent memory, multi-agent teams, public embedding
 - **Automations:** no-code workflow automation with 100+ integrations, branching, looping, filtering
 - **Real-time Collaboration:** multiplayer workspace with chat, video, and multiple project views
@@ -904,15 +927,15 @@ Works with any OpenAPI 3.0+ spec. Generate MCP tools for your own APIs in minute
 - **API & MCP:** REST API v1, Action API v2, the hosted MCP server, this local package, the agent plugin, webhooks, OAuth 2.0
 
 **Links:**
-- App: [taskade.com](https://www.taskade.com)
-- Create: [taskade.com/create](https://www.taskade.com/create)
-- Taskade App Factory: [taskade.com/apps](https://www.taskade.com/apps) · [all categories](https://www.taskade.com/apps/categories)
-- Agents: [taskade.com/agents](https://www.taskade.com/agents)
-- Templates: [taskade.com/templates](https://www.taskade.com/templates)
-- Docs: [taskade.com/docs](https://www.taskade.com/docs) · [docs.taskade.com](https://docs.taskade.com)
-- **Hosted MCP guide:** [taskade.com/docs/mcp/hosted-mcp](https://www.taskade.com/docs/mcp/hosted-mcp)
-- **Workspace MCP guide (local package):** [taskade.com/docs/mcp/workspace-mcp](https://www.taskade.com/docs/mcp/workspace-mcp)
-- Blog: [taskade.com/blog](https://www.taskade.com/blog)
+- App: [taskade.com](https://www.taskade.com/?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp)
+- Create: [taskade.com/create](https://www.taskade.com/create?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp)
+- Taskade App Factory: [taskade.com/apps](https://www.taskade.com/apps?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp) · [all categories](https://www.taskade.com/apps/categories?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp)
+- Agents: [taskade.com/agents](https://www.taskade.com/agents?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp)
+- Templates: [taskade.com/templates](https://www.taskade.com/templates?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp)
+- Docs: [taskade.com/docs](https://www.taskade.com/docs?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp) · [docs.taskade.com](https://docs.taskade.com)
+- **Hosted MCP guide:** [taskade.com/docs/mcp/hosted-mcp](https://www.taskade.com/docs/mcp/hosted-mcp?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp)
+- **Workspace MCP guide (local package):** [taskade.com/docs/mcp/workspace-mcp](https://www.taskade.com/docs/mcp/workspace-mcp?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp)
+- Blog: [taskade.com/blog](https://www.taskade.com/blog?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp)
 
 ---
 
@@ -946,7 +969,7 @@ Help us improve MCP tools, OpenAPI workflows, and agent capabilities.
 
 - [Issues](https://github.com/taskade/mcp/issues) — Report bugs or request features
 - [Pull Requests](https://github.com/taskade/mcp/pulls) — Contributions welcome
-- [Apps](https://www.taskade.com/apps) — Browse and clone community apps · [categories](https://www.taskade.com/apps/categories)
+- [Apps](https://www.taskade.com/apps?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp) — Browse and clone community apps · [categories](https://www.taskade.com/apps/categories?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp)
 
 ---
 
@@ -969,6 +992,6 @@ MIT
 
 <div align="center">
 
-[Taskade](https://www.taskade.com) · [Build an app from a prompt](https://www.taskade.com/create) · [Taskade App Factory](https://www.taskade.com/apps) · [MCP docs](https://www.taskade.com/docs/mcp) · [Developer docs](https://www.taskade.com/docs) · [Skills](https://github.com/taskade/skills) · [CLI](https://github.com/taskade/cli) · [Integrations](https://github.com/taskade/integrations)
+[Taskade](https://www.taskade.com/?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp) · [Build an app from a prompt](https://www.taskade.com/create?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp) · [Taskade App Factory](https://www.taskade.com/apps?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp) · [MCP docs](https://www.taskade.com/docs/mcp?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp) · [Developer docs](https://www.taskade.com/docs?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp) · [Skills](https://github.com/taskade/skills) · [CLI](https://github.com/taskade/cli) · [Integrations](https://github.com/taskade/integrations)
 
 </div>

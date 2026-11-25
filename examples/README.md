@@ -10,7 +10,7 @@ Import [`n8n-taskade-mcp-workflow.json`](./n8n-taskade-mcp-workflow.json) into n
 
 1. Install the [n8n MCP Client](https://www.npmjs.com/package/n8n-nodes-mcp) community node
 2. Set `N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true` in your n8n environment
-3. Get your Taskade API key from [Settings > API](https://taskade.com)
+3. Create a Taskade personal access token in [Settings > API](https://www.taskade.com/settings/api)
 
 ### Setup
 
