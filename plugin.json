@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "taskade",
-  "version": "0.6.3",
-  "description": "Use Taskade from your AI tool: plan a new Taskade Genesis app for Taskade EVE to build, check your apps, fix an app with proof, make the first screen work on a phone, make an app safe to share, clone an app kit, turn a spreadsheet into an app, publish with a way back, build and test an AI agent, turn the plan of a code repository into a project, and report on your projects and automations. Connects to the hosted Taskade MCP server with your Taskade login. The connection needs a paid Taskade plan. The Markdown skill works with no connection.",
+  "version": "0.7.0",
+  "description": "Use Taskade from your AI tool: plan a new Taskade Genesis app for Taskade EVE to build, check your apps, fix an app with proof, make the first screen work on a phone, make an app safe to share, make your automations work, clone an app kit, turn a spreadsheet into an app, publish with a way back, build and test an AI agent, turn the plan of a code repository into a project, and report on your projects and automations. Connects to the hosted Taskade MCP server with your Taskade login. The connection needs a paid Taskade plan. The Markdown skill works with no connection.",
   "author": { "name": "Taskade", "email": "hello@taskade.com", "url": "https://www.taskade.com" },
   "homepage": "https://www.taskade.com/mcp",
   "repository": "https://github.com/taskade/mcp",
@@ -13,7 +13,7 @@
       "interface": {
         "displayName": "Taskade",
         "shortDescription": "Plan, check and fix apps, projects and agents",
-        "longDescription": "Plan a new Taskade Genesis app, check and fix your apps, fix the first screen, make an app safe to share, clone an app kit, turn a spreadsheet into an app, back up and publish an app, build and test an AI agent, turn the plan of a code repository into a project, and get a status report on your projects and automations. Sign in with your Taskade account. The plugin cannot build an app or create or edit an automation. It writes the request for Taskade EVE, the builder inside Taskade, and you start the build. You publish an app in Taskade.",
+        "longDescription": "Plan a new Taskade Genesis app, check and fix your apps, fix the first screen, make an app safe to share, make your automations work, clone an app kit, turn a spreadsheet into an app, back up and publish an app, build and test an AI agent, turn the plan of a code repository into a project, and get a status report on your projects and automations. Sign in with your Taskade account. The plugin cannot build an app or create an automation. It writes the request for Taskade EVE, the builder inside Taskade, and you start the build. It changes a step setting or turns an automation on or off only after your yes. You publish an app in Taskade.",
         "developerName": "Taskade",
         "category": "Productivity",
         "capabilities": ["Read", "Write"],
@@ -81,7 +81,7 @@
         }
       },
       "publication": {
-        "release_notes": "In 0.6.3 taskade-clone-kit, taskade-build-agent and taskade-markdown send a project template, a question for an agent and an export of a project to the front door taskade. In 0.6.2 the front door asks for a yes before it gives an agent write access to projects or replaces the instructions of an agent, and it never asks for an access token in the chat. The job skills have new names that start with taskade-. taskade-build-app replaces plan-new-app, taskade-fix-app replaces fix-my-app, taskade-spreadsheet-to-app replaces import-spreadsheet, taskade-report replaces app-report, and taskade-publish-app replaces backup-my-app. The front door taskade now does the setup of getting-started and gives the project view advice. New skills: taskade-check-app, taskade-fix-first-screen, taskade-secure-app, taskade-clone-kit, taskade-build-agent, taskade-repo-to-project and taskade-markdown. The skills come from taskade/skills."
+        "release_notes": "In 0.7.0 the new skill taskade-fix-flows finds automations that are off, incomplete or failing, changes a step setting or turns an automation on or off with a preview and your yes, and gives the way back. taskade-secure-app reads who can use each list of an app and sets its sign-up with your yes. The front door gives the connect steps for Claude, Cursor and ChatGPT. Each job skill starts with a short sign-in check. In 0.6.3 taskade-clone-kit, taskade-build-agent and taskade-markdown send a project template, a question for an agent and an export of a project to the front door taskade. In 0.6.2 the front door asks for a yes before it gives an agent write access to projects or replaces the instructions of an agent, and it never asks for an access token in the chat. The job skills have new names that start with taskade-. taskade-build-app replaces plan-new-app, taskade-fix-app replaces fix-my-app, taskade-spreadsheet-to-app replaces import-spreadsheet, taskade-report replaces app-report, and taskade-publish-app replaces backup-my-app. The front door taskade now does the setup of getting-started and gives the project view advice. New skills: taskade-check-app, taskade-fix-first-screen, taskade-secure-app, taskade-clone-kit, taskade-build-agent, taskade-repo-to-project and taskade-markdown. The skills come from taskade/skills."
       }
     }
   }

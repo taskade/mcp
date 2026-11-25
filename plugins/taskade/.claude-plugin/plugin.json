@@ -1,8 +1,8 @@
 {
   "name": "taskade",
   "displayName": "Taskade",
-  "version": "0.6.3",
-  "description": "Use Taskade from Claude: plan a new Taskade Genesis app for Taskade EVE to build, check your apps, fix an app with proof, make the first screen work on a phone, make an app safe to share, clone an app kit, turn a spreadsheet into an app, publish with a way back, build and test an AI agent, turn the plan of a code repository into a project, and report on your projects and automations. Connects to the hosted Taskade MCP server with your Taskade login. The connection needs a paid Taskade plan. The Markdown skill works with no connection.",
+  "version": "0.7.0",
+  "description": "Use Taskade from Claude: plan a new Taskade Genesis app for Taskade EVE to build, check your apps, fix an app with proof, make the first screen work on a phone, make an app safe to share, make your automations work, clone an app kit, turn a spreadsheet into an app, publish with a way back, build and test an AI agent, turn the plan of a code repository into a project, and report on your projects and automations. Connects to the hosted Taskade MCP server with your Taskade login. The connection needs a paid Taskade plan. The Markdown skill works with no connection.",
   "author": { "name": "Taskade", "email": "hello@taskade.com", "url": "https://www.taskade.com" },
   "homepage": "https://www.taskade.com/mcp",
   "repository": "https://github.com/taskade/mcp",

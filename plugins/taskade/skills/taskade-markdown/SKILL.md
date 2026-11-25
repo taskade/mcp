@@ -65,6 +65,7 @@ The **Import with AI** tab also takes `.md` files and **Paste Text & Markdown**.
 
 ## With a connection
 
+- `create_project` and `create_task` come from the hosted Taskade MCP server, which works on every paid Taskade plan and not on Free. With no Taskade tools in your tool list, the import steps above do the job.
 - `create_project` takes a `spaceId` and the Markdown as `content`. It returns the new project id. Pass `view` (`list`, `table`, `board`, `calendar` or `mindmap`) to open the project in that view.
 - To add Markdown under an existing project, use `create_task`. It reads each task's content as Markdown by default. One call takes at most 20 tasks. For a full file, use `create_project`.
 
