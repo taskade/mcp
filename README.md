@@ -432,7 +432,7 @@ Clients (read only):
 | `401` with `{"error":"Unauthorized"}` before you sign in | This is normal. Without a token, the server answers `401` with a `WWW-Authenticate` header that names its sign-in metadata. Your client reads it and opens the Taskade sign-in. | Finish the sign-in. If no sign-in page opens, update the client, or send a personal access token (see [other clients](#other-clients-and-servers-api-token)). |
 | `401` with `{"error":"Unauthorized"}` from a client that sends a token | The server found no token. It reads a token only from the `Authorization` header, in the form `Bearer <token>`. It ignores a token in another header, a token without `Bearer`, and a token in the URL. | Send `Authorization: Bearer <token>`. |
 | `401` with `{"error":"Invalid or expired token"}` | The server read the token and refused it. The token is wrong or revoked. | Create a new token in [Settings > API](https://www.taskade.com/settings/api), and update the header. |
-| `list_spaces` returns no workspaces, or `MCP access is not available on this workspace's current plan.` | The workspace is on the Free plan. The hosted tools need a paid plan, and `list_spaces` hides a Free workspace. The list also comes in pages, and one page can be empty while more pages remain. | Page until `hasNextPage` is `false`. Upgrade the workspace at [taskade.com/pricing](https://www.taskade.com/pricing?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp), or pick a paid workspace. |
+| `list_spaces` returns no workspaces, or `MCP access is not available on this workspace's current plan.` | The workspace is on the Free plan. The hosted tools need a paid plan, and `list_spaces` hides a Free workspace. The list also comes in pages, and one page can be empty while more pages remain. | Page until `hasNextPage` is `false`. Upgrade the workspace at [taskade.com/pricing](https://www.taskade.com/pricing?utm_source=github&utm_medium=readme&utm_campaign=taskade-mcp), or pick a paid workspace. With the local package, you can also start it with `--legacy`. The tools of version 0.2 work with an API key on any plan. |
 | The client runs only local stdio servers | The hosted server uses Streamable HTTP. | Connect through the [`mcp-remote` bridge](#other-clients-and-servers-api-token), or use the [local package](#local-package-stdio). |
 | The agent does not see the Taskade tools after an install | The client has not loaded the new server, or the sign-in is not done. | Restart the client, or open its MCP list: `/mcp` in Claude Code, the MCP settings in Cursor, or start the server from `mcp.json` in VS Code. Then sign in. `npx @taskade/cli doctor` shows which clients have a `taskade` entry. |
 | `Access denied: you are not a member of this space.` | Your account is not a member of the workspace. | Make sure that the workspace ID is correct, or ask for an invitation. |
@@ -441,6 +441,10 @@ Clients (read only):
 | Claude shows "Authorization with the MCP server failed" | The connector sign-in failed. | Remove the connector, add it again, and sign in to the correct Taskade account. |
 | The local package stops with `TASKADE_API_KEY environment variable is not set.` or `TASKADE_API_KEY appears to be invalid (too short).` | The client did not pass a token to the local package. | Create a token in [Settings > API](https://www.taskade.com/settings/api), and set `TASKADE_API_KEY` in the `env` block of the client config. |
 | The local package stops with `The Taskade MCP server refused TASKADE_API_KEY (HTTP 401).` | By default, the local package forwards to the hosted server, and the hosted server refused the token. The token is wrong or revoked. | Create a new token in [Settings > API](https://www.taskade.com/settings/api), and update `TASKADE_API_KEY`. On the Free plan, start the package with `--legacy`. |
+| The local package stops with `The local package cannot reach the Taskade MCP server` | In the default mode, the package connects to the hosted server when it starts. The network is down, or the server answered with an HTTP error. | Check the network, then restart the server from your client. Legacy mode (`--legacy`) starts without the hosted server. |
+| The local package stops with `TASKADE_API_KEY holds a control character` | The token has a line break or another control character in it, often from a copy and paste. | Copy the token again, and paste it on one line. |
+
+When the local package stops at its start, it sends the message as the error of the `initialize` request, and writes it to stderr. Many clients show only a failed state. The full message is then in the server log of the client, for example the MCP log of Claude Desktop or the Output panel of VS Code.
 
 The full list of tool errors is in [Troubleshooting](https://www.taskade.com/docs/mcp/hosted-mcp#troubleshooting) of the hosted guide.
 
@@ -475,11 +479,22 @@ The package has two modes:
 | Default | `npx -y @taskade/mcp-server` | The [hosted tools](#hosted-tools). The package connects to `https://www.taskade.com/mcp` with your token as a Bearer token, and forwards each request. Tool names, schemas, results and errors are the ones of the hosted server. | Every paid Taskade plan. The hosted server does not work on the Free plan. |
 | Legacy | `npx -y @taskade/mcp-server --legacy`, or `TASKADE_MCP_LEGACY=1` | The [local package tools](#local-package-tools) of version 0.2, which call REST API v1 and v2. | Any plan |
 
-Use legacy mode when you need a REST API v1 operation that the hosted server does not expose. Examples are generate an agent from a prompt, turn on public agent access, delete media, and the legacy webhook subscription tools (`subscribeWebhook`, `unsubscribeWebhook`). Legacy mode stays for one major version. Then it goes away.
+Use legacy mode when you need a REST API v1 operation that the hosted server does not expose. Examples are generate an agent from a prompt, turn on public agent access, delete media, and the legacy webhook subscription tools (`subscribeWebhook`, `unsubscribeWebhook`). Use it also on the Free plan. Legacy mode stays for one major version. Then it goes away.
+
+At each start in the default mode, the package writes one line about `--legacy` to stderr. It also adds one sentence about `--legacy` after the instructions of the hosted server, so the model can tell you about legacy mode.
+
+What the default mode passes through, and what it does not:
+
+- The package answers `initialize` and `ping` itself. It sends every other request of your client to the hosted server, for example `tools/list`, `tools/call`, `resources/read` and `prompts/get`. The answer comes back unchanged.
+- A cancel from your client cancels the request on the hosted server.
+- From the hosted server, only the notifications that a tool, resource or prompt list changed reach your client. Progress notifications, log messages and resource updates do not.
+- The package offers no resource subscription. It does not send the roots, sampling or elicitation capabilities of your client to the hosted server, and it does not send a roots change of your client.
 
 ### Migrate from version 0.2
 
-Version 0.2 served the legacy tools by default. The default tools now have the hosted names. A prompt, skill or script that names a tool of version 0.2 needs the hosted name, or `--legacy`:
+Version 0.2 served the legacy tools by default. A client config with `npx -y @taskade/mcp-server` and no version gets version 1.0.0 at the next start of the client. Version 1.0.0 serves the hosted names by default. To keep the behavior of version 0.2.1 with no other change, put `@taskade/mcp-server@0.2.1` in `args`.
+
+A prompt, skill or script that names a tool of version 0.2 needs the hosted name, or `--legacy`:
 
 | Version 0.2 tool | Hosted tool |
 |---|---|

@@ -1,6 +1,15 @@
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { inspect } from 'node:util';
 
-import { createProxyServer, hostedServerTransport, hostedServerUrl, isLegacyMode } from './proxy';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { ErrorCode, isJSONRPCRequest } from '@modelcontextprotocol/sdk/types.js';
+
+import {
+  createProxyServer,
+  hostedServerTransport,
+  hostedServerUrl,
+  isLegacyMode,
+  LEGACY_NOTE,
+} from './proxy';
 import { TaskadeMCPServer } from './server';
 
 function validateAccessToken(token: string | undefined): string {
@@ -33,6 +42,25 @@ function validateAccessToken(token: string | undefined): string {
   return trimmedToken;
 }
 
+// Most clients show only a failed state when the server exits, and keep stderr in a log. A
+// client shows the error of its initialize request, so the message goes there too.
+async function answerWithError(text: string): Promise<void> {
+  process.exitCode = 1;
+  const transport = new StdioServerTransport();
+  transport.onmessage = (request) => {
+    if (isJSONRPCRequest(request)) {
+      void transport
+        .send({
+          jsonrpc: '2.0',
+          id: request.id,
+          error: { code: ErrorCode.InternalError, message: text },
+        })
+        .then(() => transport.close());
+    }
+  };
+  await transport.start();
+}
+
 async function main() {
   const accessToken = validateAccessToken(process.env.TASKADE_API_KEY);
 
@@ -49,8 +77,20 @@ async function main() {
   }
 
   // Default mode: forward the MCP session to the hosted server.
-  const url = hostedServerUrl(process.env.TASKADE_MCP_URL);
-  const server = await createProxyServer(hostedServerTransport(url, accessToken));
+  console.error(LEGACY_NOTE);
+  let url;
+  let server;
+  try {
+    url = hostedServerUrl(process.env.TASKADE_MCP_URL);
+    server = await createProxyServer(hostedServerTransport(url, accessToken));
+  } catch (error) {
+    if (error instanceof Error && error.message.startsWith('ERROR: ')) {
+      console.error(error.message);
+      await answerWithError(error.message);
+      return;
+    }
+    throw error;
+  }
   // The connection to the hosted server keeps the process alive. Close it when the client
   // closes stdin, so the process ends as in legacy mode.
   process.stdin.on('end', () => void server.close());
@@ -63,7 +103,10 @@ main().catch((error) => {
   if (error instanceof Error && error.message.startsWith('ERROR: ')) {
     console.error(error.message);
   } else {
-    console.error('Fatal error in main():', error);
+    // An unexpected error must not show the key, so the key comes out of its text.
+    const key = process.env.TASKADE_API_KEY?.trim();
+    const text = inspect(error);
+    console.error('Fatal error in main():', key ? text.split(key).join('<TASKADE_API_KEY>') : text);
   }
   process.exit(1);
 });

@@ -28,7 +28,9 @@ Legacy mode:
 TASKADE_API_KEY="your-api-key-here" npx -y @taskade/mcp-server --legacy
 ```
 
-To test the package against another MCP server, for example a local mock, set `TASKADE_MCP_URL`. It accepts an `https://` URL, and an `http://` URL only for `127.0.0.1` and `localhost`.
+A client config with `npx -y @taskade/mcp-server` and no version gets version 1.0.0 at the next start of the client. To keep the behavior of version 0.2.1 with no other change, use `@taskade/mcp-server@0.2.1`.
+
+To test the package against a local mock, set `TASKADE_MCP_URL`. It accepts only an address on `https://www.taskade.com`, `127.0.0.1`, `localhost` or `[::1]`, because the package sends your token there.
 
 To list the tools and call them, run the package in the [MCP Inspector](https://github.com/modelcontextprotocol/inspector):
 

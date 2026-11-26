@@ -10,5 +10,10 @@ startCommand:
         type: string
         title: "Taskade API Key"
         description: "Your Taskade API key. Get it from Taskade Settings > API."
+      legacy:
+        type: boolean
+        default: false
+        title: "Legacy mode"
+        description: "Serve the tools of version 0.2, which work with an API key on any Taskade plan. The default mode serves the tools of the hosted Taskade MCP server, which needs a paid plan."
   commandFunction: |-
-    (config) => ({ command: 'npx', args: ['-y', '@taskade/mcp-server'], env: { TASKADE_API_KEY: config.apiKey } })
+    (config) => ({ command: 'npx', args: ['-y', '@taskade/mcp-server', ...(config.legacy ? ['--legacy'] : [])], env: { TASKADE_API_KEY: config.apiKey } })

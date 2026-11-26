@@ -17,10 +17,13 @@ import {
   hostedServerTransport,
   hostedServerUrl,
   isLegacyMode,
+  LEGACY_NOTE,
 } from './proxy';
 
 // A fake token. Tests never read TASKADE_API_KEY from the environment.
 const TOKEN = 'proxy-test-token-0123456789';
+// A key with a line break in it. Node puts a bad header value into its error message.
+const KEY_WITH_LINE_BREAK = 'line-break-key-0123456789\nsecond-line-9876543210';
 const MOCK_INSTRUCTIONS = 'Mock hosted server. Call list_spaces first.';
 
 const MOCK_TOOLS = [
@@ -96,16 +99,21 @@ function createMockHostedServer() {
 type Mock = {
   url: URL;
   headers: IncomingHttpHeaders[];
-  setUnauthorized: (value: boolean) => void;
+  // Answers every request with this HTTP status. `undefined` serves the mock again.
+  setStatus: (status: number | undefined) => void;
   close: () => Promise<void>;
 };
 
 async function startMock(): Promise<Mock> {
   const headers: IncomingHttpHeaders[] = [];
-  let unauthorized = false;
+  let forcedStatus: number | undefined;
   const http: HttpServer = createServer(async (req, res) => {
     headers.push(req.headers);
-    if (unauthorized || req.headers.authorization !== `Bearer ${TOKEN}`) {
+    if (forcedStatus != null && forcedStatus !== 401) {
+      res.writeHead(forcedStatus).end('Service Unavailable');
+      return;
+    }
+    if (forcedStatus === 401 || req.headers.authorization !== `Bearer ${TOKEN}`) {
       res.writeHead(401, { 'content-type': 'application/json' });
       res.end(JSON.stringify({ error: 'Invalid or expired token' }));
       return;
@@ -128,8 +136,8 @@ async function startMock(): Promise<Mock> {
   return {
     url: new URL(`http://127.0.0.1:${port}/mcp`),
     headers,
-    setUnauthorized: (value) => {
-      unauthorized = value;
+    setStatus: (status) => {
+      forcedStatus = status;
     },
     close: () =>
       new Promise((resolve) => {
@@ -161,7 +169,7 @@ describe('the stdio proxy to the hosted server', () => {
 
   beforeEach(() => {
     mock.headers.length = 0;
-    mock.setUnauthorized(false);
+    mock.setStatus(undefined);
     stderr = [];
     vi.spyOn(console, 'error').mockImplementation((...args) => {
       stderr.push(args.map(String).join(' '));
@@ -193,7 +201,10 @@ describe('the stdio proxy to the hosted server', () => {
   it('passes the instructions and the capabilities of the hosted server through', async () => {
     const { proxy, direct } = await startProxy();
 
-    expect(proxy.getInstructions()).toBe(MOCK_INSTRUCTIONS);
+    // The hosted instructions come first and unchanged, then one sentence about legacy mode.
+    expect(proxy.getInstructions()).toBe(`${MOCK_INSTRUCTIONS}\n\n${LEGACY_NOTE}`);
+    expect(LEGACY_NOTE).toContain('--legacy');
+    expect(LEGACY_NOTE).toContain('any plan');
     expect(proxy.getServerCapabilities()).toEqual(direct.getServerCapabilities());
     expect(proxy.getServerCapabilities()).toEqual({
       tools: { listChanged: true },
@@ -295,7 +306,7 @@ describe('the stdio proxy to the hosted server', () => {
   });
 
   it('turns a 401 at startup into one clear message without the token', async () => {
-    mock.setUnauthorized(true);
+    mock.setStatus(401);
 
     const error = await createProxyServer(hostedServerTransport(mock.url, TOKEN)).catch(
       (e: unknown) => e,
@@ -311,9 +322,44 @@ describe('the stdio proxy to the hosted server', () => {
     expect(mock.headers).toHaveLength(1);
   });
 
+  it.each([
+    { cause: 'a 503 answer', status: 503 },
+    { cause: 'a closed port', status: undefined },
+  ])('turns $cause at startup into one clear message', async ({ status }) => {
+    mock.setStatus(status);
+    // A loopback port with no server behind it.
+    const closed = await startMock();
+    await closed.close();
+    const url = status == null ? closed.url : mock.url;
+
+    const error = await createProxyServer(hostedServerTransport(url, TOKEN)).catch(
+      (e: unknown) => e,
+    );
+
+    const message = (error as Error).message;
+    expect(message).toMatch(/^ERROR: The local package cannot reach the Taskade MCP server/);
+    expect(message).toContain('--legacy');
+    expect(message).not.toContain('TypeError');
+    expect(message).not.toContain(TOKEN);
+  });
+
+  it('refuses a key with a control character, and never shows the key', async () => {
+    const error = await Promise.resolve()
+      .then(() => createProxyServer(hostedServerTransport(mock.url, KEY_WITH_LINE_BREAK)))
+      .catch((e: unknown) => e);
+
+    const message = (error as Error).message;
+    expect(message).toContain('TASKADE_API_KEY');
+    expect(message).toContain('control character');
+    for (const part of KEY_WITH_LINE_BREAK.split('\n')) {
+      expect(message).not.toContain(part);
+    }
+    expect(mock.headers).toHaveLength(0);
+  });
+
   it('turns a 401 during a session into the same message', async () => {
     const { proxy } = await startProxy();
-    mock.setUnauthorized(true);
+    mock.setStatus(401);
 
     const error = await proxy.listTools().catch((e: unknown) => e);
 
@@ -333,18 +379,36 @@ describe('the mode and the address of the server', () => {
     expect(isLegacyMode([], { TASKADE_MCP_LEGACY: '' })).toBe(false);
   });
 
-  it('uses the hosted server unless TASKADE_MCP_URL names another one', () => {
+  it('uses the hosted server, or a loopback address for a test', () => {
     expect(hostedServerUrl(undefined).href).toBe(HOSTED_MCP_URL);
     expect(hostedServerUrl('').href).toBe(HOSTED_MCP_URL);
-    expect(hostedServerUrl('https://example.com/mcp').href).toBe('https://example.com/mcp');
+    expect(hostedServerUrl('https://www.taskade.com/mcp').href).toBe(HOSTED_MCP_URL);
     expect(hostedServerUrl('http://127.0.0.1:4000/mcp').href).toBe('http://127.0.0.1:4000/mcp');
     expect(hostedServerUrl('http://localhost:4000/mcp').href).toBe('http://localhost:4000/mcp');
+    expect(hostedServerUrl('http://[::1]:4000/mcp').href).toBe('http://[::1]:4000/mcp');
   });
 
-  it('refuses an address that is not https, except a loopback address', () => {
-    for (const value of ['http://example.com/mcp', 'ftp://example.com/mcp', 'not a url']) {
-      expect(() => hostedServerUrl(value)).toThrow('TASKADE_MCP_URL');
+  // The key goes to this address, and a project config file can set it. So no other host.
+  it('refuses every other address, and does not echo it', () => {
+    for (const value of [
+      'https://example.com/mcp',
+      'https://www.taskade.com.example.com/mcp',
+      'https://taskade.com/mcp',
+      'http://www.taskade.com/mcp',
+      'https://www.taskade.com:8443/mcp',
+      'https://user:pass@www.taskade.com/mcp',
+      'https://www.taskade.com@example.com/mcp',
+      'http://127.0.0.1@example.com/mcp',
+      'http://localhost.example.com/mcp',
+      'ftp://127.0.0.1/mcp',
+      'not a url',
+    ]) {
+      expect(() => hostedServerUrl(value), value).toThrow('TASKADE_MCP_URL');
     }
+    // The message does not echo the address, so it shows no user name or password.
+    expect(() => hostedServerUrl('https://user:secret-pass@www.taskade.com/mcp')).toThrow(
+      /^(?!.*secret-pass)/s,
+    );
   });
 });
 
@@ -414,6 +478,8 @@ describe('the command line entry point', () => {
 
     expect(toolNames(stdout)).toEqual(['list_spaces', 'delete_task']);
     expect(code).toBe(0);
+    // Every start in the default mode names the legacy switch, on one line.
+    expect(stderr.split('\n')).toContain(LEGACY_NOTE);
     expect(stderr).not.toContain(TOKEN);
   }, 30_000);
 
@@ -424,10 +490,42 @@ describe('the command line entry point', () => {
     });
 
     expect(code).toBe(1);
-    expect(stdout).toBe('');
     expect(stderr).toContain('https://www.taskade.com/settings/api');
     expect(stderr).toContain('--legacy');
-    expect(stderr).not.toContain('wrong-token-0123456789');
+    // The client also gets the message as the error of its initialize request.
+    const answer = JSON.parse(stdout.trim().split('\n')[0]);
+    expect(answer).toMatchObject({ jsonrpc: '2.0', id: 1, error: { code: -32603 } });
+    expect(answer.error.message).toContain('https://www.taskade.com/settings/api');
+    expect(answer.error.message).toContain('--legacy');
+    expect(`${stdout}${stderr}`).not.toContain('wrong-token-0123456789');
+  }, 30_000);
+
+  it('exits with a clear message when the hosted server cannot be reached', async () => {
+    const closed = await startMock();
+    await closed.close();
+
+    const { code, stdout, stderr } = await runCli([], {
+      TASKADE_API_KEY: TOKEN,
+      TASKADE_MCP_URL: closed.url.href,
+    });
+
+    expect(code).toBe(1);
+    expect(stderr).toContain('cannot reach the Taskade MCP server');
+    expect(stderr).not.toContain('TypeError');
+    expect(JSON.parse(stdout.trim().split('\n')[0]).error.message).toContain('--legacy');
+  }, 30_000);
+
+  it('never prints a key that holds a line break', async () => {
+    const { code, stdout, stderr } = await runCli([], {
+      TASKADE_API_KEY: KEY_WITH_LINE_BREAK,
+      TASKADE_MCP_URL: mock.url.href,
+    });
+
+    expect(code).toBe(1);
+    expect(stderr).toContain('control character');
+    for (const part of KEY_WITH_LINE_BREAK.split('\n')) {
+      expect(`${stdout}${stderr}`).not.toContain(part);
+    }
   }, 30_000);
 
   it.each([
@@ -445,6 +543,14 @@ describe('the command line entry point', () => {
       });
 
       expect(code).toBe(0);
+      // Legacy mode sends no instructions, as version 0.2.1 did.
+      const initialize = stdout
+        .split('\n')
+        .filter(Boolean)
+        .map((line) => JSON.parse(line))
+        .find((message) => message.id === 1);
+      expect(initialize.result.serverInfo.name).toBe('taskade');
+      expect(initialize.result).not.toHaveProperty('instructions');
       // The file holds the tool list of version 0.2.1, in order. Legacy mode must not change it.
       await expect(`${JSON.stringify(toolNames(stdout), null, 2)}\n`).toMatchFileSnapshot(
         './__snapshots__/legacy-tool-names.json',

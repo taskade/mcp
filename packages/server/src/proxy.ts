@@ -27,8 +27,16 @@ export function isLegacyMode(argv: string[], env: NodeJS.ProcessEnv): boolean {
   return argv.includes('--legacy') || flag === '1' || flag === 'true';
 }
 
-// TASKADE_MCP_URL exists to test the proxy against a mock. It accepts https, and plain http
-// only on the loopback host.
+// The local package can also start with --legacy. The first sentence names the package, because
+// the model reads it after the instructions of the hosted server.
+export const LEGACY_NOTE =
+  'The local package @taskade/mcp-server can also start with --legacy. ' +
+  'That mode serves the tools of version 0.2, which work with a Taskade API key on any plan.';
+
+const LOOPBACK_HOSTS = ['127.0.0.1', 'localhost', '[::1]'];
+
+// TASKADE_MCP_URL exists to test the proxy against a mock. The key goes to this address, and a
+// project config file can set it, so it accepts only the hosted origin or a loopback host.
 export function hostedServerUrl(value: string | undefined): URL {
   const text = value?.trim() || HOSTED_MCP_URL;
   let url: URL;
@@ -37,12 +45,15 @@ export function hostedServerUrl(value: string | undefined): URL {
   } catch {
     throw new Error('ERROR: TASKADE_MCP_URL is not a valid URL.');
   }
-  const loopback = url.hostname === '127.0.0.1' || url.hostname === 'localhost';
-  if (url.protocol === 'https:' || (url.protocol === 'http:' && loopback)) {
+  const hosted = url.origin === new URL(HOSTED_MCP_URL).origin;
+  const loopback =
+    LOOPBACK_HOSTS.includes(url.hostname) &&
+    (url.protocol === 'http:' || url.protocol === 'https:');
+  if ((hosted || loopback) && url.username === '' && url.password === '') {
     return url;
   }
   throw new Error(
-    'ERROR: TASKADE_MCP_URL must start with https://. Plain http:// works only for 127.0.0.1 and localhost.',
+    'ERROR: TASKADE_MCP_URL must be on https://www.taskade.com, or on 127.0.0.1, localhost or [::1] for a test.',
   );
 }
 
@@ -54,6 +65,22 @@ const UNAUTHORIZED_MESSAGE =
   'The hosted server works on every paid Taskade plan. It does not work on the Free plan.\n' +
   'To use the tools of version 0.2 with any plan, start the package with --legacy,\n' +
   'or set TASKADE_MCP_LEGACY=1.\n';
+
+function unreachableMessage(error: StreamableHTTPError | TypeError): string {
+  const cause = (error as { cause?: { code?: unknown } }).cause?.code;
+  const detail =
+    error instanceof StreamableHTTPError
+      ? `HTTP ${error.code}`
+      : typeof cause === 'string'
+        ? cause
+        : 'network error';
+  return (
+    `ERROR: The local package cannot reach the Taskade MCP server (${detail}).\n\n` +
+    'Check the network connection, then restart the server from your MCP client.\n' +
+    'Legacy mode works without the hosted server: start the package with --legacy,\n' +
+    'or set TASKADE_MCP_LEGACY=1.\n'
+  );
+}
 
 // An error from the hosted server keeps its code and its text. McpError adds an "MCP error"
 // prefix to the text. The prefix comes off here, because the client of the proxy adds it again.
@@ -72,6 +99,14 @@ function forwardedError(error: unknown): Error {
 }
 
 export function hostedServerTransport(url: URL, accessToken: string): Transport {
+  // Node puts an invalid header value, with the key, into its error message. So check first.
+  const controlCharacter = [...accessToken].some((c) => c < ' ' || c === '\u007f');
+  if (controlCharacter) {
+    throw new Error(
+      'ERROR: TASKADE_API_KEY holds a control character, for example a line break. ' +
+        'Copy the token again from https://www.taskade.com/settings/api.',
+    );
+  }
   return new StreamableHTTPClientTransport(url, {
     requestInit: {
       headers: { Authorization: `Bearer ${accessToken}`, 'User-Agent': USER_AGENT },
@@ -79,11 +114,18 @@ export function hostedServerTransport(url: URL, accessToken: string): Transport 
   });
 }
 
-// Connects to the hosted server, then returns a server for the stdio client that sends each
-// request to the hosted server, and each notification of the hosted server back to its
-// client. Names, titles, annotations, schemas, results and errors pass through unchanged. The
-// returned server answers `initialize` and `ping` itself, with the instructions of the hosted
-// server. Its close also closes the connection to the hosted server.
+// Connects to the hosted server, then returns a server for the stdio client.
+// - It answers `initialize` and `ping` itself, with the instructions of the hosted server and
+//   LEGACY_NOTE after them.
+// - It sends every other request of its client to the hosted server. Names, titles,
+//   annotations, schemas, results and errors pass through unchanged. A cancel of the client
+//   cancels the request on the hosted server.
+// - It sends the tools, resources and prompts list_changed notifications of the hosted server
+//   to its client. It drops the other notifications of the hosted server (progress, log
+//   messages, resource updates) and every notification of its client except a cancel.
+// - It does not offer the roots, sampling or elicitation capabilities of its client to the
+//   hosted server.
+// Its close also closes the connection to the hosted server.
 export async function createProxyServer(hostedTransport: Transport): Promise<Server> {
   const upstream = new Client({ name: 'taskade-mcp-server', version });
   try {
@@ -91,6 +133,10 @@ export async function createProxyServer(hostedTransport: Transport): Promise<Ser
   } catch (error) {
     if (error instanceof StreamableHTTPError && error.code === 401) {
       throw new Error(UNAUTHORIZED_MESSAGE);
+    }
+    // An HTTP error answer, or a network failure ("fetch failed").
+    if (error instanceof StreamableHTTPError || error instanceof TypeError) {
+      throw new Error(unreachableMessage(error));
     }
     throw error;
   }
@@ -110,7 +156,10 @@ export async function createProxyServer(hostedTransport: Transport): Promise<Ser
 
   const server = new Server(
     { name: 'taskade', version },
-    { capabilities, instructions: upstream.getInstructions() },
+    {
+      capabilities,
+      instructions: [upstream.getInstructions(), LEGACY_NOTE].filter(Boolean).join('\n\n'),
+    },
   );
 
   // TypeScript cannot resolve the generic type of request() with the zod 3.25 types
@@ -138,9 +187,11 @@ export async function createProxyServer(hostedTransport: Transport): Promise<Ser
       throw forwarded;
     }
   };
-  // For example notifications/tools/list_changed.
-  upstream.fallbackNotificationHandler = (notification) =>
-    server.notification(notification as ServerNotification);
+  upstream.fallbackNotificationHandler = async (notification) => {
+    if (notification.method.endsWith('/list_changed')) {
+      await server.notification(notification as ServerNotification);
+    }
+  };
   server.onclose = () => void upstream.close();
 
   return server;
