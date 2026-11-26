@@ -8,7 +8,7 @@ import { setupToolsV2 } from './tools.v2.generated';
 // Every API request names this package and its version. With this header, Taskade can measure
 // the usage of the package and debug its requests. The build inlines `version` from
 // package.json into bin/cli.mjs.
-const USER_AGENT = `taskade-mcp-server/${version}`;
+export const USER_AGENT = `taskade-mcp-server/${version}`;
 
 type TaskadeServerOpts = {
   accessToken: string;
