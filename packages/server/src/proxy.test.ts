@@ -101,14 +101,37 @@ type Mock = {
   headers: IncomingHttpHeaders[];
   // Answers every request with this HTTP status. `undefined` serves the mock again.
   setStatus: (status: number | undefined) => void;
+  // Answers initialize with a protocol version that no client supports.
+  setOldProtocol: (value: boolean) => void;
   close: () => Promise<void>;
 };
 
 async function startMock(): Promise<Mock> {
   const headers: IncomingHttpHeaders[] = [];
   let forcedStatus: number | undefined;
+  let oldProtocol = false;
   const http: HttpServer = createServer(async (req, res) => {
     headers.push(req.headers);
+    if (oldProtocol) {
+      let body = '';
+      for await (const chunk of req) {
+        body += chunk;
+      }
+      const { id } = JSON.parse(body);
+      res.writeHead(200, { 'content-type': 'application/json' });
+      res.end(
+        JSON.stringify({
+          jsonrpc: '2.0',
+          id,
+          result: {
+            protocolVersion: '1999-01-01',
+            capabilities: {},
+            serverInfo: { name: 'old', version: '0' },
+          },
+        }),
+      );
+      return;
+    }
     if (forcedStatus != null && forcedStatus !== 401) {
       res.writeHead(forcedStatus).end('Service Unavailable');
       return;
@@ -138,6 +161,9 @@ async function startMock(): Promise<Mock> {
     headers,
     setStatus: (status) => {
       forcedStatus = status;
+    },
+    setOldProtocol: (value) => {
+      oldProtocol = value;
     },
     close: () =>
       new Promise((resolve) => {
@@ -357,6 +383,17 @@ describe('the stdio proxy to the hosted server', () => {
     expect(mock.headers).toHaveLength(0);
   });
 
+  it.each([
+    { where: 'a NUL at the start', key: `\u0000${TOKEN}` },
+    { where: 'a NUL at the end', key: `${TOKEN}\u0000` },
+    { where: 'a control character at the end', key: `${TOKEN}\u0001` },
+  ])('refuses a key with $where, because trimming keeps it', async ({ key }) => {
+    // The CLI trims the key first. String.prototype.trim keeps these characters.
+    expect(key.trim()).toBe(key);
+    expect(() => hostedServerTransport(mock.url, key.trim())).toThrow('control character');
+    expect(mock.headers).toHaveLength(0);
+  });
+
   it('turns a 401 during a session into the same message', async () => {
     const { proxy } = await startProxy();
     mock.setStatus(401);
@@ -526,6 +563,84 @@ describe('the command line entry point', () => {
     for (const part of KEY_WITH_LINE_BREAK.split('\n')) {
       expect(`${stdout}${stderr}`).not.toContain(part);
     }
+  }, 30_000);
+
+  function initializeError(stdout: string): string {
+    const answer = JSON.parse(stdout.trim().split('\n')[0]);
+    expect(answer).toMatchObject({ jsonrpc: '2.0', id: 1, error: { code: -32603 } });
+    return answer.error.message;
+  }
+
+  it('removes the whitespace around the key', async () => {
+    const { code, stdout } = await runCli([], {
+      TASKADE_API_KEY: ` \t${TOKEN}\r\n`,
+      TASKADE_MCP_URL: mock.url.href,
+    });
+
+    expect(code).toBe(0);
+    expect(toolNames(stdout)).toEqual(['list_spaces', 'delete_task']);
+  }, 30_000);
+
+  it('refuses a control character at the end of the key that is not whitespace', async () => {
+    const { code, stdout, stderr } = await runCli([], {
+      TASKADE_API_KEY: `${TOKEN}\u0001`,
+      TASKADE_MCP_URL: mock.url.href,
+    });
+
+    expect(code).toBe(1);
+    expect(initializeError(stdout)).toContain('control character');
+    expect(`${stdout}${stderr}`).not.toContain(TOKEN);
+  }, 30_000);
+
+  it.each([
+    { problem: 'no key', key: undefined, text: 'TASKADE_API_KEY environment variable is not set' },
+    { problem: 'a key of spaces', key: '   ', text: 'TASKADE_API_KEY is empty' },
+    { problem: 'a short key', key: 'short', text: 'too short' },
+  ])(
+    'answers initialize with the error for $problem in the default mode',
+    async ({ key, text }) => {
+      const { code, stdout, stderr } = await runCli([], {
+        ...(key == null ? {} : { TASKADE_API_KEY: key }),
+        TASKADE_MCP_URL: mock.url.href,
+      });
+
+      expect(code).toBe(1);
+      expect(stderr).toContain(text);
+      expect(initializeError(stdout)).toContain(text);
+    },
+    30_000,
+  );
+
+  it('answers initialize with an unexpected start error, without the key', async () => {
+    mock.setOldProtocol(true);
+    try {
+      const { code, stdout, stderr } = await runCli([], {
+        TASKADE_API_KEY: TOKEN,
+        TASKADE_MCP_URL: mock.url.href,
+      });
+
+      expect(code).toBe(1);
+      expect(initializeError(stdout)).toMatch(
+        /^ERROR: The local package could not start: .*1999-01-01/,
+      );
+      expect(`${stdout}${stderr}`).not.toContain(TOKEN);
+    } finally {
+      mock.setOldProtocol(false);
+    }
+  }, 30_000);
+
+  it('keeps the start of version 0.2.1 for a missing key in legacy mode', async () => {
+    const { code, stdout, stderr } = await runCli(['--legacy'], {});
+
+    expect(code).toBe(1);
+    expect(stdout).toBe('');
+    expect(stderr).toBe(
+      'ERROR: TASKADE_API_KEY environment variable is not set.\n\n' +
+        'To fix this:\n' +
+        '1. Generate a Personal Access Token at: https://www.taskade.com/settings/api\n' +
+        '2. Set the environment variable:\n' +
+        '   export TASKADE_API_KEY="your_token_here"\n\n',
+    );
   }, 30_000);
 
   it.each([

@@ -12,31 +12,35 @@ import {
 } from './proxy';
 import { TaskadeMCPServer } from './server';
 
-function validateAccessToken(token: string | undefined): string {
+// Legacy mode prints the message and exits, as version 0.2 did.
+function exitWith(message: string): never {
+  console.error(message);
+  process.exit(1);
+}
+
+// Removes the whitespace around the key. `fail` gets the message for a missing or short key.
+function validateAccessToken(token: string | undefined, fail: (message: string) => never): string {
   if (!token) {
-    console.error(
+    fail(
       'ERROR: TASKADE_API_KEY environment variable is not set.\n\n' +
         'To fix this:\n' +
         '1. Generate a Personal Access Token at: https://www.taskade.com/settings/api\n' +
         '2. Set the environment variable:\n' +
         '   export TASKADE_API_KEY="your_token_here"\n',
     );
-    process.exit(1);
   }
 
   const trimmedToken = token.trim();
 
   if (trimmedToken.length === 0) {
-    console.error('ERROR: TASKADE_API_KEY is empty. Please provide a valid token.');
-    process.exit(1);
+    fail('ERROR: TASKADE_API_KEY is empty. Please provide a valid token.');
   }
 
   if (trimmedToken.length < 10) {
-    console.error(
+    fail(
       'ERROR: TASKADE_API_KEY appears to be invalid (too short).\n' +
         'Please verify your token at: https://www.taskade.com/settings/api',
     );
-    process.exit(1);
   }
 
   return trimmedToken;
@@ -61,11 +65,20 @@ async function answerWithError(text: string): Promise<void> {
   await transport.start();
 }
 
-async function main() {
-  const accessToken = validateAccessToken(process.env.TASKADE_API_KEY);
+// Cuts the key out of a text, so that no unexpected error shows it.
+function withoutKey(text: string): string {
+  const key = process.env.TASKADE_API_KEY?.trim();
+  return key ? text.split(key).join('<TASKADE_API_KEY>') : text;
+}
 
+function throwError(message: string): never {
+  throw new Error(message);
+}
+
+async function main() {
   // Legacy mode: the tools that the package generates from the Taskade API v1 and v2.
   if (isLegacyMode(process.argv.slice(2), process.env)) {
+    const accessToken = validateAccessToken(process.env.TASKADE_API_KEY, exitWith);
     const server = new TaskadeMCPServer({
       accessToken,
     });
@@ -76,20 +89,23 @@ async function main() {
     return;
   }
 
-  // Default mode: forward the MCP session to the hosted server.
+  // Default mode: forward the MCP session to the hosted server. Every failure before the
+  // stdio connection goes to stderr and to the initialize request of the client.
   console.error(LEGACY_NOTE);
   let url;
   let server;
   try {
+    const accessToken = validateAccessToken(process.env.TASKADE_API_KEY, throwError);
     url = hostedServerUrl(process.env.TASKADE_MCP_URL);
     server = await createProxyServer(hostedServerTransport(url, accessToken));
   } catch (error) {
-    if (error instanceof Error && error.message.startsWith('ERROR: ')) {
-      console.error(error.message);
-      await answerWithError(error.message);
-      return;
-    }
-    throw error;
+    const message =
+      error instanceof Error && error.message.startsWith('ERROR: ')
+        ? error.message
+        : `ERROR: The local package could not start: ${withoutKey(String(error))}`;
+    console.error(message);
+    await answerWithError(message);
+    return;
   }
   // The connection to the hosted server keeps the process alive. Close it when the client
   // closes stdin, so the process ends as in legacy mode.
@@ -103,10 +119,7 @@ main().catch((error) => {
   if (error instanceof Error && error.message.startsWith('ERROR: ')) {
     console.error(error.message);
   } else {
-    // An unexpected error must not show the key, so the key comes out of its text.
-    const key = process.env.TASKADE_API_KEY?.trim();
-    const text = inspect(error);
-    console.error('Fatal error in main():', key ? text.split(key).join('<TASKADE_API_KEY>') : text);
+    console.error('Fatal error in main():', withoutKey(inspect(error)));
   }
   process.exit(1);
 });

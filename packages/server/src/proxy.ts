@@ -99,11 +99,13 @@ function forwardedError(error: unknown): Error {
 }
 
 export function hostedServerTransport(url: URL, accessToken: string): Transport {
-  // Node puts an invalid header value, with the key, into its error message. So check first.
+  // The CLI removes the whitespace around the key first. A control character that is still in
+  // the key (inside it, or a NUL at an edge) stops the package here. Node puts an invalid
+  // header value, with the key, into its error message, so this check comes first.
   const controlCharacter = [...accessToken].some((c) => c < ' ' || c === '\u007f');
   if (controlCharacter) {
     throw new Error(
-      'ERROR: TASKADE_API_KEY holds a control character, for example a line break. ' +
+      'ERROR: TASKADE_API_KEY holds a control character, for example a line break inside it. ' +
         'Copy the token again from https://www.taskade.com/settings/api.',
     );
   }
